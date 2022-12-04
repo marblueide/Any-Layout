@@ -7,15 +7,31 @@ export {}
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
+    Component: typeof import('./src/components/LowCodeCompoent/VPicture/component.vue')['default']
+    ComponentList: typeof import('./src/components/componentList.vue')['default']
+    Editor: typeof import('./src/components/editor/index.vue')['default']
+    ElAside: typeof import('element-plus/es')['ElAside']
+    ElButton: typeof import('element-plus/es')['ElButton']
+    ElContainer: typeof import('element-plus/es')['ElContainer']
+    ElHeader: typeof import('element-plus/es')['ElHeader']
+    ElImage: typeof import('element-plus/es')['ElImage']
+    ElMain: typeof import('element-plus/es')['ElMain']
+    ElScrollbar: typeof import('element-plus/es')['ElScrollbar']
+    Grid: typeof import('./src/components/editor/Grid.vue')['default']
+    Header: typeof import('./src/components/header.vue')['default']
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
     IconCommunity: typeof import('./src/components/icons/IconCommunity.vue')['default']
     IconDocumentation: typeof import('./src/components/icons/IconDocumentation.vue')['default']
     IconEcosystem: typeof import('./src/components/icons/IconEcosystem.vue')['default']
     IconSupport: typeof import('./src/components/icons/IconSupport.vue')['default']
     IconTooling: typeof import('./src/components/icons/IconTooling.vue')['default']
+    Picture: typeof import('./src/components/LowCode/Picture.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    Shape: typeof import('./src/components/editor/Shape.vue')['default']
     TheWelcome: typeof import('./src/components/TheWelcome.vue')['default']
+    VButton: typeof import('./src/components/LowCodeCompoent/VButton/index.vue')['default']
+    VPicture: typeof import('./src/components/LowCodeCompoent/VPicture/index.vue')['default']
     WelcomeItem: typeof import('./src/components/WelcomeItem.vue')['default']
   }
 }
