@@ -1,11 +1,12 @@
 import type { LowCanvasData } from '@/types/LowCode/index';
+import { markRaw } from 'vue';
 import VButton from "./VButton/index.vue"
 import VPicture from "./VPicture/index.vue"
 
 export const componentList:LowCanvasData[]= [
     {
         label:"按钮",
-        component:VButton,
+        component:() =>  markRaw(VButton),
         events:{},
         isLock:false,
         style:{
@@ -13,7 +14,7 @@ export const componentList:LowCanvasData[]= [
             height:100,
         },
         animations:[],
-        icon:"icon-tupian",
+        icon:"icon-anniu",
         linkage:[],
         propValue:{
             value:"按钮"
@@ -21,11 +22,14 @@ export const componentList:LowCanvasData[]= [
     },
     {
         label:"图片",
-        component:VPicture,
+        component:() => markRaw(VPicture),
         events:{},
         isLock:false,
-        style:{},
-        icon:"icon-anniu",
+        style:{
+            width:300,
+            height:200
+        },
+        icon:"icon-tupian",
         animations:[],
         linkage:[],
         propValue:{

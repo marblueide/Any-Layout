@@ -11,7 +11,7 @@ export const canvasTypeToStyle = (obj:LowCanvasType):StyleValue => {
 }
 
 export const getShapeStyle = (data:StyleValue) => {
-    const arr:string[] = ['left','right','opacity','transform','width','height','rotate']
+    const arr:string[] = ['left','top','opacity','transform','width','height','rotate']
     let res = {}
     arr.forEach(key => {
         //@ts-ignore

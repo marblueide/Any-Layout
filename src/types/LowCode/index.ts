@@ -12,7 +12,7 @@ export type LowCanvasType = {
 export interface LowCanvasData{
   id?:string,
   label:string,
-  component:Component | string,
+  component:() => Component | string,
   icon:string | Component,
   events: {
     [k in string]:(...arg:any) => any

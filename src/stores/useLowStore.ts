@@ -1,6 +1,7 @@
 import type { LowCanvasData, LowCanvasType } from "@/types/LowCode";
 import { defineStore } from "pinia";
 import { reactive, ref, watch } from "vue";
+import {v4 as uuid} from "uuid"
 
 export const useLowStore = defineStore("useLowStore", () => {
   const stack = reactive<LowCanvasType[]>([]);  //历史栈
@@ -18,6 +19,8 @@ export const useLowStore = defineStore("useLowStore", () => {
   );    //获取localStorage中保存的State
   const lowCanvasState = ref<LowCanvasType>(localCanvasState);  //当前的State
   const currentComponent =  ref<LowCanvasData>()
+  const idMapData = new Map<string,LowCanvasData>()
+  const zIndex = ref<number>(0);
 
   stack.push(lowCanvasState.value); //初始化历史栈
 
@@ -51,6 +54,29 @@ export const useLowStore = defineStore("useLowStore", () => {
     lowCanvasState.value = initState
   }
 
+  const addLowCanvasData = (data:LowCanvasData) => {
+    if(!data.id){
+      data.id = uuid()
+    }
+    lowCanvasState.value.data.push(data)
+    idMapData.set(data.id as string,data)
+  }
+
+  const getCanvasDataById = (id:string) => {
+    return idMapData.get(id)
+  }
+
+  const setCurrentComponent = (id:string) => {
+    let current = idMapData.get(id)
+    currentComponent.value = current as LowCanvasData
+  }
+
+  const setCurrentComponentPos = (left:number,top:number) => {
+    //@ts-ignore
+    currentComponent.value.style.left = left;
+    //@ts-ignore
+    currentComponent.value.style.top = top;
+  }
 
   return {
     stack,
@@ -59,6 +85,11 @@ export const useLowStore = defineStore("useLowStore", () => {
     lowStackForward,
     initStack,
     initLowCanvasState,
-    currentComponent
+    currentComponent,
+    addLowCanvasData,
+    getCanvasDataById,
+    zIndex,
+    setCurrentComponent,
+    setCurrentComponentPos
   };
 });

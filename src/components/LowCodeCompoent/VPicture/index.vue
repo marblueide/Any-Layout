@@ -1,5 +1,5 @@
 <template>
-    <el-image v-bind="{...propValue}" loading="lazy"></el-image>
+    <el-image v-bind="{...propValue}" loading="lazy" class="el-image"></el-image>
 </template>
     
 <script setup lang='ts'>
@@ -11,6 +11,9 @@
     }>()
 </script>
     
-<style>
-    
+<style scoped lang="scss">
+    .el-image{
+        width: 100%;
+        height: 100%;
+    }
 </style>
