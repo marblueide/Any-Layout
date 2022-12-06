@@ -1,7 +1,7 @@
 <template>
     <div class="editor" ref="editorRef" :style="editorStyle" @drop="handleDrop" @dragover="handleDragOver">
         <Grid :width="lowCanvasState.width" :height="lowCanvasState.height" />
-        <Shape v-for="item in lowCanvasState.data" :id="item.id!" :style="getShapeStyle(item.style)">
+        <Shape v-for="item in lowCanvasState.data" :id="item.id!" :key="item.id!" :style="getShapeStyle(item.style)">
             <component :is="item.component()" :propValue="item.propValue"></component>
         </Shape>
     </div>
@@ -18,7 +18,7 @@ import Shape from './Shape.vue';
 import {cloneDeep} from "lodash-es"
 
 const store = useLowStore()
-const { lowCanvasState,zIndex } = storeToRefs(store)
+const { lowCanvasState } = storeToRefs(store)
 
 const editorRef = ref()
 let editorRect: DOMRect;
@@ -49,8 +49,6 @@ const handleDrop = (e: DragEvent) => {
     data.style.left = left
     //@ts-ignore
     data.style.top = top
-    data.style.zIndex = zIndex.value
-    zIndex.value++
     store.addLowCanvasData(data)
 }
 

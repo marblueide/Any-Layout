@@ -8,6 +8,8 @@ export {}
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     Component: typeof import('./src/components/LowCodeCompoent/VPicture/component.vue')['default']
+    ComponentLaycer: typeof import('./src/components/componentLaycer.vue')['default']
+    ComponentLayer: typeof import('./src/components/componentLayer.vue')['default']
     ComponentList: typeof import('./src/components/componentList.vue')['default']
     Editor: typeof import('./src/components/editor/index.vue')['default']
     ElAside: typeof import('element-plus/es')['ElAside']

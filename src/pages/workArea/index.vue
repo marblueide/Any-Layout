@@ -4,6 +4,7 @@
     <div class="main" flex flex-1 overflow="auto">
       <div class="left" w-60 bg-white border-r-1 border-gray-2>
         <componentListVue />
+        <componentLayer></componentLayer>
       </div>
       <div class="center" flex-1 p-5 overflow="hidden">
         <el-scrollbar>
@@ -21,6 +22,7 @@
 <script setup lang="ts">
 import Header from '@/components/header.vue';
 import componentListVue from '@/components/componentList.vue';
+import componentLayer from '@/components/componentLayer.vue';
 import Editor from "@/components/editor/index.vue"
 </script>
   

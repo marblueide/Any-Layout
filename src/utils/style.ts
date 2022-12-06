@@ -15,7 +15,7 @@ export const getShapeStyle = (data:StyleValue) => {
     let res = {}
     arr.forEach(key => {
         //@ts-ignore
-        if(data[key]){
+        if(data[key] != undefined){
             if(key == "rotate"){
                 //@ts-ignore
                 res[key] = data[key] + 'deg'
