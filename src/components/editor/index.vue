@@ -50,6 +50,7 @@ const handleDrop = (e: DragEvent) => {
     data.style.left = left
     //@ts-ignore
     data.style.top = top
+    console.log(left,top)
     store.addLowCanvasData(data)
 }
 

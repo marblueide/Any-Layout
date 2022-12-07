@@ -1,13 +1,20 @@
 <template>
-    <div class="shape" :style="style" @mousedown="handleMouseDown" cursor-move>
-        <div class="shape-point" @mousedown.stop="handlePointDown($event,point)" z-1 absolute rounded-10 bg-white
-            cursor-n-resize border="1 blue-6" v-for="point in pointList" :style="getPointStyle(point)"></div>
+    <div class="shape" z-1 :style="style" @mousedown="handleMouseDown" cursor-move>
+        <div class="rataion-point">
+
+        </div>
+        <template v-if="currentComponent?.id == id">
+            <div class="shape-point" @mousedown.stop="handlePointDown($event,point)" z-1 absolute rounded-10 bg-white
+                cursor-n-resize border="1 blue-6" v-for="point in pointList" :style="getPointStyle(point)"></div>
+        </template>
+
         <slot></slot>
     </div>
 </template>
     
 <script setup lang='ts'>
 import { add, transform } from 'lodash-es';
+import { storeToRefs } from 'pinia';
 import type { StyleValue } from 'vue';
 import { useLowStore } from '../../stores/useLowStore';
 
@@ -17,6 +24,7 @@ const props = defineProps<{
     id: string
 }>()
 const store = useLowStore()
+const {currentComponent} = storeToRefs(store)
 const pointList = ['lt', 't', 'rt', 'r', 'rb', 'b', 'lb', 'l']
 const canvasData = store.getCanvasDataById(props.id)
 
@@ -81,9 +89,10 @@ const getPointStyle = (point: string): StyleValue => {
 }
 
 const handlePointDown = (e: MouseEvent, point: string) => {
+    console.log(point)
     e.preventDefault()
     //@ts-ignore
-    const { width, height,left,top } = canvasData?.style
+    const { width, height, left, top } = canvasData?.style
     const startX = e.clientX
     const startY = e.clientY;
 
@@ -97,28 +106,35 @@ const handlePointDown = (e: MouseEvent, point: string) => {
     const move = (e: MouseEvent) => {
         const endX = e.clientX
         const endY = e.clientY
-        let addW = endX - startX,addH = endY - startY;
-        
-        
-        if(point.length == 2){
+        let addW = endX - startX, addH = endY - startY;
+
+        if (point.length == 2) {
             addW = hasL ? -addW : addW
             addH = hasT ? -addH : addH
-        }else{
-            if(hasT || hasB){
+        } else {
+            if (hasT || hasB) {
                 addW = 0
                 addH = hasT ? -addH : addH
             }
-            if(hasL || hasR){
+            if (hasL || hasR) {
                 addW = hasL ? -addW : addW
                 addH = 0
             }
         }
         let l = hasL ? left - addW : left
         let t = hasT ? top - addH : top
-        const w = addW + width
-        const h = addH + height
+        let w = addW + width
+        let h = addH + height
+        if(w < 0){
+            w = Math.abs(w)
+            l = l - w
+        }
+        if(h < 0){
+            h = Math.abs(h)
+            t = t - h
+        }
         store.setCurrentComponentSize(w, h)
-        store.setCurrentComponentPos(l,t)
+        store.setCurrentComponentPos(l, t)
     }
 
     const up = () => {
@@ -130,16 +146,21 @@ const handlePointDown = (e: MouseEvent, point: string) => {
     document.addEventListener("mouseup", up)
 }
 
+const handleRatation = (e:MouseEvent) => {
+
+}
+
 </script>
     
 <style scoped lang="scss">
 .shape {
-    position: relative;
-
+    position: absolute;
+    rotate: 45deg;
     .shape-point {
         height: 8px;
         width: 8px;
         transform: translate(-50%, -50%);
+        
     }
 }
 </style>

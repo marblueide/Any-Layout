@@ -1,5 +1,5 @@
 <template>
-    <el-button>{{propValue.value}}</el-button>
+    <el-button class="btn">{{propValue.value}}</el-button>
 </template>
     
 <script setup lang='ts'>
@@ -10,6 +10,9 @@
     }>()
 </script>
     
-<style>
-    
+<style scoped lang="scss">
+    .btn{
+        width: 100%;
+        height: 100%;
+    }
 </style>

@@ -10,8 +10,8 @@ export const componentList:LowCanvasData[]= [
         events:{},
         isLock:false,
         style:{
-            width:100,
-            height:100,
+            width:60,
+            height:32,
         },
         animations:[],
         icon:"icon-anniu",
