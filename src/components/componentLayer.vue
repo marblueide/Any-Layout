@@ -40,11 +40,11 @@ const handleDelete = (id: string | undefined) => {
 }
 
 const handleUp = (id: string | undefined) => {
-    id && store.downLayerComponentData(id)
+    id && store.upLayerComponentData(id)
 }
 
 const handleDown = (id: string | undefined) => {
-    id && store.upLayerComponentData(id)
+    id && store.downLayerComponentData(id)
 }
 
 </script>

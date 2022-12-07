@@ -37,6 +37,7 @@ const handleDrop = (e: DragEvent) => {
     e.preventDefault()
     e.stopPropagation()
     const data = cloneDeep(componentList[e.dataTransfer?.getData("index") as unknown as number])
+    if(!data) return
     if (!editorRect) editorRect = editorRef.value.getBoundingClientRect()
     //@ts-ignore
     const { width, height } = data.style

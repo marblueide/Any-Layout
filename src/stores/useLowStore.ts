@@ -2,7 +2,7 @@ import type { LowCanvasData, LowCanvasType } from "@/types/LowCode";
 import { defineStore } from "pinia";
 import { reactive, ref, watch } from "vue";
 import { v4 as uuid } from "uuid";
-import {swap} from "@/utils"
+import { swap } from "@/utils";
 
 export const useLowStore = defineStore("useLowStore", () => {
   const stack = reactive<LowCanvasType[]>([]); //历史栈
@@ -20,7 +20,7 @@ export const useLowStore = defineStore("useLowStore", () => {
   ); //获取localStorage中保存的State
   const lowCanvasState = ref<LowCanvasType>(localCanvasState); //当前的State
   const currentComponent = ref<LowCanvasData>();
-  const currentComponentIndex =  ref<number>()
+  const currentComponentIndex = ref<number>();
   const idMapData = new Map<string, LowCanvasData>(); //id对应Data
   const idMapDataIndex = new Map<string, number>(); //id对应Data的Index
 
@@ -77,42 +77,53 @@ export const useLowStore = defineStore("useLowStore", () => {
   };
 
   const setCurrentComponentPos = (left: number, top: number) => {
+    if(!currentComponent.value) return
     //@ts-ignore
     currentComponent.value.style.left = left;
     //@ts-ignore
     currentComponent.value.style.top = top;
   };
 
+  const setCurrentComponentSize = (width:number,height:number) => {
+    if(!currentComponent.value) return
+    //@ts-ignore
+    currentComponent.value.style.width = width;
+    //@ts-ignore
+    currentComponent.value.style.height = height;
+  }
+
   const deleteComponentData = (id: string) => {
     //删除ComponentData
     const index = idMapDataIndex.get(id);
     if (index != undefined) {
-      console.log(index)
+      console.log(index);
       lowCanvasState.value.data.splice(index, 1);
-      const target = idMapData.get(id)
-      if(currentComponent.value == target) currentComponent.value = undefined
+      const target = idMapData.get(id);
+      if (currentComponent.value == target) currentComponent.value = undefined;
       idMapData.delete(id);
       idMapDataIndex.delete(id);
     }
   };
 
-  const upLayerComponentData = (id:string) => {
+  const upLayerComponentData = (id: string) => {
+    //层上移
     const index = idMapDataIndex.get(id);
-    if(index){
-      const [tmp] =  swap(lowCanvasState.value.data,index,index-1)
-      idMapDataIndex.set(id,index - 1)
-      tmp.id && idMapDataIndex.set(tmp.id,index);
+    if (index != undefined && index < lowCanvasState.value.data.length - 1) {
+      const [tmp] = swap(lowCanvasState.value.data, index, index + 1);
+      idMapDataIndex.set(id, index + 1);
+      tmp.id && idMapDataIndex.set(tmp.id, index);
     }
-  }
+  };
 
-  const downLayerComponentData = (id:string) => {
-    const index = idMapDataIndex.get(id)
-    if(index != undefined && index <= lowCanvasState.value.data.length - 1){
-      const [tmp] = swap(lowCanvasState.value.data,index,index+1)
-      idMapDataIndex.set(id,index + 1)
-      tmp.id && idMapDataIndex.set(tmp.id,index)
+  const downLayerComponentData = (id: string) => {
+    //层下降
+    const index = idMapDataIndex.get(id);
+    if (index) {
+      const [tmp] = swap(lowCanvasState.value.data, index, index - 1);
+      idMapDataIndex.set(id, index - 1);
+      tmp.id && idMapDataIndex.set(tmp.id, index);
     }
-  }
+  };
 
   return {
     stack,
@@ -129,6 +140,7 @@ export const useLowStore = defineStore("useLowStore", () => {
     setCurrentComponentPos,
     deleteComponentData,
     upLayerComponentData,
-    downLayerComponentData
+    downLayerComponentData,
+    setCurrentComponentSize
   };
 });
