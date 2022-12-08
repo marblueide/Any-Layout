@@ -91,6 +91,7 @@ export const useLowStore = defineStore("useLowStore", () => {
       const [tmp] = swap(lowCanvasData, index, index + 1);
       idMapDataIndex.set(id, index + 1);
       tmp.id && idMapDataIndex.set(tmp.id, index);
+      recordSnapshot();
     }
   };
 
@@ -101,6 +102,7 @@ export const useLowStore = defineStore("useLowStore", () => {
       const [tmp] = swap(lowCanvasData, index, index - 1);
       idMapDataIndex.set(id, index - 1);
       tmp.id && idMapDataIndex.set(tmp.id, index);
+      recordSnapshot();
     }
   };
 
