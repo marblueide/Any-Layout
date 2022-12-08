@@ -1,18 +1,8 @@
 import { useLowStore } from '../stores/useLowStore';
 <template>
-  <div
-    class="editor-header"
-    box-border
-    h-20
-    border="b-1 gray-2"
-    items-center
-    p-4
-    flex
-  >
+  <div class="editor-header" box-border h-20 border="b-1 gray-2" items-center p-4 flex>
     <el-button m-x-1>JSON</el-button>
-    <el-button m-x-1 @click="handleBack" :disabled="stackIndex != 0"
-      >撤销</el-button
-    >
+    <el-button m-x-1 @click="handleBack" :disabled="stackIndex == 0">撤销</el-button>
     <el-button m-x-1 @click="reset">重做</el-button>
     <el-button m-x-1>插入图片</el-button>
     <el-button m-x-1>预览</el-button>
@@ -45,4 +35,6 @@ const save = () => {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+
+</style>

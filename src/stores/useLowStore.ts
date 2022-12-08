@@ -7,7 +7,7 @@ import { merge, cloneDeep } from "lodash-es";
 
 export const useLowStore = defineStore("useLowStore", () => {
   const stack = reactive<LowCanvasData[][]>([]); //历史栈
-  const index = ref<number>(-1); //当前的State在历史栈中的位置
+  const index = ref<number>(0); //当前的State在历史栈中的位置
   const initState = {
     width: 1200,
     height: 720,
@@ -24,17 +24,18 @@ export const useLowStore = defineStore("useLowStore", () => {
   const currentComponentIndex = ref<number>();
   const idMapData = new Map<string, LowCanvasData>(); //id对应Data
   const idMapDataIndex = new Map<string, number>(); //id对应Data的Index
+  stack.push([]);
 
   const initStack = () => {
     //初始化Stack
     if (stack.length == 0) return;
-    stack.splice(0, stack.length);
+    stack.splice(0, stack.length, []);
     initLowCanvasState();
   };
 
   const initLowCanvasState = () => {
     //初始化LowCanvasState
-    lowCanvasState.value = initState;
+    lowCanvasState.value = cloneDeep(initState);
   };
 
   const addLowCanvasData = (data: LowCanvasData) => {
@@ -118,6 +119,9 @@ export const useLowStore = defineStore("useLowStore", () => {
     //添加快照
     stack[++index.value] =
       state != undefined ? cloneDeep(state) : cloneDeep(lowCanvasData);
+    if (index.value < stack.length - 1) {
+      stack.splice(index.value + 1, stack.length);
+    }
   };
 
   const backSnapshot = () => {
