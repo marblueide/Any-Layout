@@ -54,17 +54,29 @@ export const useLowStore = defineStore("useLowStore", () => {
     return lowCanvasData[index as number];
   };
 
-  const setCurrentComponent = (id: string) => {
+  const setCurrentComponent = (id?: string) => {
+    if (id == undefined) {
+      currentComponentIndex.value = undefined;
+      currentComponent.value = undefined;
+      return;
+    }
     //设置当前活动的组件
     let index = idMapDataIndex.get(id);
     currentComponentIndex.value = index;
-    index != undefined && (currentComponent.value = lowCanvasData[index]);
+    currentComponent.value =
+      index == undefined ? undefined : lowCanvasData[index];
   };
 
   const setCurrentComponentStyle = (style: StyleValue) => {
     //设置当前活动组建的style
     if (!currentComponent.value) return;
     currentComponent.value.style = merge(currentComponent.value.style, style);
+  };
+
+  const setComponentStyle = (id: string, style: StyleValue) => {
+    const index = idMapDataIndex.get(id);
+    index != undefined &&
+      (lowCanvasData[index].style = merge(lowCanvasData[index].style, style));
   };
 
   const deleteComponentData = (id: string) => {
@@ -175,6 +187,7 @@ export const useLowStore = defineStore("useLowStore", () => {
     addLowCanvasData,
     getCanvasDataById,
     setCurrentComponent,
+    setComponentStyle,
     deleteComponentData,
     upLayerComponentData,
     downLayerComponentData,

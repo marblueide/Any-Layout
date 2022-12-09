@@ -18,9 +18,11 @@ export interface LowCanvasData {
   };
   isLock: boolean;
   style: StyleValue;
-  propValue: {
-    [k in string]: any;
-  };
+  propValue:
+    | {
+        [k in string]: any;
+      }
+    | LowCanvasData[];
   animations: DataAnimation[];
   linkage: DataLinkage[];
 }

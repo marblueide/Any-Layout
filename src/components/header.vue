@@ -8,6 +8,8 @@
     <el-button m-x-1 @click="save">保存</el-button>
     <el-button m-x-1 @click="clearCanvas">清空画布</el-button>
     <el-button m-x-1 @click="init">初始化</el-button>
+    <el-button m-x-1>组合</el-button>
+    <el-button m-x-1>拆分</el-button>
   </div>
 </template>
 

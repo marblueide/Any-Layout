@@ -1,25 +1,10 @@
 <template>
-  <div
-    class="shape"
-    z-1
-    :style="style"
-    @mousedown="handleMouseDown"
-    cursor-move
-  >
+  <div class="shape" z-1 :style="style" @mousedown.stop.prevent="handleMouseDown"
+    :class="(currentComponent?.id == id) ? 'cursor-move outline-blue-3 outline-1  outline-solid' : ''">
     <div class="rataion-point"></div>
     <template v-if="currentComponent?.id == id">
-      <div
-        class="shape-point"
-        @mousedown.stop="handlePointDown($event, point)"
-        z-1
-        absolute
-        rounded-10
-        bg-white
-        cursor-n-resize
-        border="1 blue-6"
-        v-for="point in pointList"
-        :style="getPointStyle(point)"
-      ></div>
+      <div class="shape-point" @mousedown.stop.prevent="handlePointDown($event, point)" z-1 absolute rounded-10 bg-white
+        cursor-n-resize border="1 blue-6" v-for="point in pointList" :style="getPointStyle(point)"></div>
     </template>
 
     <slot></slot>
@@ -40,12 +25,9 @@ const { currentComponent } = storeToRefs(store);
 const pointList = ["lt", "t", "rt", "r", "rb", "b", "lb", "l"];
 
 const handleMouseDown = (e: MouseEvent) => {
-  e.preventDefault();
-  e.stopPropagation();
   store.setCurrentComponent(props.id);
   //@ts-ignore
   const { left, top } = currentComponent.value.style;
-  console.log(left, top);
   const startX = e.clientX;
   const startY = e.clientY;
 
@@ -106,7 +88,6 @@ const getPointStyle = (point: string): StyleValue => {
 };
 
 const handlePointDown = (e: MouseEvent, point: string) => {
-  e.preventDefault();
   store.setCurrentComponent(props.id);
   //@ts-ignore
   const { width, height, left, top } = currentComponent.value!.style;
@@ -167,7 +148,7 @@ const handlePointDown = (e: MouseEvent, point: string) => {
   document.addEventListener("mouseup", up);
 };
 
-const handleRatation = (e: MouseEvent) => {};
+const handleRatation = (e: MouseEvent) => { };
 </script>
 
 <style scoped lang="scss">
