@@ -12,6 +12,7 @@ export const componentList: LowCanvasData[] = [
     style: {
       width: 60,
       height: 32,
+      rotate: 0,
     },
     animations: [],
     icon: "icon-anniu",
@@ -28,6 +29,7 @@ export const componentList: LowCanvasData[] = [
     style: {
       width: 300,
       height: 200,
+      rotate: 0,
     },
     icon: "icon-tupian",
     animations: [],

@@ -43,3 +43,5 @@ export interface DataLinkage {
     value: number | string;
   };
 }
+
+export type pointType = "lt" | "t" | "rt" | "r" | "rb" | "b" | "lb" | "l";
