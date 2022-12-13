@@ -97,10 +97,11 @@ const hideLine = () => {
 };
 
 const showLine = (isDown: boolean, isLeft: boolean) => {
-  //@ts-ignore
   const currentStyle = getComponentRotatedStyle(
+    //@ts-ignore
     cloneDeep(currentComponent.value?.style)
   );
+
   //@ts-ignore
   const {
     left: curLeft,
@@ -123,6 +124,7 @@ const showLine = (isDown: boolean, isLeft: boolean) => {
 
     //@ts-ignore
     const { left, top, width, height } = getComponentRotatedStyle(
+      //@ts-ignore
       cloneDeep(data.style)
     );
     const conditions: {

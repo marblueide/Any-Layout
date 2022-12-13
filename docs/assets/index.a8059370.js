@@ -5621,7 +5621,7 @@ function lf() {
 }
 const cf = "modulepreload",
   uf = function (e) {
-    return "/" + e;
+    return "/Any-Layout/" + e;
   },
   Vr = {},
   ff = function (t, n, s) {
@@ -5664,14 +5664,14 @@ const cf = "modulepreload",
   }),
   df = () =>
     ff(
-      () => import("./index.8f663b33.js"),
-      ["assets/index.8f663b33.js", "assets/index.45dfeec9.css"]
+      () => import("./index.203ad9ca.js"),
+      ["assets/index.203ad9ca.js", "assets/index.e214c9db.css"]
     ),
   hf = [
     { name: "workArea", path: "/workarea", component: df, props: !0 },
     { name: "index", path: "/", component: af, props: !0 },
   ],
-  pf = rf({ history: vu("/"), routes: hf }),
+  pf = rf({ history: vu("/Any-Layout"), routes: hf }),
   gf = In({
     __name: "index",
     props: { data: null },

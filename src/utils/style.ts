@@ -1,5 +1,5 @@
 import { cloneDeep } from "lodash-es";
-import type { StyleValue } from "vue";
+import type { CSSProperties, StyleValue } from "vue";
 import type { LowCanvasType, LowCanvasData } from "../types/LowCode/index";
 import { angleToRadian } from "./calculateComponentPositonAndSize";
 export const canvasTypeToStyle = (obj: LowCanvasType): StyleValue => {

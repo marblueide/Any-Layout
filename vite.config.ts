@@ -10,6 +10,7 @@ import { ElementPlusResolver } from "unplugin-vue-components/resolvers";
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: "/Any-Layout",
   build: {
     outDir: resolve(__dirname, "./docs"),
   },

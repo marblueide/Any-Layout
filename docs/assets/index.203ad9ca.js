@@ -55,7 +55,7 @@ import {
   $ as Qn,
   a0 as er,
   a1 as lo,
-} from "./index.8ceb05a1.js";
+} from "./index.a8059370.js";
 var co =
   typeof global == "object" && global && global.Object === Object && global;
 const tr = co;
@@ -4775,7 +4775,8 @@ const Pf = de(Af, [["__scopeId", "data-v-69ff7b77"]]),
       animations: [],
       linkage: [],
       propValue: {
-        src: new URL("/assets/default.e3262314.webp", self.location).href,
+        src: new URL("/Any-Layout/assets/default.e3262314.webp", self.location)
+          .href,
         fit: "cover",
       },
     },
@@ -5116,7 +5117,7 @@ const mt = Xf(),
       );
     },
   });
-const qf = de(Kf, [["__scopeId", "data-v-8e4afdc4"]]),
+const qf = de(Kf, [["__scopeId", "data-v-32e49a8e"]]),
   Jf = U({
     __name: "Area",
     props: {
@@ -5151,7 +5152,7 @@ const qf = de(Kf, [["__scopeId", "data-v-8e4afdc4"]]),
     },
   });
 const Zf = de(Jf, [["__scopeId", "data-v-9248070d"]]),
-  Qf = (e) => (Qn("data-v-257a1eea"), (e = e()), er(), e),
+  Qf = (e) => (Qn("data-v-18b2d862"), (e = e()), er(), e),
   eh = ["onMousedown"],
   th = ["onMousedown"],
   nh = Qf(() =>
@@ -5338,7 +5339,7 @@ const Zf = de(Jf, [["__scopeId", "data-v-9248070d"]]),
       };
     },
   });
-const sh = de(ah, [["__scopeId", "data-v-257a1eea"]]),
+const sh = de(ah, [["__scopeId", "data-v-18b2d862"]]),
   ih = ["width", "height"],
   lh = lo(
     '<defs data-v-cbed8443><pattern id="smallGrid" width="7.236328125" height="7.236328125" patternUnits="userSpaceOnUse" data-v-cbed8443><path d="M 7.236328125 0 L 0 0 0 7.236328125" fill="none" stroke="rgba(207, 207, 207, 0.3)" stroke-width="1" data-v-cbed8443></path></pattern><pattern id="grid" width="36.181640625" height="36.181640625" patternUnits="userSpaceOnUse" data-v-cbed8443><rect width="36.181640625" height="36.181640625" fill="url(#smallGrid)" data-v-cbed8443></rect><path d="M 36.181640625 0 L 0 0 0 36.181640625" fill="none" stroke="rgba(186, 186, 186, 0.5)" stroke-width="1" data-v-cbed8443></path></pattern></defs>',
