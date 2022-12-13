@@ -6,14 +6,17 @@ import { resolve } from "path";
 import AutoImport from "unplugin-auto-import/vite";
 import Components from "unplugin-vue-components/vite";
 import Pages from "vite-plugin-pages";
-import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
+import { ElementPlusResolver } from "unplugin-vue-components/resolvers";
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  build: {
+    outDir: resolve(__dirname, "./docs"),
+  },
   plugins: [
     vue(),
     Pages({
-      exclude: ['**/components/*.vue'],
+      exclude: ["**/components/*.vue"],
     }),
     AutoImport({
       imports: ["vue", "vue-router", "pinia"],
@@ -21,7 +24,7 @@ export default defineConfig({
         enabled: true,
       },
       dts: true,
-      resolvers:[ElementPlusResolver()]
+      resolvers: [ElementPlusResolver()],
     }),
     Components({
       dts: true,
@@ -31,7 +34,7 @@ export default defineConfig({
           names: ["RouterView", "RouterLink"],
         },
       ],
-      resolvers:[ElementPlusResolver()]
+      resolvers: [ElementPlusResolver()],
     }),
     Unocss({
       configFile: resolve(__dirname, "uno.config.ts"),
@@ -40,7 +43,7 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),
-      "@assets":fileURLToPath(new URL("./src/assets", import.meta.url)),
+      "@assets": fileURLToPath(new URL("./src/assets", import.meta.url)),
     },
   },
 });

@@ -5,6 +5,7 @@ import { v4 as uuid } from "uuid";
 import { swap } from "@/utils";
 import { merge, cloneDeep } from "lodash-es";
 
+//@ts-ignore
 export const useLowStore = defineStore("useLowStore", () => {
   const stack = reactive<LowCanvasData[][]>([]); //历史栈
   const index = ref<number>(0); //当前的State在历史栈中的位置
@@ -142,6 +143,7 @@ export const useLowStore = defineStore("useLowStore", () => {
     //后退
     if (stack.length < 0) return;
     index.value--;
+    //@ts-ignore
     setLowCanvasData(cloneDeep(stack[index.value]) ?? []);
   };
 
@@ -149,6 +151,7 @@ export const useLowStore = defineStore("useLowStore", () => {
     //前进
     if (index.value >= stack.length - 1) return;
     index.value++;
+    //@ts-ignore
     setLowCanvasData(cloneDeep(stack[index.value]) ?? []);
   };
 

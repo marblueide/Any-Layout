@@ -1,13 +1,37 @@
 <template>
-  <div class="shape" ref="shapeRef" z-1 :style="style" @mousedown.stop.prevent="handleMouseDown"
-    :class="(currentComponent?.id == id) ? 'cursor-move outline-blue-3 outline-1  outline-solid' : ''">
-    <div class="rataion-point" absolute @mousedown.stop.prevent="handleRatation" v-show="currentComponent?.id == id">
+  <div
+    class="shape"
+    ref="shapeRef"
+    z-1
+    :style="style"
+    @mousedown.stop.prevent="handleMouseDown"
+    :class="
+      currentComponent?.id == id
+        ? 'cursor-move outline-blue-3 outline-1  outline-solid'
+        : ''
+    "
+  >
+    <div
+      class="rataion-point"
+      absolute
+      @mousedown.stop.prevent="handleRatation"
+      v-show="currentComponent?.id == id"
+    >
       <i class="iconfont icon-xuanzhuan" color-blue-3 cursor-grab></i>
     </div>
     <template v-if="currentComponent?.id == id">
-      <div class="shape-point" @mousedown.stop.prevent="handlePointDown($event, point)" z-1 absolute rounded-10 bg-white
-        cursor-n-resize border="1 blue-6" v-for="point in pointList" :style="getPointStyle(point)">
-      </div>
+      <div
+        class="shape-point"
+        @mousedown.stop.prevent="handlePointDown($event, point)"
+        z-1
+        absolute
+        rounded-10
+        bg-white
+        cursor-n-resize
+        border="1 blue-6"
+        v-for="point in pointList"
+        :style="getPointStyle(point)"
+      ></div>
     </template>
     <slot></slot>
   </div>
@@ -17,9 +41,10 @@
 import { storeToRefs } from "pinia";
 import { nextTick, ref, type StyleValue } from "vue";
 import { useLowStore } from "../../stores/useLowStore";
-import { } from "@/utils"
-import { calculateComponentPositonAndSize } from '../../utils/calculateComponentPositonAndSize';
+import {} from "@/utils";
+import { calculateComponentPositonAndSize } from "../../utils/calculateComponentPositonAndSize";
 import emitter from "@/utils/mitt";
+import type { pointType } from "@/types";
 
 const props = defineProps<{
   style: StyleValue;
@@ -27,8 +52,8 @@ const props = defineProps<{
 }>();
 const store = useLowStore();
 const { currentComponent } = storeToRefs(store);
-const pointList = ["lt", "t", "rt", "r", "rb", "b", "lb", "l"];
-const shapeRef = ref()
+const pointList: pointType[] = ["lt", "t", "rt", "r", "rb", "b", "lb", "l"];
+const shapeRef = ref();
 
 const handleMouseDown = (e: MouseEvent) => {
   store.setCurrentComponent(props.id);
@@ -37,9 +62,9 @@ const handleMouseDown = (e: MouseEvent) => {
   const startX = e.clientX;
   const startY = e.clientY;
 
-  let isMove = false
+  let isMove = false;
   const move = async (e: MouseEvent) => {
-    isMove = true
+    isMove = true;
     const endX = e.clientX;
     const endY = e.clientY;
     const curX = endX - startX + left;
@@ -49,10 +74,10 @@ const handleMouseDown = (e: MouseEvent) => {
       top: curY,
     });
     // await nextTick()
-    emitter.emit('move', {
+    emitter.emit("move", {
       isDown: startY - endY > 0,
-      isLeft: startX - endX < 0
-    })
+      isLeft: startX - endX < 0,
+    });
   };
 
   const up = () => {
@@ -60,14 +85,14 @@ const handleMouseDown = (e: MouseEvent) => {
     document.removeEventListener("mousemove", move);
     document.removeEventListener("mouseup", up);
     isMove && store.recordSnapshot();
-    emitter.emit('unMove')
+    emitter.emit("unMove");
   };
 
   document.addEventListener("mousemove", move);
   document.addEventListener("mouseup", up);
 };
 
-const getPointStyle = (point: string): StyleValue => {
+const getPointStyle = (point: pointType): StyleValue => {
   const canvasData = store.getCanvasDataById(props.id);
   let hasT = point.includes("t");
   let hasB = point.includes("b");
@@ -101,56 +126,52 @@ const getPointStyle = (point: string): StyleValue => {
   };
 };
 
-const handlePointDown = (e: MouseEvent, point: string) => {
+const handlePointDown = (e: MouseEvent, point: pointType) => {
   store.setCurrentComponent(props.id);
   //@ts-ignore
   const { width, height, left, top, rotate } = currentComponent.value!.style;
-  const editorRectInfo = document.querySelector('#editor')!.getBoundingClientRect()
+  const editorRectInfo = document
+    .querySelector("#editor")!
+    .getBoundingClientRect();
   // 当前点击坐标
   const curPoint = {
     x: e.clientX - editorRectInfo.left,
     y: e.clientY - editorRectInfo.top,
-  }
+  };
 
   //组件中心点
   const centerPoint = {
     x: left + width / 2,
-    y: top + height / 2
-  }
+    y: top + height / 2,
+  };
 
   //对称点
   const symmetricPoint = {
     x: centerPoint.x - (curPoint.x - centerPoint.x),
-    y: centerPoint.y - (curPoint.y - centerPoint.y)
-  }
+    y: centerPoint.y - (curPoint.y - centerPoint.y),
+  };
 
   const style = {
     width,
     height,
     top,
     left,
-    rotate
-  }
+    rotate,
+  };
 
   const move = (e: MouseEvent) => {
     const curPosition = {
       x: e.clientX - editorRectInfo.left,
-      y: e.clientY - editorRectInfo.top
-    }
+      y: e.clientY - editorRectInfo.top,
+    };
 
     calculateComponentPositonAndSize(point, style, curPosition, 0, {
       curPoint,
       symmetricPoint,
       center: centerPoint,
-      orginPoint: {
-        left,
-        top,
-        width,
-        height
-      }
-    })
+    });
 
-    store.setCurrentComponentStyle(style)
+    store.setCurrentComponentStyle(style);
   };
 
   const up = () => {
@@ -164,33 +185,35 @@ const handlePointDown = (e: MouseEvent, point: string) => {
 };
 
 const handleRatation = (e: MouseEvent) => {
-  const startX = e.clientX
-  const startY = e.clientY
+  const startX = e.clientX;
+  const startY = e.clientY;
   //@ts-ignore
-  const { rotate } = currentComponent.value?.style
-  const rect = shapeRef.value.getBoundingClientRect()
-  const centerX = rect.left + rect.width / 2
-  const centerY = rect.top + rect.height / 2
+  const { rotate } = currentComponent.value?.style;
+  const rect = shapeRef.value.getBoundingClientRect();
+  const centerX = rect.left + rect.width / 2;
+  const centerY = rect.top + rect.height / 2;
 
-  const rotateDegreeBefore = Math.atan2(startY - centerY, startX - centerX) / (Math.PI / 180)
+  const rotateDegreeBefore =
+    Math.atan2(startY - centerY, startX - centerX) / (Math.PI / 180);
 
   const move = (e: MouseEvent) => {
-    const curX = e.clientX
-    const curY = e.clientY
-    const rotateDegreeAfter = Math.atan2(curY - centerY, curX - centerX) / (Math.PI / 180)
+    const curX = e.clientX;
+    const curY = e.clientY;
+    const rotateDegreeAfter =
+      Math.atan2(curY - centerY, curX - centerX) / (Math.PI / 180);
     //@ts-ignore
     store.setCurrentComponentStyle({
-      rotate: rotate + rotateDegreeAfter - rotateDegreeBefore
-    })
-  }
+      rotate: rotate + rotateDegreeAfter - rotateDegreeBefore,
+    });
+  };
 
   const up = () => {
-    document.removeEventListener('mousemove', move)
-    document.removeEventListener('mouseup', up)
-  }
+    document.removeEventListener("mousemove", move);
+    document.removeEventListener("mouseup", up);
+  };
 
-  document.addEventListener('mousemove', move)
-  document.addEventListener("mouseup", up)
+  document.addEventListener("mousemove", move);
+  document.addEventListener("mouseup", up);
 };
 </script>
 
