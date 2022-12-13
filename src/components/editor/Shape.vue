@@ -15,10 +15,11 @@
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { ref, type StyleValue } from "vue";
+import { nextTick, ref, type StyleValue } from "vue";
 import { useLowStore } from "../../stores/useLowStore";
 import { } from "@/utils"
 import { calculateComponentPositonAndSize } from '../../utils/calculateComponentPositonAndSize';
+import emitter from "@/utils/mitt";
 
 const props = defineProps<{
   style: StyleValue;
@@ -36,7 +37,9 @@ const handleMouseDown = (e: MouseEvent) => {
   const startX = e.clientX;
   const startY = e.clientY;
 
-  const move = (e: MouseEvent) => {
+  let isMove = false
+  const move = async (e: MouseEvent) => {
+    isMove = true
     const endX = e.clientX;
     const endY = e.clientY;
     const curX = endX - startX + left;
@@ -45,13 +48,19 @@ const handleMouseDown = (e: MouseEvent) => {
       left: curX,
       top: curY,
     });
+    // await nextTick()
+    emitter.emit('move', {
+      isDown: startY - endY > 0,
+      isLeft: startX - endX < 0
+    })
   };
 
   const up = () => {
     //@ts-ignore
     document.removeEventListener("mousemove", move);
     document.removeEventListener("mouseup", up);
-    store.recordSnapshot();
+    isMove && store.recordSnapshot();
+    emitter.emit('unMove')
   };
 
   document.addEventListener("mousemove", move);
@@ -170,7 +179,9 @@ const handleRatation = (e: MouseEvent) => {
     const curY = e.clientY
     const rotateDegreeAfter = Math.atan2(curY - centerY, curX - centerX) / (Math.PI / 180)
     //@ts-ignore
-    currentComponent.value.style.rotate = rotate + rotateDegreeAfter - rotateDegreeBefore;
+    store.setCurrentComponentStyle({
+      rotate: rotate + rotateDegreeAfter - rotateDegreeBefore
+    })
   }
 
   const up = () => {

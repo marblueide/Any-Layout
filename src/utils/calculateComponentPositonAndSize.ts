@@ -24,7 +24,7 @@ const calculateRotatedPointCoordinate = (
   };
 };
 
-const angleToRadian = (angel: number) => {
+export const angleToRadian = (angel: number) => {
   return (Math.PI / 180) * angel;
 };
 
