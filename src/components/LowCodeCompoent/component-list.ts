@@ -5,31 +5,19 @@ import VPicture from "./VPicture/index.vue";
 import Border from "./Attrs/Border.vue";
 import Shadow from "./Attrs/Shadow.vue";
 import Arrangement from "./Attrs/Arrangement.vue";
-import TextAlign from "./Attrs/TextAlign.vue";
+import TextVerticalAlign from "./Attrs/TextVerticalAlign.vue";
+import TextHorizontalAlign from "./Attrs/TextHorizontalAlign.vue";
+import TextValue from "./Attrs/TextValue.vue";
+import Background from "./Attrs/Background.vue";
 
-export const baseAttr: {
-  [k in string]: AttrComponent;
-} = {
-  border: {
-    name: "border",
-    title: "边框",
-    component: () => markRaw(Border),
-  },
-  shadow: {
-    name: "shadow",
-    title: "阴影",
-    component: () => markRaw(Shadow),
-  },
-  arrangement: {
-    name: "arrangement",
-    title: "排列方式",
-    component: () => markRaw(Arrangement),
-  },
-  textAlign: {
-    name: "textAlign",
-    title: "文字对齐",
-    component: () => markRaw(TextAlign),
-  },
+export const baseAttr: AttrComponent = {
+  border: () => markRaw(Border),
+  shadow: () => markRaw(Shadow),
+  arrangement: () => markRaw(Arrangement),
+  textVerticalAlign: () => markRaw(TextVerticalAlign),
+  textHorizontalAlign: () => markRaw(TextHorizontalAlign),
+  textValue: () => markRaw(TextValue),
+  background: () => markRaw(Background),
 };
 
 export const componentList: LowCanvasData[] = [
@@ -39,13 +27,43 @@ export const componentList: LowCanvasData[] = [
     attr: [
       {
         name: "内容",
-        data: ["textAlign"],
-        active: ["textAlign"],
+        data: [
+          {
+            name: "props",
+            title: "属性",
+            components: [baseAttr.textValue],
+          },
+        ],
+        active: ["props"],
       },
       {
         name: "样式",
-        data: ["border", "shadow"],
-        active: ["border", "shadow"],
+        data: [
+          {
+            name: "textAlign",
+            title: "文字对齐",
+            components: [
+              baseAttr.textVerticalAlign,
+              baseAttr.textHorizontalAlign,
+            ],
+          },
+          {
+            name: "background",
+            title: "颜色",
+            components: [baseAttr.background],
+          },
+          {
+            name: "shadow",
+            title: "阴影",
+            components: [baseAttr.shadow],
+          },
+          {
+            name: "border",
+            title: "边框设置",
+            components: [baseAttr.border],
+          },
+        ],
+        active: ["textAlign", "background", "shadow", "border"],
       },
     ],
     events: {},
@@ -59,6 +77,7 @@ export const componentList: LowCanvasData[] = [
       boxShadow: "none",
       justifyContent: "center",
       alignItems: "center",
+      background: "#fff",
     },
     animations: [],
     icon: "icon-anniu",
@@ -78,8 +97,8 @@ export const componentList: LowCanvasData[] = [
       },
       {
         name: "样式",
-        data: ["border"],
-        active: ["border"],
+        data: [],
+        active: [],
       },
     ],
     events: {},

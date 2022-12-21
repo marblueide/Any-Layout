@@ -28,16 +28,21 @@ export interface LowCanvasData {
   linkage: DataLinkage[];
 }
 
-export interface Attr {
+export type AttrComponent = {
+  [k in string]: () => Component | string;
+};
+
+export type Attr = {
   name: string;
-  data: string[];
+  data: AttrData[];
   active: string[];
-}
-export interface AttrComponent {
+};
+
+export type AttrData<T = AttrComponent> = {
   name: string;
   title: string;
-  component: () => Component | string;
-}
+  components: T[keyof T][];
+};
 
 export interface DataAnimation {
   label: string;

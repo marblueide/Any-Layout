@@ -10,6 +10,7 @@ const noneFix = [
   "justifyContent",
   "alignItems",
   "alignItems",
+  "background",
 ];
 const shapeStyle = [
   "left",

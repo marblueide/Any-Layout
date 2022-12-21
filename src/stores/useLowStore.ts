@@ -80,14 +80,13 @@ export const useLowStore = defineStore("useLowStore", () => {
     return lowCanvasData[index as number];
   };
 
-  //设置属性的操作
   const setCurrentComponent = (id?: string) => {
+    //设置当前活动的组件
     if (id == undefined) {
       currentComponentIndex.value = undefined;
       currentComponent.value = undefined;
       return;
     }
-    //设置当前活动的组件
     let index = idMapDataIndex.get(id);
     currentComponentIndex.value = index;
     currentComponent.value =
@@ -98,6 +97,14 @@ export const useLowStore = defineStore("useLowStore", () => {
     //设置当前活动组建的style
     if (!currentComponent.value) return;
     currentComponent.value.style = merge(currentComponent.value.style, style);
+  };
+
+  const setCurrentProps = (obj: any) => {
+    if (!currentComponent.value) return;
+    currentComponent.value.propValue = merge(
+      currentComponent.value.propValue,
+      obj
+    );
   };
 
   const setComponentStyle = (id: string, style: StyleValue) => {
@@ -200,6 +207,7 @@ export const useLowStore = defineStore("useLowStore", () => {
     getCanvasDataById,
     setCurrentComponent,
     setComponentStyle,
+    setCurrentProps,
     deleteComponentData,
     upLayerComponentData,
     downLayerComponentData,
