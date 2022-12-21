@@ -2,6 +2,25 @@ import { cloneDeep } from "lodash-es";
 import type { CSSProperties, StyleValue } from "vue";
 import type { LowCanvasType, LowCanvasData } from "../types/LowCode/index";
 import { angleToRadian } from "./calculateComponentPositonAndSize";
+
+const degFix = ["rotate"];
+const noneFix = [
+  "opacity",
+  "boxShadow",
+  "justifyContent",
+  "alignItems",
+  "alignItems",
+];
+const shapeStyle = [
+  "left",
+  "top",
+  "opacity",
+  "transform",
+  "width",
+  "height",
+  "rotate",
+];
+
 export const canvasTypeToStyle = (obj: LowCanvasType): StyleValue => {
   return {
     width: obj.width + "px",
@@ -13,17 +32,8 @@ export const canvasTypeToStyle = (obj: LowCanvasType): StyleValue => {
 };
 
 export const getShapeStyle = (data: StyleValue) => {
-  const arr: string[] = [
-    "left",
-    "top",
-    "opacity",
-    "transform",
-    "width",
-    "height",
-    "rotate",
-  ];
   let res = {};
-  arr.forEach((key) => {
+  shapeStyle.forEach((key) => {
     //@ts-ignore
     if (data[key] != undefined) {
       if (key == "rotate") {
@@ -41,6 +51,7 @@ export const getShapeStyle = (data: StyleValue) => {
   return res;
 };
 
+//@ts-nocheck
 export const getComponentRotatedStyle = (style: StyleValue) => {
   style = cloneDeep(style);
   //@ts-ignore
@@ -81,4 +92,22 @@ export const getComponentRotatedStyle = (style: StyleValue) => {
   }
 
   return style;
+};
+
+export const getOriginStyle = (data: StyleValue) => {
+  const res: {
+    [k in string]: any;
+  } = {};
+  Object.keys(data).forEach((k: any) => {
+    if (shapeStyle.includes(k)) return;
+    if (noneFix.includes(k)) {
+      res[k] = data[k as keyof StyleValue];
+    } else if (degFix.includes(k)) {
+      res[k] = data[k as keyof StyleValue] + "deg";
+    } else {
+      res[k] = data[k as keyof StyleValue] + "px";
+    }
+  });
+
+  return res;
 };

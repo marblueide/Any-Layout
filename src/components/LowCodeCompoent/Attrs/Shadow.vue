@@ -1,0 +1,58 @@
+<template>
+  <div class="shadows">
+    <el-form label-position="top">
+      <el-form-item label="应用阴影">
+        <div class="wrapper" grid>
+          <el-tooltip
+            placement="top"
+            :content="item.title"
+            v-for="item in defaultShadow"
+          >
+            <div
+              border="1 solid"
+              w-8
+              h-8
+              flex
+              justify-center
+              items-center
+              cursor-pointer
+              :class="boxShadow == item.value ? 'border-black' : 'border-gray'"
+              @click="handleChange('boxShadow', item.value)"
+            >
+              <div
+                border-gray-7
+                w-4
+                h-4
+                :style="{ boxShadow: item.value }"
+              ></div>
+            </div>
+          </el-tooltip>
+        </div>
+      </el-form-item>
+    </el-form>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { defaultShadow } from "./attr.type";
+import { useLowStore } from "../../../stores/useLowStore";
+import { storeToRefs } from "pinia";
+import { toRefs, type StyleValue } from "vue";
+const store = useLowStore();
+const { currentComponent } = storeToRefs(store);
+//@ts-ignore
+const { boxShadow } = toRefs(currentComponent.value?.style);
+
+const handleChange = (key: string, value: any) => {
+  store.setCurrentComponentStyle({
+    [key]: value,
+  });
+};
+</script>
+
+<style scoped lang="scss">
+.wrapper {
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  grid-column-gap: 0.5rem;
+}
+</style>

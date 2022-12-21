@@ -13,26 +13,30 @@
           </div>
         </el-scrollbar>
       </div>
-      <div class="right" w-65 bg-white border-l-1 border-gray-2></div>
+      <div class="right" w-65 bg-white border-l-1 border-gray-2>
+        <Attr v-if="currentComponent" />
+        <default-attr v-else></default-attr>
+      </div>
     </div>
-
   </div>
 </template>
-  
+
 <script setup lang="ts">
-import Header from '@/components/header.vue';
-import componentListVue from '@/components/componentList.vue';
-import componentLayer from '@/components/componentLayer.vue';
-import Editor from "@/components/editor/index.vue"
+import Header from "@/components/header.vue";
+import componentListVue from "@/components/componentList.vue";
+import componentLayer from "@/components/componentLayer.vue";
+import Editor from "@/components/editor/index.vue";
+import Attr from "@/components/editor/Attr.vue";
+import { useLowStore } from "../../stores/useLowStore";
+import { storeToRefs } from "pinia";
+
+const store = useLowStore();
+const { currentComponent } = storeToRefs(store);
 </script>
-  
+
 <style scoped lang="scss">
 .editor {
   height: 100%;
-
-  .header {
-    width: 100%;
-  }
 
   .main {
     width: 100%;
@@ -45,10 +49,9 @@ import Editor from "@/components/editor/index.vue"
         height: 100%;
       }
     }
+
+    .right {
+    }
   }
-
-
-
 }
 </style>
-  

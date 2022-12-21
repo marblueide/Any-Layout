@@ -12,6 +12,7 @@ export interface LowCanvasData {
   id?: string;
   label: string;
   component: () => Component | string;
+  attr: Attr[];
   icon: string | Component;
   events: {
     [k in string]: (...arg: any) => any;
@@ -25,6 +26,17 @@ export interface LowCanvasData {
     | LowCanvasData[];
   animations: DataAnimation[];
   linkage: DataLinkage[];
+}
+
+export interface Attr {
+  name: string;
+  data: string[];
+  active: string[];
+}
+export interface AttrComponent {
+  name: string;
+  title: string;
+  component: () => Component | string;
 }
 
 export interface DataAnimation {

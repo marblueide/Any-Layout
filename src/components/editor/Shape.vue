@@ -203,7 +203,7 @@ const handleRatation = (e: MouseEvent) => {
       Math.atan2(curY - centerY, curX - centerX) / (Math.PI / 180);
     //@ts-ignore
     store.setCurrentComponentStyle({
-      rotate: rotate + rotateDegreeAfter - rotateDegreeBefore,
+      rotate: +rotate + rotateDegreeAfter - rotateDegreeBefore,
     });
   };
 

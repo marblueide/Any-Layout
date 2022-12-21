@@ -13,20 +13,24 @@ export const useLowStore = defineStore("useLowStore", () => {
     width: 1200,
     height: 720,
     scale: 1,
-    background: "white",
+    background: "#fff",
     opacity: 1,
   }; //初始化State
   const localCanvasState: LowCanvasType = JSON.parse(
     localStorage.getItem("CanvasState") ?? JSON.stringify(initState)
   ); //获取localStorage中保存的State
+  const localCanvasData: LowCanvasData[] = JSON.parse(
+    localStorage.getItem("CanvasData") ?? JSON.stringify([])
+  );
   const lowCanvasState = ref<LowCanvasType>(localCanvasState); //当前的State
-  const lowCanvasData = reactive<LowCanvasData[]>([]);
+  const lowCanvasData = reactive<LowCanvasData[]>(localCanvasData);
   const currentComponent = ref<LowCanvasData>();
   const currentComponentIndex = ref<number>();
   const idMapData = new Map<string, LowCanvasData>(); //id对应Data
   const idMapDataIndex = new Map<string, number>(); //id对应Data的Index
   stack.push([]);
 
+  //初始化的操作
   const initStack = () => {
     //初始化Stack
     if (stack.length == 0) return;
@@ -37,6 +41,27 @@ export const useLowStore = defineStore("useLowStore", () => {
   const initLowCanvasState = () => {
     //初始化LowCanvasState
     lowCanvasState.value = cloneDeep(initState);
+  };
+
+  const init = () => {
+    //初始化
+    stack.splice(0, stack.length);
+    index.value = -1;
+    lowCanvasData.splice(0, lowCanvasData.length);
+    currentComponent.value = undefined;
+    currentComponentIndex.value = undefined;
+    idMapData.clear();
+    idMapDataIndex.clear();
+  };
+
+  const clearCanvas = () => {
+    //清空画布
+    lowCanvasData.splice(0, lowCanvasData.length);
+    currentComponent.value = undefined;
+    currentComponentIndex.value = undefined;
+    idMapData.clear();
+    idMapDataIndex.clear();
+    recordSnapshot([]);
   };
 
   const addLowCanvasData = (data: LowCanvasData) => {
@@ -55,6 +80,7 @@ export const useLowStore = defineStore("useLowStore", () => {
     return lowCanvasData[index as number];
   };
 
+  //设置属性的操作
   const setCurrentComponent = (id?: string) => {
     if (id == undefined) {
       currentComponentIndex.value = undefined;
@@ -78,6 +104,10 @@ export const useLowStore = defineStore("useLowStore", () => {
     const index = idMapDataIndex.get(id);
     index != undefined &&
       (lowCanvasData[index].style = merge(lowCanvasData[index].style, style));
+  };
+
+  const setLowCanvasState = (obj: Partial<LowCanvasType>) => {
+    lowCanvasState.value = merge(lowCanvasState.value, obj);
   };
 
   const deleteComponentData = (id: string) => {
@@ -155,27 +185,6 @@ export const useLowStore = defineStore("useLowStore", () => {
     setLowCanvasData(cloneDeep(stack[index.value]) ?? []);
   };
 
-  const init = () => {
-    //初始化
-    stack.splice(0, stack.length);
-    index.value = -1;
-    lowCanvasData.splice(0, lowCanvasData.length);
-    currentComponent.value = undefined;
-    currentComponentIndex.value = undefined;
-    idMapData.clear();
-    idMapDataIndex.clear();
-  };
-
-  const clearCanvas = () => {
-    //清空画布
-    lowCanvasData.splice(0, lowCanvasData.length);
-    currentComponent.value = undefined;
-    currentComponentIndex.value = undefined;
-    idMapData.clear();
-    idMapDataIndex.clear();
-    recordSnapshot([]);
-  };
-
   return {
     stack,
     stackIndex: index,
@@ -198,5 +207,6 @@ export const useLowStore = defineStore("useLowStore", () => {
     init,
     clearCanvas,
     recordSnapshot,
+    setLowCanvasState,
   };
 });
