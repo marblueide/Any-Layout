@@ -9,11 +9,13 @@
       >
         <el-collapse v-model="tabItem.active">
           <el-collapse-item
+            v-for="item in tabItem.data"
             :name="item.name"
             :title="item.title"
-            v-for="item in getComponents(index)"
           >
-            <component :is="item.component()"></component>
+            <el-form label-position="top">
+              <component :is="c()" v-for="c in item.components"></component>
+            </el-form>
           </el-collapse-item>
         </el-collapse>
       </el-tab-pane>
@@ -25,16 +27,11 @@
 import { storeToRefs } from "pinia";
 import { ref } from "vue";
 import { useLowStore } from "../../stores/useLowStore";
-import { baseAttr } from "../LowCodeCompoent/component-list";
 
 const store = useLowStore();
 const { currentComponent } = storeToRefs(store);
 
 const activeTab = ref(0);
-
-const getComponents = (i: number) => {
-  return currentComponent.value?.attr[i].data.map((k) => baseAttr[k]);
-};
 </script>
 
 <style scoped lang="scss">
