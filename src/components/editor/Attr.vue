@@ -1,23 +1,26 @@
 <template>
   <div class="attr">
-    <el-tabs type="border-card" v-model="activeTab">
+    <el-tabs class="el-tabs" type="border-card" v-model="activeTab">
       <el-tab-pane
+        v-for="(tabItem, index) in attrList"
         :label="tabItem.name"
         :name="index"
         :key="index"
-        v-for="(tabItem, index) in currentComponent?.attr"
       >
-        <el-collapse v-model="tabItem.active">
-          <el-collapse-item
-            v-for="item in tabItem.data"
-            :name="item.name"
-            :title="item.title"
-          >
-            <el-form label-position="top">
-              <component :is="c()" v-for="c in item.components"></component>
-            </el-form>
-          </el-collapse-item>
-        </el-collapse>
+        <KeepAlive>
+          <el-collapse :model-value="tabItem.all()">
+            <el-collapse-item
+              v-for="item in tabItem.data"
+              :name="item.name"
+              :title="item.title"
+              v-show="currentComponent?.attr[index].includes(item.name)"
+            >
+              <el-form label-position="top">
+                <component v-for="c in item.components" :is="c"></component>
+              </el-form>
+            </el-collapse-item>
+          </el-collapse>
+        </KeepAlive>
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -27,7 +30,7 @@
 import { storeToRefs } from "pinia";
 import { ref } from "vue";
 import { useLowStore } from "../../stores/useLowStore";
-
+import { attrList } from "../LowCodeCompoent/attr-list";
 const store = useLowStore();
 const { currentComponent } = storeToRefs(store);
 
@@ -36,6 +39,40 @@ const activeTab = ref(0);
 
 <style scoped lang="scss">
 .attr {
+  height: 100%;
+
+  .el-tabs {
+    height: 100%;
+
+    :deep(.el-tabs__content) {
+      height: 100%;
+      overflow: auto;
+
+      .el-collapse {
+        padding-bottom: 70px;
+      }
+
+      /*里面的代码可以根据自己需求去进行更改*/
+      /* 设置滚动条的样式 */
+      &::-webkit-scrollbar {
+        width: 12px;
+      }
+
+      /* 滚动槽 */
+      &::-webkit-scrollbar-track {
+        -webkit-box-shadow: inset006pxrgba(0, 0, 0, 0.3);
+        border-radius: 10px;
+      }
+
+      /* 滚动条滑块 */
+      &::-webkit-scrollbar-thumb {
+        border-radius: 10px;
+        background: rgba(0, 0, 0, 0.1);
+        -webkit-box-shadow: inset006pxrgba(0, 0, 0, 0.5);
+      }
+    }
+  }
+
   :deep(.el-tabs--border-card) {
     border: none;
 

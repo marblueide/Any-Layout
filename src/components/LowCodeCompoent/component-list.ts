@@ -1,83 +1,36 @@
-import type { AttrComponent, LowCanvasData } from "@/types/LowCode/index";
-import { markRaw } from "vue";
+import type { LowCanvasData } from "@/types/LowCode/index";
+import {
+  markRaw,
+  type Component,
+  type ComputedOptions,
+  type MethodOptions,
+} from "vue";
 import VButton from "./VButton/index.vue";
 import VPicture from "./VPicture/index.vue";
-import Border from "./Attrs/Border.vue";
-import Shadow from "./Attrs/Shadow.vue";
-import Arrangement from "./Attrs/Arrangement.vue";
-import TextVerticalAlign from "./Attrs/TextVerticalAlign.vue";
-import TextHorizontalAlign from "./Attrs/TextHorizontalAlign.vue";
-import TextValue from "./Attrs/TextValue.vue";
-import Background from "./Attrs/Background.vue";
+import { LabelEnum } from "../../types/LowCode/index";
 
-export const baseAttr: AttrComponent = {
-  border: () => markRaw(Border),
-  shadow: () => markRaw(Shadow),
-  arrangement: () => markRaw(Arrangement),
-  textVerticalAlign: () => markRaw(TextVerticalAlign),
-  textHorizontalAlign: () => markRaw(TextHorizontalAlign),
-  textValue: () => markRaw(TextValue),
-  background: () => markRaw(Background),
-};
-
-export const componentList: LowCanvasData[] = [
+export const componentList: [
+  LowCanvasData<LabelEnum.button>,
+  LowCanvasData<LabelEnum.picture>
+] = [
   {
-    label: "按钮",
+    label: LabelEnum.button,
     component: () => markRaw(VButton),
-    attr: [
-      {
-        name: "内容",
-        data: [
-          {
-            name: "props",
-            title: "属性",
-            components: [baseAttr.textValue],
-          },
-        ],
-        active: ["props"],
-      },
-      {
-        name: "样式",
-        data: [
-          {
-            name: "textAlign",
-            title: "文字对齐",
-            components: [
-              baseAttr.textVerticalAlign,
-              baseAttr.textHorizontalAlign,
-            ],
-          },
-          {
-            name: "background",
-            title: "颜色",
-            components: [baseAttr.background],
-          },
-          {
-            name: "shadow",
-            title: "阴影",
-            components: [baseAttr.shadow],
-          },
-          {
-            name: "border",
-            title: "边框设置",
-            components: [baseAttr.border],
-          },
-        ],
-        active: ["textAlign", "background", "shadow", "border"],
-      },
-    ],
+    attr: [["props"], ["font", "align", "background", "shadow", "border"]],
     events: {},
     isLock: false,
     style: {
       width: 90,
       height: 45,
-      rotate: "0",
+      rotate: 0,
       borderWidth: 2,
       borderRadius: 0,
       boxShadow: "none",
       justifyContent: "center",
       alignItems: "center",
       background: "#fff",
+      color: "#000",
+      fontSize: 16,
     },
     animations: [],
     icon: "icon-anniu",
@@ -87,26 +40,15 @@ export const componentList: LowCanvasData[] = [
     },
   },
   {
-    label: "图片",
+    label: LabelEnum.picture,
     component: () => markRaw(VPicture),
-    attr: [
-      {
-        name: "内容",
-        data: [],
-        active: [],
-      },
-      {
-        name: "样式",
-        data: [],
-        active: [],
-      },
-    ],
+    attr: [[], []],
     events: {},
     isLock: false,
     style: {
       width: 300,
       height: 200,
-      rotate: "0",
+      rotate: 0,
     },
     icon: "icon-tupian",
     animations: [],

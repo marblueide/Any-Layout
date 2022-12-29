@@ -35,16 +35,7 @@
 <script setup lang="ts">
 import { useLowStore } from "@/stores/useLowStore";
 import { storeToRefs } from "pinia";
-import {
-  computed,
-  ref,
-  reactive,
-  onUpdated,
-  onBeforeUpdate,
-  watch,
-  type StyleValue,
-  toRaw,
-} from "vue";
+import { computed, ref, reactive, type StyleValue, toRaw } from "vue";
 import { getShapeStyle, getOriginStyle } from "../../utils/style";
 import { componentList } from "@/components/LowCodeCompoent/component-list";
 import { cloneDeep } from "lodash-es";

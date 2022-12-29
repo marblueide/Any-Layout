@@ -4,7 +4,11 @@
       <div class="vz" grid>
         <div
           v-for="item in defaultTextverticalAlign"
-          :class="item.value == alignItems ? 'border-black' : 'border-gray-3'"
+          :class="
+            item.value == currentComponent?.style?.alignItems
+              ? 'border-black'
+              : 'border-gray-3'
+          "
           p-1
           border="1 solid"
           cursor-pointer
@@ -21,20 +25,9 @@
 
 <script setup lang="ts">
 import { defaultTextverticalAlign } from "./attr.type";
-import { useLowStore } from "../../../stores/useLowStore";
-import { storeToRefs } from "pinia";
-import { toRefs } from "vue";
+import { useAttr } from "./useAttr";
 
-const store = useLowStore();
-const { currentComponent } = storeToRefs(store);
-
-//@ts-ignore
-const { alignItems } = toRefs(currentComponent.value?.style);
-const handleChange = (key: string, value: any) => {
-  store.setCurrentComponentStyle({
-    [key]: value,
-  });
-};
+const { currentComponent, handleChange } = useAttr();
 </script>
 
 <style scoped lang="scss">

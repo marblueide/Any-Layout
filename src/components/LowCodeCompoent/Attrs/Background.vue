@@ -2,13 +2,13 @@
   <div class="background">
     <el-form-item>
       <el-color-picker
-        :model-value="background"
+        :model-value="currentComponent?.style.background"
         @change="handleChange('background', $event)"
       />
     </el-form-item>
     <el-form-item label="应用背景色">
       <el-input
-        :model-value="background"
+        :model-value="currentComponent?.style.background"
         @input="handleChange('background', $event)"
       ></el-input>
     </el-form-item>
@@ -18,18 +18,12 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
 import { toRefs } from "vue";
-import { useLowStore } from "../../../stores/useLowStore";
-const store = useLowStore();
-const { currentComponent } = storeToRefs(store);
+import { useAttr } from "./useAttr";
+
+const { currentComponent, handleChange } = useAttr();
 
 //@ts-ignore
 const { background } = toRefs(currentComponent.value?.style);
-
-const handleChange = (key: string, value: any) => {
-  store.setCurrentComponentStyle({
-    [key]: value,
-  });
-};
 </script>
 
 <style></style>

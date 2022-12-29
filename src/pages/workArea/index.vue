@@ -1,7 +1,7 @@
 <template>
   <div class="editor" flex flex-col>
     <Header></Header>
-    <div class="main" flex flex-1 overflow="auto">
+    <div class="main" flex flex-1 overflow="hidden">
       <div class="left" w-65 bg-white border-r-1 border-gray-2>
         <componentListVue />
         <componentLayer></componentLayer>
@@ -13,9 +13,9 @@
           </div>
         </el-scrollbar>
       </div>
-      <div class="right" w-65 bg-white border-l-1 border-gray-2>
-        <Attr v-if="currentComponent" />
-        <default-attr v-else></default-attr>
+      <div class="right" w-75 bg-white border-l-1 border-gray-2>
+        <Attr v-show="currentComponent" />
+        <default-attr v-show="!currentComponent"></default-attr>
       </div>
     </div>
   </div>

@@ -1,4 +1,11 @@
-import type { Component, StyleValue } from "vue";
+import type { Component, Prop } from "vue";
+import type { PropValue } from "./PropValue";
+import type { ComponentStyle } from "./style";
+
+export enum LabelEnum {
+  button = "按钮",
+  picture = "图片",
+}
 
 export type LowCanvasType = {
   width: number;
@@ -8,40 +15,36 @@ export type LowCanvasType = {
   opacity: number;
 };
 
-export interface LowCanvasData {
+export type LowCanvasData<T extends LabelEnum = LabelEnum> = {
   id?: string;
-  label: string;
+  label: T;
   component: () => Component | string;
-  attr: Attr[];
+  attr: string[][];
   icon: string | Component;
   events: {
     [k in string]: (...arg: any) => any;
   };
   isLock: boolean;
-  style: StyleValue;
-  propValue:
-    | {
-        [k in string]: any;
-      }
-    | LowCanvasData[];
+  style: Partial<ComponentStyle>;
+  propValue: PropValue[T] | LowCanvasData<LabelEnum>[];
   animations: DataAnimation[];
   linkage: DataLinkage[];
-}
+};
 
 export type AttrComponent = {
-  [k in string]: () => Component | string;
+  [k in string]: Component;
 };
 
 export type Attr = {
   name: string;
   data: AttrData[];
-  active: string[];
+  all: () => string[];
 };
 
-export type AttrData<T = AttrComponent> = {
+export type AttrData = {
   name: string;
   title: string;
-  components: T[keyof T][];
+  components: Component[];
 };
 
 export interface DataAnimation {

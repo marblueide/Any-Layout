@@ -5,7 +5,9 @@
         <div
           v-for="item in defaultTextHorizontalAlign"
           :class="
-            item.value == justifyContent ? 'border-black' : 'border-gray-3'
+            item.value == currentComponent?.style?.justifyContent
+              ? 'border-black'
+              : 'border-gray-3'
           "
           p-1
           border="1 solid"
@@ -22,22 +24,11 @@
 </template>
 
 <script setup lang="ts">
+import { onActivated, ref, toRefs } from "vue";
 import { defaultTextHorizontalAlign } from "./attr.type";
-import { useLowStore } from "../../../stores/useLowStore";
-import { storeToRefs } from "pinia";
-import { toRefs } from "vue";
+import { useAttr } from "./useAttr";
 
-const store = useLowStore();
-const { currentComponent } = storeToRefs(store);
-
-//@ts-ignore
-const { justifyContent } = toRefs(currentComponent.value?.style);
-
-const handleChange = (key: string, value: any) => {
-  store.setCurrentComponentStyle({
-    [key]: value,
-  });
-};
+const { currentComponent, handleChange } = useAttr();
 </script>
 
 <style scoped lang="scss">

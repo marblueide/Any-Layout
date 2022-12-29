@@ -83,7 +83,7 @@ export const useLowStore = defineStore("useLowStore", () => {
   const setCurrentComponent = (id?: string) => {
     //设置当前活动的组件
     if (id == undefined) {
-      currentComponentIndex.value = undefined;
+      currentComponentIndex.value = -1;
       currentComponent.value = undefined;
       return;
     }

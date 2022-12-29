@@ -2,7 +2,7 @@
   <el-form-item label="边框大小">
     <el-input
       type="number"
-      :model-value="borderWidth"
+      :model-value="currentComponent?.style.borderWidth"
       @update:modelValue="handleChange('borderWidth', +$event)"
     ></el-input>
   </el-form-item>
@@ -21,7 +21,11 @@
           justify-center
           items-center
           cursor-pointer
-          :class="borderRadius == item.value ? 'border-black' : 'border-gray'"
+          :class="
+            currentComponent?.style.borderRadius == item.value
+              ? 'border-black'
+              : 'border-gray'
+          "
           @click="handleChange('borderRadius', item.value)"
         >
           <div
@@ -39,19 +43,11 @@
 </template>
 
 <script setup lang="ts">
-import { storeToRefs } from "pinia";
 import { toRefs } from "vue";
-import { useLowStore } from "../../../stores/useLowStore";
-import { SIZE, defaultRadius } from "./attr.type";
-const store = useLowStore();
-const { currentComponent } = storeToRefs(store);
-//@ts-ignore
-const { borderRadius, borderWidth } = toRefs(currentComponent.value?.style);
-const handleChange = (key: string, value: any) => {
-  store.setCurrentComponentStyle({
-    [key]: value,
-  });
-};
+import { defaultRadius } from "./attr.type";
+import { useAttr } from "./useAttr";
+
+const { currentComponent, handleChange } = useAttr();
 </script>
 
 <style scoped lang="scss">

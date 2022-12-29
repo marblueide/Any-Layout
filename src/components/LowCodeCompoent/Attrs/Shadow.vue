@@ -15,7 +15,11 @@
             justify-center
             items-center
             cursor-pointer
-            :class="boxShadow == item.value ? 'border-black' : 'border-gray'"
+            :class="
+              currentComponent?.style?.boxShadow == item.value
+                ? 'border-black'
+                : 'border-gray'
+            "
             @click="handleChange('boxShadow', item.value)"
           >
             <div border-gray-7 w-4 h-4 :style="{ boxShadow: item.value }"></div>
@@ -28,19 +32,10 @@
 
 <script setup lang="ts">
 import { defaultShadow } from "./attr.type";
-import { useLowStore } from "../../../stores/useLowStore";
-import { storeToRefs } from "pinia";
-import { toRefs, type StyleValue } from "vue";
-const store = useLowStore();
-const { currentComponent } = storeToRefs(store);
-//@ts-ignore
-const { boxShadow } = toRefs(currentComponent.value?.style);
+import { toRefs } from "vue";
+import { useAttr } from "./useAttr";
 
-const handleChange = (key: string, value: any) => {
-  store.setCurrentComponentStyle({
-    [key]: value,
-  });
-};
+const { currentComponent, handleChange } = useAttr();
 </script>
 
 <style scoped lang="scss">
