@@ -75,8 +75,6 @@ const handleDown = (id: string | undefined) => {
 
 <style scoped lang="scss">
 .component-layer {
-  height: 35%;
-
   .layer-item {
     font-size: 0.8rem;
 
