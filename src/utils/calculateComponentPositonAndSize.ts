@@ -1,5 +1,5 @@
 import type { Point, pointType } from "@/types/index";
-import type { StyleValue } from "vue";
+import type { ComponentStyle } from "../types/LowCode/style";
 
 type pointInfoType = {
   center: Point;
@@ -39,7 +39,7 @@ const getCenterPoint = (
 };
 
 const calculateLeftTop = (
-  style: StyleValue,
+  style: Partial<ComponentStyle>,
   curPositon: Point,
   proportion: number,
   pointInfo: pointInfoType
@@ -74,7 +74,7 @@ const calculateLeftTop = (
 };
 
 const calculateTop = (
-  style: StyleValue,
+  style: Partial<ComponentStyle>,
   curPositon: Point,
   proportion: number,
   pointInfo: pointInfoType
@@ -129,7 +129,7 @@ const calculateTop = (
 };
 
 const calculateRightTop = (
-  style: StyleValue,
+  style: Partial<ComponentStyle>,
   curPositon: Point,
   proportion: number,
   pointInfo: pointInfoType
@@ -165,7 +165,7 @@ const calculateRightTop = (
 };
 
 const calculateRight = (
-  style: StyleValue,
+  style: Partial<ComponentStyle>,
   curPositon: Point,
   proportion: number,
   pointInfo: pointInfoType
@@ -215,7 +215,7 @@ const calculateRight = (
 };
 
 const calculateRightBottom = (
-  style: StyleValue,
+  style: Partial<ComponentStyle>,
   curPositon: Point,
   proportion: number,
   pointInfo: pointInfoType
@@ -250,7 +250,7 @@ const calculateRightBottom = (
 };
 
 const calculateBottom = (
-  style: StyleValue,
+  style: Partial<ComponentStyle>,
   curPositon: Point,
   proportion: number,
   pointInfo: pointInfoType
@@ -300,7 +300,7 @@ const calculateBottom = (
 };
 
 const calculateLeftBottom = (
-  style: StyleValue,
+  style: Partial<ComponentStyle>,
   curPositon: Point,
   proportion: number,
   pointInfo: pointInfoType
@@ -334,7 +334,7 @@ const calculateLeftBottom = (
 };
 
 const calculateLeft = (
-  style: StyleValue,
+  style: Partial<ComponentStyle>,
   curPositon: Point,
   proportion: number,
   pointInfo: pointInfoType
@@ -385,7 +385,7 @@ const calculateLeft = (
 
 const funcs: {
   [key in pointType]: (
-    style: StyleValue,
+    style: Partial<ComponentStyle>,
     curPositon: Point,
     proportion: number,
     pointInfo: pointInfoType
@@ -403,7 +403,7 @@ const funcs: {
 
 export const calculateComponentPositonAndSize = (
   point: pointType,
-  style: StyleValue,
+  style: Partial<ComponentStyle>,
   curPositon: Point,
   proportion: number,
   pointInfo: pointInfoType

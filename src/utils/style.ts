@@ -1,7 +1,12 @@
-import { degFix, noneFix, shapeStyle } from "@/types/LowCode/style";
+import {
+  degFix,
+  noneFix,
+  shapeStyle,
+  type ComponentStyle,
+} from "@/types/LowCode/style";
 import { cloneDeep } from "lodash-es";
-import type { CSSProperties, StyleValue } from "vue";
-import type { LowCanvasType, LowCanvasData } from "../types/LowCode/index";
+import type { StyleValue } from "vue";
+import type { LowCanvasType } from "../types/LowCode/index";
 import { angleToRadian } from "./calculateComponentPositonAndSize";
 
 export const canvasTypeToStyle = (obj: LowCanvasType): StyleValue => {
@@ -14,81 +19,70 @@ export const canvasTypeToStyle = (obj: LowCanvasType): StyleValue => {
   };
 };
 
-export const getShapeStyle = (data: StyleValue) => {
-  let res = {};
+export const getShapeStyle = (data: Partial<ComponentStyle>) => {
+  let res: {
+    [k in keyof ComponentStyle]?: any;
+  } = {};
   shapeStyle.forEach((key) => {
-    //@ts-ignore
-    if (data[key] != undefined) {
+    if (data[key as keyof ComponentStyle] != undefined) {
       if (key == "rotate") {
-        //@ts-ignore
-        res[key] = data[key] + "deg";
+        res[key as keyof ComponentStyle] =
+          data[key as keyof ComponentStyle] + "deg";
       } else if (key == "opacity") {
-        //@ts-ignore
-        res[key] = data[key];
+        res[key as keyof ComponentStyle] = data[key as keyof ComponentStyle];
       } else {
-        //@ts-ignore
-        res[key] = data[key] + "px";
+        res[key as keyof ComponentStyle] =
+          data[key as keyof ComponentStyle] + "px";
       }
     }
   });
   return res;
 };
 
-//@ts-nocheck
-export const getComponentRotatedStyle = (style: StyleValue) => {
+export const getComponentRotatedStyle = (style: Partial<ComponentStyle>) => {
   style = cloneDeep(style);
-  //@ts-ignore
-  if (style.rotate != 0) {
-    const newWidth =
-      //@ts-ignore
-      style.width * Math.abs(Math.cos(angleToRadian(style.rotate))) +
-      //@ts-ignore
-      style.height * Math.abs(Math.sin(angleToRadian(style.rotate)));
-    //@ts-ignore
-    const diffX = (style.width - newWidth) / 2; // 旋转后范围变小是正值，变大是负值
-    //@ts-ignore
-    style.left += diffX;
-    //@ts-ignore
-    style.right = style.left + newWidth;
+  if (style.width && style.rotate && style.height && style.left && style.top) {
+    if (style.rotate != 0) {
+      const newWidth =
+        style.width * Math.abs(Math.cos(angleToRadian(style.rotate))) +
+        style.height * Math.abs(Math.sin(angleToRadian(style.rotate)));
 
-    const newHeight =
-      //@ts-ignore
-      style.height * Math.abs(Math.cos(angleToRadian(style.rotate))) +
-      //@ts-ignore
-      style.width * Math.abs(Math.sin(angleToRadian(style.rotate)));
-    //@ts-ignore
-    const diffY = (newHeight - style.height) / 2; // 始终是正
-    //@ts-ignore
-    style.top -= diffY;
-    //@ts-ignore
-    style.bottom = style.top + newHeight;
+      const diffX = (style.width - newWidth) / 2; // 旋转后范围变小是正值，变大是负值
 
-    //@ts-ignore
-    style.width = newWidth;
-    //@ts-ignore
-    style.height = newHeight;
-  } else {
-    //@ts-ignore
-    style.bottom = style.top + style.height;
-    //@ts-ignore
-    style.right = style.left + style.width;
+      style.left += diffX;
+
+      style.right = style.left + newWidth;
+
+      const newHeight =
+        style.height * Math.abs(Math.cos(angleToRadian(style.rotate))) +
+        style.width * Math.abs(Math.sin(angleToRadian(style.rotate)));
+      const diffY = (newHeight - style.height) / 2; // 始终是正
+      style.top -= diffY;
+      style.bottom = style.top + newHeight;
+
+      style.width = newWidth;
+      style.height = newHeight;
+    } else {
+      style.bottom = style.top + style.height;
+      style.right = style.left + style.width;
+    }
   }
 
   return style;
 };
 
-export const getOriginStyle = (data: StyleValue) => {
+export const getOriginStyle = (data: Partial<ComponentStyle>) => {
   const res: {
     [k in string]: any;
   } = {};
-  Object.keys(data).forEach((k: any) => {
+  Object.keys(data).forEach((k) => {
     if (shapeStyle.includes(k)) return;
     if (noneFix.includes(k)) {
-      res[k] = data[k as keyof StyleValue];
+      res[k] = data[k as keyof ComponentStyle];
     } else if (degFix.includes(k)) {
-      res[k] = data[k as keyof StyleValue] + "deg";
+      res[k] = data[k as keyof ComponentStyle] + "deg";
     } else {
-      res[k] = data[k as keyof StyleValue] + "px";
+      res[k] = data[k as keyof ComponentStyle] + "px";
     }
   });
 

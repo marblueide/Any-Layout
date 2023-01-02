@@ -1,6 +1,10 @@
 export type ComponentStyle = {
   width: number;
   height: number;
+  left: number;
+  top: number;
+  right: number;
+  bottom: number;
   rotate: number;
   borderWidth: number;
   borderRadius: number;
