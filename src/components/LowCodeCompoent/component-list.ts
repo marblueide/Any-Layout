@@ -1,17 +1,14 @@
 import type { LowCanvasData } from "@/types/LowCode/index";
-import {
-  markRaw,
-  type Component,
-  type ComputedOptions,
-  type MethodOptions,
-} from "vue";
+import { markRaw } from "vue";
 import VButton from "./VButton/index.vue";
 import VPicture from "./VPicture/index.vue";
+import VText from "./VText/index.vue";
 import { LabelEnum } from "../../types/LowCode/index";
 
 export const componentList: [
   LowCanvasData<LabelEnum.button>,
-  LowCanvasData<LabelEnum.picture>
+  LowCanvasData<LabelEnum.picture>,
+  LowCanvasData<LabelEnum.text>
 ] = [
   {
     label: LabelEnum.button,
@@ -56,6 +53,28 @@ export const componentList: [
     propValue: {
       src: new URL("@/assets/default.webp", import.meta.url).href,
       fit: "cover",
+    },
+  },
+  {
+    label: LabelEnum.text,
+    component: () => markRaw(VText),
+    attr: [["props"], ["font"]],
+    events: {},
+    isLock: false,
+    style: {
+      width: 90,
+      height: 45,
+      rotate: 0,
+      justifyContent: "center",
+      alignItems: "center",
+      color: "#000",
+      fontSize: 16,
+    },
+    animations: [],
+    icon: "icon-anniu",
+    linkage: [],
+    propValue: {
+      value: "按钮",
     },
   },
 ];

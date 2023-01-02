@@ -5,6 +5,8 @@ import type { ComponentStyle } from "./style";
 export enum LabelEnum {
   button = "按钮",
   picture = "图片",
+  text = "文本",
+  group = "组合",
 }
 
 export type LowCanvasType = {
@@ -26,7 +28,9 @@ export type LowCanvasData<T extends LabelEnum = LabelEnum> = {
   };
   isLock: boolean;
   style: Partial<ComponentStyle>;
-  propValue: PropValue[T] | LowCanvasData<LabelEnum>[];
+  propValue: T extends LabelEnum.group
+    ? LowCanvasData<LabelEnum>[]
+    : PropValue[T];
   animations: DataAnimation[];
   linkage: DataLinkage[];
 };
@@ -41,8 +45,8 @@ export type Attr = {
   all: () => string[];
 };
 
-export type AttrData = {
-  name: string;
+export type AttrData<T extends string = string> = {
+  name: T;
   title: string;
   components: Component[];
 };
@@ -65,3 +69,11 @@ export interface DataLinkage {
 }
 
 export type pointType = "lt" | "t" | "rt" | "r" | "rb" | "b" | "lb" | "l";
+
+export type AreaData = {
+  left: number;
+  top: number;
+  width: number;
+  height: number;
+  components: LowCanvasData[];
+};
