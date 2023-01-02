@@ -98,12 +98,11 @@ const hideLine = () => {
 };
 
 const showLine = (isDown: boolean, isLeft: boolean) => {
+  if (!currentComponent.value) return;
   const currentStyle = getComponentRotatedStyle(
-    //@ts-ignore
     cloneDeep(currentComponent.value?.style)
   );
 
-  //@ts-ignore
   const {
     left: curLeft,
     top: curTop,
@@ -113,19 +112,15 @@ const showLine = (isDown: boolean, isLeft: boolean) => {
     height: curHeight,
     rotate,
   } = currentStyle;
-  //@ts-ignore
-  const curHalfWidth = curWidth / 2;
-  //@ts-ignore
-  const curHalfHeight = curHeight / 2;
+  const curHalfWidth = curWidth! / 2;
+  const curHalfHeight = curHeight! / 2;
 
   const needShow: line[] = [];
   hideLine();
   lowCanvasData.value.forEach((data) => {
     if (data.id == currentComponent.value?.id) return;
 
-    //@ts-ignore
     const { left, top, width, height } = getComponentRotatedStyle(
-      //@ts-ignore
       cloneDeep(data.style)
     );
     if (
@@ -139,8 +134,9 @@ const showLine = (isDown: boolean, isLeft: boolean) => {
       !curLeft ||
       !curRight ||
       !curWidth
-    )
+    ) {
       return;
+    }
     const conditions: {
       [k in "top" | "left"]: {
         line: k extends "top" ? topLine : leftLine;

@@ -8,6 +8,7 @@ import { cloneDeep } from "lodash-es";
 import type { StyleValue } from "vue";
 import type { LowCanvasType } from "../types/LowCode/index";
 import { angleToRadian } from "./calculateComponentPositonAndSize";
+import { isNil } from "lodash-es";
 
 export const canvasTypeToStyle = (obj: LowCanvasType): StyleValue => {
   return {
@@ -41,33 +42,38 @@ export const getShapeStyle = (data: Partial<ComponentStyle>) => {
 
 export const getComponentRotatedStyle = (style: Partial<ComponentStyle>) => {
   style = cloneDeep(style);
-  if (style.width && style.rotate && style.height && style.left && style.top) {
+  if (
+    !isNil(style.width) &&
+    !isNil(style.rotate) &&
+    !isNil(style.height) &&
+    !isNil(style.left) &&
+    !isNil(style.top)
+  ) {
     if (style.rotate != 0) {
       const newWidth =
-        style.width * Math.abs(Math.cos(angleToRadian(style.rotate))) +
-        style.height * Math.abs(Math.sin(angleToRadian(style.rotate)));
+        style.width! * Math.abs(Math.cos(angleToRadian(style.rotate!))) +
+        style.height! * Math.abs(Math.sin(angleToRadian(style.rotate!)));
 
-      const diffX = (style.width - newWidth) / 2; // 旋转后范围变小是正值，变大是负值
+      const diffX = (style.width! - newWidth) / 2; // 旋转后范围变小是正值，变大是负值
 
-      style.left += diffX;
+      style.left! += diffX;
 
-      style.right = style.left + newWidth;
+      style.right = style.left! + newWidth;
 
       const newHeight =
-        style.height * Math.abs(Math.cos(angleToRadian(style.rotate))) +
-        style.width * Math.abs(Math.sin(angleToRadian(style.rotate)));
-      const diffY = (newHeight - style.height) / 2; // 始终是正
-      style.top -= diffY;
-      style.bottom = style.top + newHeight;
+        style.height! * Math.abs(Math.cos(angleToRadian(style.rotate!))) +
+        style.width! * Math.abs(Math.sin(angleToRadian(style.rotate!)));
+      const diffY = (newHeight - style.height!) / 2; // 始终是正
+      style.top! -= diffY;
+      style.bottom = style.top! + newHeight;
 
       style.width = newWidth;
       style.height = newHeight;
     } else {
-      style.bottom = style.top + style.height;
-      style.right = style.left + style.width;
+      style.bottom = style.top! + style.height!;
+      style.right = style.left! + style.width!;
     }
   }
-
   return style;
 };
 
