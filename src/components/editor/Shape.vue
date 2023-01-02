@@ -57,8 +57,7 @@ const shapeRef = ref();
 
 const handleMouseDown = (e: MouseEvent) => {
   store.setCurrentComponent(props.id);
-  //@ts-ignore
-  const { left, top } = currentComponent.value.style;
+  const { left, top } = currentComponent.value!.style;
   const startX = e.clientX;
   const startY = e.clientY;
 
@@ -67,8 +66,8 @@ const handleMouseDown = (e: MouseEvent) => {
     isMove = true;
     const endX = e.clientX;
     const endY = e.clientY;
-    const curX = endX - startX + left;
-    const curY = endY - startY + top;
+    const curX = endX - startX + left!;
+    const curY = endY - startY + top!;
     store.setCurrentComponentStyle({
       left: curX,
       top: curY,
@@ -81,7 +80,6 @@ const handleMouseDown = (e: MouseEvent) => {
   };
 
   const up = () => {
-    //@ts-ignore
     document.removeEventListener("mousemove", move);
     document.removeEventListener("mouseup", up);
     isMove && store.recordSnapshot();
@@ -128,7 +126,6 @@ const getPointStyle = (point: pointType): StyleValue => {
 
 const handlePointDown = (e: MouseEvent, point: pointType) => {
   store.setCurrentComponent(props.id);
-  //@ts-ignore
   const { width, height, left, top, rotate } = currentComponent.value!.style;
   const editorRectInfo = document
     .querySelector("#editor")!
@@ -141,8 +138,8 @@ const handlePointDown = (e: MouseEvent, point: pointType) => {
 
   //组件中心点
   const centerPoint = {
-    x: left + width / 2,
-    y: top + height / 2,
+    x: left! + width! / 2,
+    y: top! + height! / 2,
   };
 
   //对称点
@@ -187,8 +184,7 @@ const handlePointDown = (e: MouseEvent, point: pointType) => {
 const handleRatation = (e: MouseEvent) => {
   const startX = e.clientX;
   const startY = e.clientY;
-  //@ts-ignore
-  const { rotate } = currentComponent.value?.style;
+  const { rotate } = currentComponent.value!.style;
   const rect = shapeRef.value.getBoundingClientRect();
   const centerX = rect.left + rect.width / 2;
   const centerY = rect.top + rect.height / 2;
@@ -203,7 +199,7 @@ const handleRatation = (e: MouseEvent) => {
       Math.atan2(curY - centerY, curX - centerX) / (Math.PI / 180);
     //@ts-ignore
     store.setCurrentComponentStyle({
-      rotate: +rotate + rotateDegreeAfter - rotateDegreeBefore,
+      rotate: +rotate! + rotateDegreeAfter - rotateDegreeBefore,
     });
   };
 

@@ -13,12 +13,13 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, type StyleValue } from "vue";
+import { reactive } from "vue";
 import { getShapeStyle, getComponentRotatedStyle } from "@/utils/style";
 import emitter from "@/utils/mitt";
 import { useLowStore } from "../../stores/useLowStore";
 import { storeToRefs } from "pinia";
 import { cloneDeep } from "lodash-es";
+import type { ComponentStyle } from "../../types/LowCode/style";
 
 type line = "xt" | "xc" | "xb" | "yl" | "yc" | "yr";
 type topLine = "xt" | "xc" | "xb";
@@ -127,6 +128,19 @@ const showLine = (isDown: boolean, isLeft: boolean) => {
       //@ts-ignore
       cloneDeep(data.style)
     );
+    if (
+      !left ||
+      !top ||
+      !width ||
+      !height ||
+      !curBottom ||
+      !curTop ||
+      !curHeight ||
+      !curLeft ||
+      !curRight ||
+      !curWidth
+    )
+      return;
     const conditions: {
       [k in "top" | "left"]: {
         line: k extends "top" ? topLine : leftLine;
@@ -215,16 +229,13 @@ const isNearly = (target: number, cur: number) => {
 const transformCurComponnet = (
   key: "top" | "left",
   value: number,
-  currentStyle: StyleValue
+  currentStyle: Partial<ComponentStyle>
 ) => {
-  //@ts-ignore
-  const { height, width } = currentComponent.value?.style;
+  const { height, width } = currentComponent.value!.style;
   if (key == "top") {
-    //@ts-ignore
-    return Math.round(value - (height - currentStyle.height) / 2);
+    return Math.round(value - (height! - currentStyle.height!) / 2);
   }
-  //@ts-ignore
-  return Math.round(value - (width - currentStyle.width) / 2);
+  return Math.round(value - (width! - currentStyle.width!) / 2);
 };
 </script>
 
