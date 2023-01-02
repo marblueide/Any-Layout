@@ -1,15 +1,12 @@
 import type { LowCanvasData, LowCanvasType } from "@/types/LowCode";
 import { defineStore } from "pinia";
-import { reactive, ref, watch } from "vue";
-import { v4 as uuid } from "uuid";
 import { swap } from "@/utils";
-import { useArea } from "./useArea";
-import { useStack } from "./useStack";
-import { useState } from "./useState";
+import { useArea, useStack, useState } from "./moudles";
 
 //@ts-ignore
 export const useLowStore = defineStore("useLowStore", () => {
-  const { areaData, setAreaData } = useArea();
+  const { areaData, isShowArea, setAreaData, initArea, setIsShowArea } =
+    useArea();
 
   let {
     lowCanvasState,
@@ -38,6 +35,12 @@ export const useLowStore = defineStore("useLowStore", () => {
     backSnapshot,
     forwardSnapshot,
   } = useStack();
+
+  const init = () => {
+    initLowCanvasData();
+    initStack();
+    initArea();
+  };
 
   const clearCanvas = () => {
     //清空画布
@@ -88,12 +91,13 @@ export const useLowStore = defineStore("useLowStore", () => {
     lowCanvasState,
     lowCanvasData,
     areaData,
+    isShowArea,
+    currentComponent,
+    currentComponentIndex,
     backSnapshot,
     forwardSnapshot,
     initStack,
     initLowCanvasState,
-    currentComponent,
-    currentComponentIndex,
     addLowCanvasData: addLowCanvasDataAndSnapshot,
     getCanvasDataById,
     setCurrentComponent,
@@ -108,5 +112,7 @@ export const useLowStore = defineStore("useLowStore", () => {
     clearCanvas,
     recordSnapshot,
     setLowCanvasState,
+    init,
+    setIsShowArea,
   };
 });

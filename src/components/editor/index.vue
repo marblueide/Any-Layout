@@ -24,7 +24,7 @@
       </component>
     </Shape>
     <Area
-      v-bind="{ ...areaStyle }"
+      v-bind="{ ...areaData }"
       v-show="isShowArea"
       @mousedown.stop.prevent="handleAreaDwon"
     />
@@ -35,14 +35,19 @@
 <script setup lang="ts">
 import { useLowStore } from "@/stores/useLowStore";
 import { storeToRefs } from "pinia";
-import { computed, ref, reactive, type StyleValue, toRaw } from "vue";
-import { getShapeStyle, getOriginStyle } from "../../utils/style";
+import { computed, ref, reactive, type StyleValue } from "vue";
+import {
+  getShapeStyle,
+  getOriginStyle,
+  getComponentRotatedStyle,
+} from "../../utils/style";
 import { componentList } from "@/components/LowCodeCompoent/component-list";
 import { cloneDeep } from "lodash-es";
 import type { LowCanvasData } from "../../types/LowCode/index";
 
 const store = useLowStore();
-const { lowCanvasState, lowCanvasData } = storeToRefs(store);
+const { lowCanvasState, lowCanvasData, areaData, isShowArea } =
+  storeToRefs(store);
 const editorRef = ref();
 let editorRect: DOMRect;
 
@@ -68,18 +73,18 @@ const handleDrop = (e: DragEvent) => {
   const { width, height } = data.style;
   //@ts-ignore
   let left = e.clientX - editorRect.x - width / 2;
-  let top = e.clientY - editorRect.y - height / 2;
+  let top = e.clientY - editorRect.y - height! / 2;
   left =
     left < 0
       ? 0
-      : left >= lowCanvasState.value.width - width
-      ? lowCanvasState.value.width - width
+      : left >= lowCanvasState.value.width - width!
+      ? lowCanvasState.value.width - width!
       : left;
   top =
     top < 0
       ? 0
-      : top >= lowCanvasState.value.height - height
-      ? lowCanvasState.value.height - height
+      : top >= lowCanvasState.value.height - height!
+      ? lowCanvasState.value.height - height!
       : top;
   //@ts-ignore
   data.style.left = left;
@@ -92,17 +97,7 @@ const handleDragOver = (e: DragEvent) => {
   e.preventDefault();
 };
 
-//处理选择框
-const areaStyle = reactive({
-  left: 0,
-  top: 0,
-  width: 0,
-  height: 0,
-});
-
 const selectComponentSet = reactive<Set<LowCanvasData>>(new Set());
-
-const isShowArea = ref(false);
 
 const handleMouseDown = (e: MouseEvent) => {
   if (!editorRect) editorRect = editorRef.value.getBoundingClientRect();
@@ -110,18 +105,23 @@ const handleMouseDown = (e: MouseEvent) => {
   const startY = e.clientY;
 
   store.setCurrentComponent();
-  isShowArea.value = true;
+  store.setIsShowArea(true);
   selectComponentSet.clear();
-  areaStyle.left = startX - editorRect.left;
-  areaStyle.top = startY - editorRect.top;
-  areaStyle.width = 0;
-  areaStyle.height = 0;
+  store.setAreaData({
+    left: startX - editorRect.left,
+    top: startY - editorRect.top,
+    width: 0,
+    height: 0,
+    components: [],
+  });
 
   const move = (e: MouseEvent) => {
     const endX = e.clientX;
     const endY = e.clientY;
-    areaStyle.width = endX - startX;
-    areaStyle.height = endY - startY;
+    store.setAreaData({
+      width: endX - startX,
+      height: endY - startY,
+    });
   };
 
   const up = () => {
@@ -133,12 +133,16 @@ const handleMouseDown = (e: MouseEvent) => {
       b = -Infinity;
     lowCanvasData.value.forEach((item) => {
       //@ts-ignore
-      const { left, top, width, height } = item.style;
+      const { left, top, width, height } = getComponentRotatedStyle(item.style);
       if (
-        left >= areaStyle.left &&
-        left <= areaStyle.left + areaStyle.width &&
-        top >= areaStyle.top &&
-        top <= areaStyle.top + areaStyle.height
+        left &&
+        top &&
+        width &&
+        height &&
+        left >= areaData.value.left &&
+        left <= areaData.value.left + areaData.value.width &&
+        top >= areaData.value.top &&
+        top <= areaData.value.top + areaData.value.height
       ) {
         selectComponentSet.add(item);
         l = Math.min(l, left);
@@ -148,12 +152,15 @@ const handleMouseDown = (e: MouseEvent) => {
       }
     });
     if (selectComponentSet.size > 1) {
-      areaStyle.left = l;
-      areaStyle.top = t;
-      areaStyle.width = r - l;
-      areaStyle.height = b - t;
+      store.setAreaData({
+        left: l,
+        top: t,
+        width: r - l,
+        height: b - t,
+        components: [...selectComponentSet],
+      });
     }
-    isShowArea.value = selectComponentSet.size > 1;
+    store.setIsShowArea(selectComponentSet.size > 1);
   };
 
   document.addEventListener("mousemove", move);
@@ -161,7 +168,7 @@ const handleMouseDown = (e: MouseEvent) => {
 };
 
 const handleAreaDwon = (e: MouseEvent) => {
-  const { left, top } = areaStyle;
+  const { left, top } = areaData.value;
   const startX = e.clientX;
   const startY = e.clientY;
   const componetPos: StyleValue[] = [];
@@ -176,8 +183,11 @@ const handleAreaDwon = (e: MouseEvent) => {
     const disX = endX - startX;
     const disY = endY - startY;
 
-    areaStyle.left = left + disX;
-    areaStyle.top = top + disY;
+    store.setAreaData({
+      left: left + disX,
+      top: top + disY,
+    });
+
     let index = 0;
     selectComponentSet.forEach((item) => {
       //@ts-ignore
