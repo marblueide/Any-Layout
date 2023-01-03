@@ -5,8 +5,14 @@ import { useArea, useStack, useState } from "./moudles";
 
 //@ts-ignore
 export const useLowStore = defineStore("useLowStore", () => {
-  const { areaData, isShowArea, setAreaData, initArea, setIsShowArea } =
-    useArea();
+  const {
+    areaData,
+    isShowArea,
+    setAreaData,
+    initArea,
+    setIsShowArea,
+    compose,
+  } = useArea();
 
   let {
     lowCanvasState,
@@ -114,5 +120,6 @@ export const useLowStore = defineStore("useLowStore", () => {
     setLowCanvasState,
     init,
     setIsShowArea,
+    compose,
   };
 });

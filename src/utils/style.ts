@@ -8,29 +8,7 @@ import { cloneDeep } from "lodash-es";
 import type { StyleValue } from "vue";
 import type { LowCanvasType } from "../types/LowCode/index";
 import { angleToRadian } from "./calculateComponentPositonAndSize";
-<<<<<<< HEAD
 import { isNil } from "lodash-es";
-=======
-
-const degFix = ["rotate"];
-const noneFix = [
-  "opacity",
-  "boxShadow",
-  "justifyContent",
-  "alignItems",
-  "alignItems",
-  "background",
-];
-const shapeStyle = [
-  "left",
-  "top",
-  "opacity",
-  "transform",
-  "width",
-  "height",
-  "rotate",
-];
->>>>>>> fe206e7d4967b068316ee9a340e0b56a3c2e4c91
 
 export const canvasTypeToStyle = (obj: LowCanvasType): StyleValue => {
   return {

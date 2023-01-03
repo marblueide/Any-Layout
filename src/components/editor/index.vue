@@ -1,33 +1,12 @@
 <template>
-  <div
-    id="editor"
-    class="editor"
-    ref="editorRef"
-    overflow="hidden"
-    :style="editorStyle"
-    @drop="handleDrop"
-    @dragover="handleDragOver"
-    @mousedown.stop.prevent="handleMouseDown"
-  >
+  <div id="editor" class="editor" ref="editorRef" overflow="hidden" :style="editorStyle" @drop="handleDrop"
+    @dragover="handleDragOver" @mousedown.stop.prevent="handleMouseDown">
     <Grid :width="lowCanvasState.width" :height="lowCanvasState.height" />
-    <Shape
-      v-for="item in lowCanvasData"
-      :id="item.id!"
-      :key="item.id!"
-      :style="getShapeStyle(item.style)"
-    >
-      <component
-        :is="item.component()"
-        :propValue="item.propValue"
-        :style="getOriginStyle(item.style)"
-      >
+    <Shape v-for="item in lowCanvasData" :id="item.id!" :key="item.id!" :style="getShapeStyle(item.style)">
+      <component :is="item.component()" :propValue="item.propValue" :style="getOriginStyle(item.style)">
       </component>
     </Shape>
-    <Area
-      v-bind="{ ...areaData }"
-      v-show="isShowArea"
-      @mousedown.stop.prevent="handleAreaDwon"
-    />
+    <Area v-bind="{ ...areaData }" v-show="isShowArea" @mousedown.stop.prevent="handleAreaDwon" />
     <MarkLine />
   </div>
 </template>
@@ -78,14 +57,14 @@ const handleDrop = (e: DragEvent) => {
     left < 0
       ? 0
       : left >= lowCanvasState.value.width - width!
-      ? lowCanvasState.value.width - width!
-      : left;
+        ? lowCanvasState.value.width - width!
+        : left;
   top =
     top < 0
       ? 0
       : top >= lowCanvasState.value.height - height!
-      ? lowCanvasState.value.height - height!
-      : top;
+        ? lowCanvasState.value.height - height!
+        : top;
   //@ts-ignore
   data.style.left = left;
   //@ts-ignore

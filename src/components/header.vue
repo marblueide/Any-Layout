@@ -1,43 +1,20 @@
 <template>
-  <div
-    class="editor-header"
-    box-border
-    h-20
-    border="b-1 gray-2"
-    items-center
-    p-4
-    flex
-  >
+  <div class="editor-header" box-border h-20 border="b-1 gray-2" items-center p-4 flex>
     <el-button m-x-1>JSON</el-button>
-    <el-button m-x-1 @click="handleBack" :disabled="stackIndex == 0"
-      >撤销</el-button
-    >
-    <el-button
-      m-x-1
-      @click="handleForward"
-      :disabled="stackIndex == stack.length - 1"
-      >回退</el-button
-    >
+    <el-button m-x-1 @click="handleBack" :disabled="stackIndex == 0">撤销</el-button>
+    <el-button m-x-1 @click="handleForward" :disabled="stackIndex == stack.length - 1">回退</el-button>
     <el-button m-x-1>插入图片</el-button>
     <el-button m-x-1>预览</el-button>
     <el-button m-x-1 @click="save">保存</el-button>
     <el-button m-x-1 @click="clearCanvas">清空画布</el-button>
     <el-button m-x-1 @click="init">初始化</el-button>
-    <el-button m-x-1>组合</el-button>
+    <el-button m-x-1 @click="compose">组合</el-button>
     <el-button m-x-1>拆分</el-button>
     <div class="canvas-size" grid h-10 w-80 items-center mx-2>
       <span color-gray-7>画布大小</span>
-      <el-input
-        :model-value="lowCanvasState.width"
-        type="number"
-        @input="handleInput('width', +$event)"
-      >
+      <el-input :model-value="lowCanvasState.width" type="number" @input="handleInput('width', +$event)">
       </el-input>
-      <el-input
-        :model-value="lowCanvasState.height"
-        type="number"
-        @input="handleInput('height', +$event)"
-      >
+      <el-input :model-value="lowCanvasState.height" type="number" @input="handleInput('height', +$event)">
       </el-input>
     </div>
   </div>
@@ -72,11 +49,15 @@ const save = () => {
   localStorage.setItem("CanvasData", JSON.stringify(lowCanvasData.value));
 };
 
+const compose = () => {
+  store.compose()
+}
+
 const handleInput = (key: string, val: number) => {
   store.setLowCanvasState({
     [key]: val,
   });
-};
+}
 </script>
 
 <style lang="scss" scoped>

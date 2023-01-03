@@ -1,40 +1,17 @@
 <template>
   <div class="attr">
     <el-tabs class="el-tabs" type="border-card" v-model="activeTab">
-      <el-tab-pane
-        v-for="(tabItem, index) in attrList"
-        :label="tabItem.name"
-        :name="index"
-        :key="index"
-      >
-<<<<<<< HEAD
+      <el-tab-pane v-for="(tabItem, index) in attrList" :label="tabItem.name" :name="index" :key="index">
         <KeepAlive>
           <el-collapse :model-value="tabItem.all()">
-            <el-collapse-item
-              v-for="item in tabItem.data"
-              :name="item.name"
-              :title="item.title"
-              v-show="currentComponent?.attr[index].includes(item.name)"
-            >
+            <el-collapse-item v-for="item in tabItem.data" :name="item.name" :title="item.title"
+              v-show="currentComponent?.attr[index].includes(item.name)">
               <el-form label-position="top">
                 <component v-for="c in item.components" :is="c"></component>
               </el-form>
             </el-collapse-item>
           </el-collapse>
         </KeepAlive>
-=======
-        <el-collapse v-model="tabItem.active">
-          <el-collapse-item
-            v-for="item in tabItem.data"
-            :name="item.name"
-            :title="item.title"
-          >
-            <el-form label-position="top">
-              <component :is="c()" v-for="c in item.components"></component>
-            </el-form>
-          </el-collapse-item>
-        </el-collapse>
->>>>>>> fe206e7d4967b068316ee9a340e0b56a3c2e4c91
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -44,11 +21,7 @@
 import { storeToRefs } from "pinia";
 import { ref } from "vue";
 import { useLowStore } from "../../stores/useLowStore";
-<<<<<<< HEAD
 import { attrList } from "../LowCodeCompoent/attr-list";
-=======
-
->>>>>>> fe206e7d4967b068316ee9a340e0b56a3c2e4c91
 const store = useLowStore();
 const { currentComponent } = storeToRefs(store);
 
