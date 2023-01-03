@@ -105,10 +105,25 @@ export const useState = () => {
     lowCanvasData.push(data);
     idMapData.set(data.id as string, lowCanvasData[lowCanvasData.length - 1]);
     idMapDataIndex.set(data.id as string, lowCanvasData.length - 1);
+    return lowCanvasData[lowCanvasData.length - 1];
   };
 
   const setMoving = (value: boolean) => {
     isMoving.value = value;
+  };
+
+  const splite = () => {
+    currentComponent.value?.propValue.forEach((component: LowCanvasData) => {
+      component.style.left! += currentComponent.value?.style.left!;
+      component.style.top! += currentComponent.value?.style.top!;
+      addLowCanvasData(component);
+      component.id &&
+        idMapDataIndex.set(component.id, lowCanvasData.length - 1);
+      component.id &&
+        idMapData.set(component.id, lowCanvasData[lowCanvasData.length - 1]);
+    });
+    currentComponent.value?.id &&
+      deleteComponentData(currentComponent.value?.id);
   };
 
   return {
@@ -130,5 +145,6 @@ export const useState = () => {
     initLowCanvasState,
     initLowCanvasData,
     addLowCanvasData,
+    splite,
   };
 };

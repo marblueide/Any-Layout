@@ -8,7 +8,7 @@
     <el-button m-x-1 @click="clearCanvas">清空画布</el-button>
     <el-button m-x-1 @click="init">初始化</el-button>
     <el-button m-x-1 @click="compose" :disabled="areaData.components.length == 0">组合</el-button>
-    <el-button m-x-1 :disabled="!Array.isArray(currentComponent?.propValue)">拆分</el-button>
+    <el-button m-x-1 @click="splite" :disabled="!Array.isArray(currentComponent?.propValue)">拆分</el-button>
     <div class="canvas-size" grid h-10 w-80 items-center mx-2>
       <span color-gray-7>画布大小</span>
       <el-input :model-value="lowCanvasState.width" type="number" @input="handleInput('width', +$event)">
@@ -50,6 +50,11 @@ const save = () => {
 
 const compose = () => {
   store.compose()
+  store.recordSnapshot()
+}
+
+const splite = () => {
+  store.splite()
   store.recordSnapshot()
 }
 

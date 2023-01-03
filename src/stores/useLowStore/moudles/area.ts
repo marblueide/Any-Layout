@@ -20,6 +20,7 @@ export const useArea = () => {
     idMapData,
     idMapDataIndex,
     lowCanvasData,
+    setCurrentComponent,
   } = useState();
   const setAreaData = (obj: Partial<AreaData>) => {
     areaData.value = merge(areaData.value, obj);
@@ -51,7 +52,7 @@ export const useArea = () => {
       animations: [],
       linkage: [],
     };
-    addLowCanvasData(defaultGroup);
+    const component = addLowCanvasData(defaultGroup);
 
     areaData.value.components.forEach((component) => {
       component.id && deleteComponentData(component.id);
@@ -65,6 +66,7 @@ export const useArea = () => {
 
     areaData.value.components = [];
     isShowArea.value = false;
+    setCurrentComponent(component.id);
   };
 
   const initArea = () => {
