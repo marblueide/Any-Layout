@@ -1,25 +1,19 @@
 <template>
   <div class="mark-line">
-    <div
-      class="line"
-      v-for="item in lines"
-      absolute
-      :class="item.includes('x') ? 'xline' : 'yline'"
-      bg-blue-2
-      :style="getShapeStyle(lineState[item].style)"
-      v-show="lineState[item].isShow"
-    ></div>
+    <div class="line" v-for="item in lines" absolute :class="item.includes('x') ? 'xline' : 'yline'" bg-blue-2
+      :style="getShapeStyle(lineState[item].style)" v-show="lineState[item].isShow"></div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { reactive } from "vue";
+import { computed, reactive } from "vue";
 import { getShapeStyle, getComponentRotatedStyle } from "@/utils/style";
 import emitter from "@/utils/mitt";
 import { useLowStore } from "../../stores/useLowStore";
 import { storeToRefs } from "pinia";
-import { cloneDeep } from "lodash-es";
+import { clone, cloneDeep, isNil } from 'lodash-es';
 import type { ComponentStyle } from "../../types/LowCode/style";
+import type { LowCanvasData } from "@/types";
 
 type line = "xt" | "xc" | "xb" | "yl" | "yc" | "yr";
 type topLine = "xt" | "xc" | "xb";
@@ -81,7 +75,7 @@ const lineState = reactive<{
 const lines: line[] = ["xt", "xc", "xb", "yl", "yc", "yr"];
 const diff = 10;
 const store = useLowStore();
-const { currentComponent, lowCanvasData } = storeToRefs(store);
+const { currentComponent, lowCanvasData, currentComponentIndex } = storeToRefs(store);
 
 emitter.on("move", ({ isDown, isLeft }) => {
   showLine(isDown, isLeft);
@@ -97,10 +91,37 @@ const hideLine = () => {
   }
 };
 
+const isGroup = computed(() => {
+  return !isNil(currentComponentIndex.value) && lowCanvasData.value[currentComponentIndex.value!] != currentComponent.value
+})
+
+const components = computed(() => {
+  const arr: LowCanvasData[] = []
+  lowCanvasData.value.forEach((component) => {
+    arr.push(component);
+    if (Array.isArray(component.propValue)) {
+      component.propValue.forEach(c => {
+        const cloneC = cloneDeep(c)
+        cloneC.style.left += component.style.left
+        cloneC.style.top += component.style.top
+        arr.push(cloneC)
+      })
+    }
+  })
+  return arr
+})
+
 const showLine = (isDown: boolean, isLeft: boolean) => {
   if (!currentComponent.value) return;
+  const cloneCurStyle = cloneDeep(currentComponent.value?.style)
+  const groupC = lowCanvasData.value[currentComponentIndex.value!]
+  if (isGroup.value) {
+    //判断是否是组合内的组件
+    cloneCurStyle.left! += groupC.style.left!
+    cloneCurStyle.top! += groupC.style.top!
+  }
   const currentStyle = getComponentRotatedStyle(
-    cloneDeep(currentComponent.value?.style)
+    cloneCurStyle
   );
 
   const {
@@ -117,7 +138,7 @@ const showLine = (isDown: boolean, isLeft: boolean) => {
 
   const needShow: line[] = [];
   hideLine();
-  lowCanvasData.value.forEach((data) => {
+  components.value.forEach((data) => {
     if (data.id == currentComponent.value?.id) return;
 
     const { left, top, width, height } = getComponentRotatedStyle(
@@ -198,15 +219,16 @@ const showLine = (isDown: boolean, isLeft: boolean) => {
           needShow.push(condition.line);
           lineState[condition.line].style[key as "top" | "left"] =
             condition.lineValue;
+          const val = isGroup.value ? condition.curValue - groupC.style[key as "top" | "left"]! : condition.curValue
           store.setCurrentComponentStyle({
             [key]:
               rotate != 0
                 ? transformCurComponnet(
-                    key as "top" | "left",
-                    condition.curValue,
-                    currentStyle
-                  )
-                : condition.curValue,
+                  key as "top" | "left",
+                  val,
+                  currentStyle
+                )
+                : val,
           });
         }
       });

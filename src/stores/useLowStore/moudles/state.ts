@@ -22,6 +22,8 @@ const currentComponent = ref<LowCanvasData>();
 const currentComponentIndex = ref<number>();
 const idMapData = new Map<string, LowCanvasData>(); //id对应Data
 const idMapDataIndex = new Map<string, number>(); //id对应Data的Index
+const isMoving = ref(false);
+
 export const useState = () => {
   const initLowCanvasState = () => {
     //初始化LowCanvasState
@@ -39,10 +41,10 @@ export const useState = () => {
       currentComponent.value = undefined;
       return;
     }
-    let index = idMapDataIndex.get(id);
+    const component = idMapData.get(id);
+    const index = idMapDataIndex.get(id);
     currentComponentIndex.value = index;
-    currentComponent.value =
-      index == undefined ? undefined : lowCanvasData[index];
+    currentComponent.value = component;
   };
 
   const setCurrentComponentStyle = (style: Partial<ComponentStyle>) => {
@@ -60,9 +62,8 @@ export const useState = () => {
   };
 
   const setComponentStyle = (id: string, style: Partial<ComponentStyle>) => {
-    const index = idMapDataIndex.get(id);
-    index != undefined &&
-      (lowCanvasData[index].style = merge(lowCanvasData[index].style, style));
+    const component = idMapData.get(id);
+    component && (component.style = merge(component?.style, style));
   };
 
   const setLowCanvasState = (obj: Partial<LowCanvasType>) => {
@@ -102,8 +103,12 @@ export const useState = () => {
       data.id = uuid();
     }
     lowCanvasData.push(data);
-    idMapData.set(data.id as string, data);
+    idMapData.set(data.id as string, lowCanvasData[lowCanvasData.length - 1]);
     idMapDataIndex.set(data.id as string, lowCanvasData.length - 1);
+  };
+
+  const setMoving = (value: boolean) => {
+    isMoving.value = value;
   };
 
   return {
@@ -113,6 +118,8 @@ export const useState = () => {
     currentComponentIndex,
     idMapData,
     idMapDataIndex,
+    isMoving,
+    setMoving,
     setCurrentComponent,
     setCurrentComponentStyle,
     setCurrentProps,

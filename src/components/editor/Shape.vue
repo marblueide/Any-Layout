@@ -1,37 +1,15 @@
 <template>
-  <div
-    class="shape"
-    ref="shapeRef"
-    z-1
-    :style="style"
-    @mousedown.stop.prevent="handleMouseDown"
-    :class="
-      currentComponent?.id == id
-        ? 'cursor-move outline-blue-3 outline-1  outline-solid'
-        : ''
-    "
-  >
-    <div
-      class="rataion-point"
-      absolute
-      @mousedown.stop.prevent="handleRatation"
-      v-show="currentComponent?.id == id"
-    >
+  <div class="shape" ref="shapeRef" z-1 :style="style" @mousedown.stop.prevent="handleMouseDown" :class="
+  currentComponent?.id == id || isMoving
+    ? 'cursor-move outline-blue-3 outline-1  outline-solid'
+    : ''
+">
+    <div class="rataion-point" absolute @mousedown.stop.prevent="handleRatation" v-show="currentComponent?.id == id">
       <i class="iconfont icon-xuanzhuan" color-blue-3 cursor-grab></i>
     </div>
     <template v-if="currentComponent?.id == id">
-      <div
-        class="shape-point"
-        @mousedown.stop.prevent="handlePointDown($event, point)"
-        z-1
-        absolute
-        rounded-10
-        bg-white
-        cursor-n-resize
-        border="1 blue-6"
-        v-for="point in pointList"
-        :style="getPointStyle(point)"
-      ></div>
+      <div class="shape-point" @mousedown.stop.prevent="handlePointDown($event, point)" z-1 absolute rounded-10 bg-white
+        cursor-n-resize border="1 blue-6" v-for="point in pointList" :style="getPointStyle(point)"></div>
     </template>
     <slot></slot>
   </div>
@@ -41,7 +19,7 @@
 import { storeToRefs } from "pinia";
 import { nextTick, ref, type StyleValue } from "vue";
 import { useLowStore } from "../../stores/useLowStore";
-import {} from "@/utils";
+import { } from "@/utils";
 import { calculateComponentPositonAndSize } from "../../utils/calculateComponentPositonAndSize";
 import emitter from "@/utils/mitt";
 import type { pointType } from "@/types";
@@ -51,7 +29,7 @@ const props = defineProps<{
   id: string;
 }>();
 const store = useLowStore();
-const { currentComponent } = storeToRefs(store);
+const { currentComponent, isMoving } = storeToRefs(store);
 const pointList: pointType[] = ["lt", "t", "rt", "r", "rb", "b", "lb", "l"];
 const shapeRef = ref();
 
@@ -61,9 +39,9 @@ const handleMouseDown = (e: MouseEvent) => {
   const startX = e.clientX;
   const startY = e.clientY;
 
-  let isMove = false;
+  store.setMoving(false)
   const move = async (e: MouseEvent) => {
-    isMove = true;
+    store.setMoving(true)
     const endX = e.clientX;
     const endY = e.clientY;
     const curX = endX - startX + left!;
@@ -82,7 +60,8 @@ const handleMouseDown = (e: MouseEvent) => {
   const up = () => {
     document.removeEventListener("mousemove", move);
     document.removeEventListener("mouseup", up);
-    isMove && store.recordSnapshot();
+    isMoving.value && store.recordSnapshot();
+    store.setMoving(false)
     emitter.emit("unMove");
   };
 
@@ -99,21 +78,15 @@ const getPointStyle = (point: pointType): StyleValue => {
   let left, top;
 
   if (point.length == 2) {
-    //@ts-ignore
     left = hasL ? 0 : canvasData.style.width;
-    //@ts-ignore
     top = hasT ? 0 : canvasData.style.height;
   } else {
     if (hasL || hasR) {
-      //@ts-ignore
       left = hasL ? 0 : canvasData.style.width;
-      //@ts-ignore
-      top = canvasData.style.height / 2;
+      top = canvasData.style.height! / 2;
     }
     if (hasT || hasB) {
-      //@ts-ignore
-      left = canvasData.style.width / 2;
-      //@ts-ignore
+      left = canvasData.style.width! / 2;
       top = hasT ? 0 : canvasData.style.height;
     }
   }

@@ -21,6 +21,8 @@ export const useLowStore = defineStore("useLowStore", () => {
     currentComponentIndex,
     idMapData,
     idMapDataIndex,
+    isMoving,
+    setMoving,
     setCurrentComponent,
     setCurrentComponentStyle,
     setCurrentProps,
@@ -65,8 +67,7 @@ export const useLowStore = defineStore("useLowStore", () => {
   };
 
   const getCanvasDataById = (id: string) => {
-    let index = idMapDataIndex.get(id);
-    return lowCanvasData[index as number];
+    return idMapData.get(id);
   };
 
   const upLayerComponentData = (id: string) => {
@@ -100,6 +101,8 @@ export const useLowStore = defineStore("useLowStore", () => {
     isShowArea,
     currentComponent,
     currentComponentIndex,
+    isMoving,
+    setMoving,
     backSnapshot,
     forwardSnapshot,
     initStack,

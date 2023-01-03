@@ -3,6 +3,7 @@ import { markRaw, ref } from "vue";
 import { cloneDeep, merge } from "lodash-es";
 import { LabelEnum, type LowCanvasData } from "../../../types/LowCode/index";
 import Group from "@/components/LowCodeCompoent/VGroup/index.vue";
+import { useState } from "./state";
 
 const areaData = ref<AreaData>({
   left: 0,
@@ -13,6 +14,13 @@ const areaData = ref<AreaData>({
 });
 const isShowArea = ref(false);
 export const useArea = () => {
+  const {
+    addLowCanvasData,
+    deleteComponentData,
+    idMapData,
+    idMapDataIndex,
+    lowCanvasData,
+  } = useState();
   const setAreaData = (obj: Partial<AreaData>) => {
     areaData.value = merge(areaData.value, obj);
   };
@@ -20,7 +28,9 @@ export const useArea = () => {
     const components: LowCanvasData[] = [];
     areaData.value.components.forEach((component) => {
       if (component.label != LabelEnum.group) {
-        components.push(cloneDeep(component));
+        component.style.left && (component.style.left -= areaData.value.left);
+        component.style.top && (component.style.top -= areaData.value.top);
+        components.push(component);
       }
     });
 
@@ -31,11 +41,30 @@ export const useArea = () => {
       icon: "",
       events: {},
       isLock: false,
-      style: {},
+      style: {
+        left: areaData.value.left,
+        top: areaData.value.top,
+        width: areaData.value.width,
+        height: areaData.value.height,
+      },
       propValue: components,
       animations: [],
       linkage: [],
     };
+    addLowCanvasData(defaultGroup);
+
+    areaData.value.components.forEach((component) => {
+      component.id && deleteComponentData(component.id);
+    });
+
+    areaData.value.components.forEach((component) => {
+      component.id && idMapData.set(component.id, component);
+      component.id &&
+        idMapDataIndex.set(component.id, lowCanvasData.length - 1);
+    });
+
+    areaData.value.components = [];
+    isShowArea.value = false;
   };
 
   const initArea = () => {

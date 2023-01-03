@@ -3,13 +3,12 @@
     <el-button m-x-1>JSON</el-button>
     <el-button m-x-1 @click="handleBack" :disabled="stackIndex == 0">撤销</el-button>
     <el-button m-x-1 @click="handleForward" :disabled="stackIndex == stack.length - 1">回退</el-button>
-    <el-button m-x-1>插入图片</el-button>
     <el-button m-x-1>预览</el-button>
     <el-button m-x-1 @click="save">保存</el-button>
     <el-button m-x-1 @click="clearCanvas">清空画布</el-button>
     <el-button m-x-1 @click="init">初始化</el-button>
-    <el-button m-x-1 @click="compose">组合</el-button>
-    <el-button m-x-1>拆分</el-button>
+    <el-button m-x-1 @click="compose" :disabled="areaData.components.length == 0">组合</el-button>
+    <el-button m-x-1 :disabled="!Array.isArray(currentComponent?.propValue)">拆分</el-button>
     <div class="canvas-size" grid h-10 w-80 items-center mx-2>
       <span color-gray-7>画布大小</span>
       <el-input :model-value="lowCanvasState.width" type="number" @input="handleInput('width', +$event)">
@@ -26,7 +25,7 @@ import { values } from "lodash-es";
 import { storeToRefs } from "pinia";
 
 const store = useLowStore();
-const { lowCanvasState, lowCanvasData, stackIndex, stack } = storeToRefs(store);
+const { lowCanvasState, lowCanvasData, stackIndex, stack, areaData, currentComponent } = storeToRefs(store);
 
 const handleBack = () => {
   store.backSnapshot();
@@ -51,6 +50,7 @@ const save = () => {
 
 const compose = () => {
   store.compose()
+  store.recordSnapshot()
 }
 
 const handleInput = (key: string, val: number) => {
