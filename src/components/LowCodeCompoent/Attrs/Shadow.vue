@@ -15,11 +15,15 @@
             justify-center
             items-center
             cursor-pointer
+<<<<<<< HEAD
             :class="
               currentComponent?.style?.boxShadow == item.value
                 ? 'border-black'
                 : 'border-gray'
             "
+=======
+            :class="boxShadow == item.value ? 'border-black' : 'border-gray'"
+>>>>>>> fe206e7d4967b068316ee9a340e0b56a3c2e4c91
             @click="handleChange('boxShadow', item.value)"
           >
             <div border-gray-7 w-4 h-4 :style="{ boxShadow: item.value }"></div>

@@ -2,7 +2,11 @@
   <el-form-item label="边框大小">
     <el-input
       type="number"
+<<<<<<< HEAD
       :model-value="currentComponent?.style.borderWidth"
+=======
+      :model-value="borderWidth"
+>>>>>>> fe206e7d4967b068316ee9a340e0b56a3c2e4c91
       @update:modelValue="handleChange('borderWidth', +$event)"
     ></el-input>
   </el-form-item>
@@ -21,11 +25,15 @@
           justify-center
           items-center
           cursor-pointer
+<<<<<<< HEAD
           :class="
             currentComponent?.style.borderRadius == item.value
               ? 'border-black'
               : 'border-gray'
           "
+=======
+          :class="borderRadius == item.value ? 'border-black' : 'border-gray'"
+>>>>>>> fe206e7d4967b068316ee9a340e0b56a3c2e4c91
           @click="handleChange('borderRadius', item.value)"
         >
           <div

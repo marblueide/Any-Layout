@@ -36,10 +36,23 @@ export type LowCanvasData<T extends LabelEnum = LabelEnum> = {
 };
 
 export type AttrComponent = {
+<<<<<<< HEAD
   [k in string]: Component;
 };
 
 export type Attr = {
+=======
+  [k in string]: () => Component | string;
+};
+
+export type Attr = {
+  name: string;
+  data: AttrData[];
+  active: string[];
+};
+
+export type AttrData<T = AttrComponent> = {
+>>>>>>> fe206e7d4967b068316ee9a340e0b56a3c2e4c91
   name: string;
   data: AttrData[];
   all: () => string[];
@@ -48,7 +61,11 @@ export type Attr = {
 export type AttrData<T extends string = string> = {
   name: T;
   title: string;
+<<<<<<< HEAD
   components: Component[];
+=======
+  components: T[keyof T][];
+>>>>>>> fe206e7d4967b068316ee9a340e0b56a3c2e4c91
 };
 
 export interface DataAnimation {

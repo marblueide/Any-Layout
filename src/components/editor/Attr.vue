@@ -7,6 +7,7 @@
         :name="index"
         :key="index"
       >
+<<<<<<< HEAD
         <KeepAlive>
           <el-collapse :model-value="tabItem.all()">
             <el-collapse-item
@@ -21,6 +22,19 @@
             </el-collapse-item>
           </el-collapse>
         </KeepAlive>
+=======
+        <el-collapse v-model="tabItem.active">
+          <el-collapse-item
+            v-for="item in tabItem.data"
+            :name="item.name"
+            :title="item.title"
+          >
+            <el-form label-position="top">
+              <component :is="c()" v-for="c in item.components"></component>
+            </el-form>
+          </el-collapse-item>
+        </el-collapse>
+>>>>>>> fe206e7d4967b068316ee9a340e0b56a3c2e4c91
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -30,7 +44,11 @@
 import { storeToRefs } from "pinia";
 import { ref } from "vue";
 import { useLowStore } from "../../stores/useLowStore";
+<<<<<<< HEAD
 import { attrList } from "../LowCodeCompoent/attr-list";
+=======
+
+>>>>>>> fe206e7d4967b068316ee9a340e0b56a3c2e4c91
 const store = useLowStore();
 const { currentComponent } = storeToRefs(store);
 
