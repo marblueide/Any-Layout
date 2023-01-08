@@ -1,9 +1,9 @@
 <template>
   <div class="shape" ref="shapeRef" z-1 :style="style" @mousedown.stop.prevent="handleMouseDown" :class="
-  currentComponent?.id == id || isMoving
-    ? 'cursor-move outline-blue-3 outline-1  outline-solid'
-    : ''
-">
+    currentComponent?.id == id || isMoving
+      ? 'cursor-move outline-blue-3 outline-1  outline-solid'
+      : ''
+  ">
     <div class="rataion-point" absolute @mousedown.stop.prevent="handleRatation" v-show="currentComponent?.id == id">
       <i class="iconfont icon-xuanzhuan" color-blue-3 cursor-grab></i>
     </div>
@@ -113,7 +113,16 @@ const getPointStyle = (point: pointType): StyleValue => {
 
 const handlePointDown = (e: MouseEvent, point: pointType) => {
   store.setCurrentComponent(props.id);
-  const { width, height, left, top, rotate } = currentComponent.value!.style;
+  let { width, height, left, top, rotate } = currentComponent.value!.style;
+
+  if (isGroupChidren.value) {
+    const { left: l, top: t } = lowCanvasData.value[currentComponentIndex.value!].style
+    left += l
+    top += t
+  }
+
+  store.setMoving(true)
+
   const editorRectInfo = document
     .querySelector("#editor")!
     .getBoundingClientRect();
@@ -175,7 +184,23 @@ const handlePointDown = (e: MouseEvent, point: pointType) => {
       })
     }
 
+    if (isGroupChidren.value) {
+      const { left: l, top: t, height, width } = lowCanvasData.value[currentComponentIndex.value!].style
+      style.left -= l
+      style.top -= t
+      if (style.top + style.height > height) {
+        store.setComponentStyle(lowCanvasData.value[currentComponentIndex.value!].id!, {
+          height: style.top + style.height
+        })
+      }
 
+      if (style.left + style.width > width) {
+        console.log(width)
+        store.setComponentStyle(lowCanvasData.value[currentComponentIndex.value!].id!, {
+          width: style.left + style.width
+        })
+      }
+    }
     store.setCurrentComponentStyle(style);
   };
 
@@ -183,6 +208,7 @@ const handlePointDown = (e: MouseEvent, point: pointType) => {
     document.removeEventListener("mousemove", move);
     document.removeEventListener("mouseup", up);
     store.recordSnapshot();
+    store.setMoving(false)
   };
 
   document.addEventListener("mousemove", move);

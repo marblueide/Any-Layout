@@ -25,7 +25,7 @@ import { cloneDeep } from "lodash-es";
 import type { LowCanvasData } from "../../types/LowCode/index";
 
 const store = useLowStore();
-const { lowCanvasState, lowCanvasData, areaData, isShowArea } =
+const { lowCanvasState, lowCanvasData, areaData, isShowArea, currentComponent } =
   storeToRefs(store);
 const editorRef = ref();
 let editorRect: DOMRect;

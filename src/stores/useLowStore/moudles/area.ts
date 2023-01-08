@@ -5,6 +5,15 @@ import { LabelEnum, type LowCanvasData } from "../../../types/LowCode/index";
 import Group from "@/components/LowCodeCompoent/VGroup/index.vue";
 import { useState } from "./state";
 
+const {
+  addLowCanvasData,
+  deleteComponentData,
+  idMapData,
+  idMapDataIndex,
+  lowCanvasData,
+  setCurrentComponent,
+  currentComponent,
+} = useState();
 const areaData = ref<AreaData>({
   left: 0,
   top: 0,
@@ -14,14 +23,6 @@ const areaData = ref<AreaData>({
 });
 const isShowArea = ref(false);
 export const useArea = () => {
-  const {
-    addLowCanvasData,
-    deleteComponentData,
-    idMapData,
-    idMapDataIndex,
-    lowCanvasData,
-    setCurrentComponent,
-  } = useState();
   const setAreaData = (obj: Partial<AreaData>) => {
     areaData.value = merge(areaData.value, obj);
   };
