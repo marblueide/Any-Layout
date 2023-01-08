@@ -23,6 +23,7 @@ import {
 import { componentList } from "@/components/LowCodeCompoent/component-list";
 import { cloneDeep } from "lodash-es";
 import type { LowCanvasData } from "../../types/LowCode/index";
+import type { ComponentStyle } from "@/types/LowCode/style";
 
 const store = useLowStore();
 const { lowCanvasState, lowCanvasData, areaData, isShowArea, currentComponent } =
@@ -76,7 +77,7 @@ const handleDragOver = (e: DragEvent) => {
   e.preventDefault();
 };
 
-const selectComponentSet = reactive<Set<LowCanvasData>>(new Set());
+const selectComponentSet = reactive<Set<string>>(new Set());
 
 const handleMouseDown = (e: MouseEvent) => {
   if (!editorRect) editorRect = editorRef.value.getBoundingClientRect();
@@ -123,7 +124,7 @@ const handleMouseDown = (e: MouseEvent) => {
         top >= areaData.value.top &&
         top <= areaData.value.top + areaData.value.height
       ) {
-        selectComponentSet.add(item);
+        selectComponentSet.add(item.id!);
         l = Math.min(l, left);
         t = Math.min(t, top);
         r = Math.max(r, left + width);
@@ -150,11 +151,16 @@ const handleAreaDwon = (e: MouseEvent) => {
   const { left, top } = areaData.value;
   const startX = e.clientX;
   const startY = e.clientY;
-  const componetPos: StyleValue[] = [];
-  selectComponentSet.forEach((item) => {
-    //@ts-ignore
-    componetPos.push(cloneDeep(item.style));
+  const componetPos: ComponentStyle[] = [];
+  const data: LowCanvasData[] = []
+  selectComponentSet.forEach((id) => {
+    data.push(store.getComponentById(id)!)
+
   });
+
+  data.forEach(item => {
+    componetPos.push(cloneDeep(item.style));
+  })
 
   const move = (e: MouseEvent) => {
     const endX = e.clientX;
@@ -168,10 +174,11 @@ const handleAreaDwon = (e: MouseEvent) => {
     });
 
     let index = 0;
-    selectComponentSet.forEach((item) => {
+    selectComponentSet.forEach((id) => {
+      const item = store.getComponentById(id)
       //@ts-ignore
       const { left, top } = componetPos[index++];
-      store.setComponentStyle(item.id as string, {
+      item && store.setComponentStyle(item.id!, {
         left: left + disX,
         //@ts-ignore
         top: top + disY,

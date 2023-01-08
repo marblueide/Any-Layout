@@ -74,5 +74,5 @@ export type AreaData = {
   top: number;
   width: number;
   height: number;
-  components: LowCanvasData[];
+  components: string[];
 };

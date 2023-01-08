@@ -112,6 +112,10 @@ export const useState = () => {
     isMoving.value = value;
   };
 
+  const getComponentById = (id: string) => {
+    return idMapData.get(id);
+  };
+
   return {
     lowCanvasState,
     lowCanvasData,
@@ -131,5 +135,6 @@ export const useState = () => {
     initLowCanvasState,
     initLowCanvasData,
     addLowCanvasData,
+    getComponentById,
   };
 };

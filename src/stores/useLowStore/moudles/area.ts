@@ -13,6 +13,7 @@ const {
   lowCanvasData,
   setCurrentComponent,
   currentComponent,
+  getComponentById,
 } = useState();
 const areaData = ref<AreaData>({
   left: 0,
@@ -27,9 +28,10 @@ export const useArea = () => {
     areaData.value = merge(areaData.value, obj);
   };
   const compose = () => {
+    const data = areaData.value.components.map((id) => getComponentById(id));
     const components: LowCanvasData[] = [];
-    areaData.value.components.forEach((component) => {
-      if (component.label != LabelEnum.group) {
+    data.forEach((component) => {
+      if (component && component.label != LabelEnum.group) {
         component.style.left && (component.style.left -= areaData.value.left);
         component.style.top && (component.style.top -= areaData.value.top);
         components.push(component);
@@ -57,14 +59,18 @@ export const useArea = () => {
     };
     const component = addLowCanvasData(defaultGroup);
 
-    areaData.value.components.forEach((component) => {
-      component.id && deleteComponentData(component.id);
+    data.forEach((component) => {
+      if (component) {
+        component.id && deleteComponentData(component.id);
+      }
     });
 
-    areaData.value.components.forEach((component) => {
-      component.id && idMapData.set(component.id, component);
-      component.id &&
-        idMapDataIndex.set(component.id, lowCanvasData.length - 1);
+    data.forEach((component) => {
+      if (component) {
+        component.id && idMapData.set(component.id, component);
+        component.id &&
+          idMapDataIndex.set(component.id, lowCanvasData.length - 1);
+      }
     });
 
     areaData.value.components = [];

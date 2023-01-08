@@ -34,6 +34,7 @@ export const useLowStore = defineStore("useLowStore", () => {
     initLowCanvasState,
     initLowCanvasData,
     addLowCanvasData,
+    getComponentById,
   } = useState();
 
   const {
@@ -160,5 +161,6 @@ export const useLowStore = defineStore("useLowStore", () => {
     compose,
     splite,
     spliteSingle,
+    getComponentById,
   };
 });
