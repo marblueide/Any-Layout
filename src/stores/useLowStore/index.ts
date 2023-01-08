@@ -2,6 +2,7 @@ import type { LowCanvasData, LowCanvasType } from "@/types/LowCode";
 import { defineStore } from "pinia";
 import { swap } from "@/utils";
 import { useArea, useStack, useState } from "./moudles";
+import type { PropValue } from "../../types/LowCode/PropValue";
 
 //@ts-ignore
 export const useLowStore = defineStore("useLowStore", () => {
@@ -33,7 +34,6 @@ export const useLowStore = defineStore("useLowStore", () => {
     initLowCanvasState,
     initLowCanvasData,
     addLowCanvasData,
-    splite,
   } = useState();
 
   const {
@@ -93,6 +93,39 @@ export const useLowStore = defineStore("useLowStore", () => {
     }
   };
 
+  const splite = () => {
+    if (Array.isArray(currentComponent.value?.propValue)) {
+      currentComponent.value?.propValue.forEach((component: LowCanvasData) => {
+        component.style.left! += currentComponent.value?.style.left!;
+        component.style.top! += currentComponent.value?.style.top!;
+        addLowCanvasData(component);
+        component.id &&
+          idMapDataIndex.set(component.id, lowCanvasData.length - 1);
+        component.id &&
+          idMapData.set(component.id, lowCanvasData[lowCanvasData.length - 1]);
+      });
+      currentComponent.value?.id &&
+        deleteComponentData(currentComponent.value?.id);
+    }
+  };
+
+  const spliteSingle = (id: string) => {
+    const father = lowCanvasData[currentComponentIndex.value!];
+    if (Array.isArray(father.propValue)) {
+      const index = father.propValue.findIndex(
+        (component) => component.id == id
+      );
+      const component = idMapData.get(id);
+      component!.style.left += father.style.left;
+      component!.style.top += father.style.top;
+      addLowCanvasData(component!);
+      index != undefined && index != -1 && father.propValue.splice(index, 1);
+      if (father.propValue.length == 0) {
+        deleteComponentData(father.id!);
+      }
+    }
+  };
+
   return {
     stack,
     stackIndex: index,
@@ -126,5 +159,6 @@ export const useLowStore = defineStore("useLowStore", () => {
     setIsShowArea,
     compose,
     splite,
+    spliteSingle,
   };
 });

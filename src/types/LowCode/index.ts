@@ -20,6 +20,7 @@ export type LowCanvasType = {
 export type LowCanvasData<T extends LabelEnum = LabelEnum> = {
   id?: string;
   label: T;
+  name: keyof typeof LabelEnum;
   component: () => Component | string;
   attr: string[][];
   icon: string | Component;
@@ -27,10 +28,8 @@ export type LowCanvasData<T extends LabelEnum = LabelEnum> = {
     [k in string]: (...arg: any) => any;
   };
   isLock: boolean;
-  style: Partial<ComponentStyle>;
-  propValue: T extends LabelEnum.group
-    ? LowCanvasData<LabelEnum>[]
-    : PropValue[T];
+  style: ComponentStyle;
+  propValue: PropValue[T];
   animations: DataAnimation[];
   linkage: DataLinkage[];
 };

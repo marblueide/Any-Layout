@@ -37,6 +37,7 @@ export const useArea = () => {
 
     const defaultGroup: LowCanvasData = {
       label: LabelEnum.group,
+      name: "group",
       component: () => markRaw(Group),
       attr: [[], []],
       icon: "",
@@ -47,6 +48,7 @@ export const useArea = () => {
         top: areaData.value.top,
         width: areaData.value.width,
         height: areaData.value.height,
+        rotate: 0,
       },
       propValue: components,
       animations: [],

@@ -13,7 +13,7 @@ import { useLowStore } from "../../stores/useLowStore";
 import { storeToRefs } from "pinia";
 import { clone, cloneDeep, isNil } from 'lodash-es';
 import type { ComponentStyle } from "../../types/LowCode/style";
-import type { LowCanvasData } from "@/types";
+import { LabelEnum, type LowCanvasData } from "@/types";
 
 type line = "xt" | "xc" | "xb" | "yl" | "yc" | "yr";
 type topLine = "xt" | "xc" | "xb";
@@ -99,7 +99,7 @@ const components = computed(() => {
   const arr: LowCanvasData[] = []
   lowCanvasData.value.forEach((component) => {
     arr.push(component);
-    if (Array.isArray(component.propValue)) {
+    if (Array.isArray(component.propValue) && currentComponent.value?.label != LabelEnum.group) {
       component.propValue.forEach(c => {
         const cloneC = cloneDeep(c)
         cloneC.style.left += component.style.left

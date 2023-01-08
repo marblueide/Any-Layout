@@ -17,21 +17,27 @@
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { nextTick, ref, type StyleValue } from "vue";
+import { computed, ref, type StyleValue } from "vue";
 import { useLowStore } from "../../stores/useLowStore";
 import { } from "@/utils";
 import { calculateComponentPositonAndSize } from "../../utils/calculateComponentPositonAndSize";
 import emitter from "@/utils/mitt";
-import type { pointType } from "@/types";
+import { LabelEnum, type pointType } from "@/types";
+import type { LowCanvasData } from '../../types/LowCode/index';
+import { cloneDeep } from "lodash-es";
 
 const props = defineProps<{
   style: StyleValue;
   id: string;
 }>();
 const store = useLowStore();
-const { currentComponent, isMoving } = storeToRefs(store);
+const { currentComponent, isMoving, lowCanvasData, currentComponentIndex } = storeToRefs(store);
 const pointList: pointType[] = ["lt", "t", "rt", "r", "rb", "b", "lb", "l"];
 const shapeRef = ref();
+
+const isGroupChidren = computed(() => {
+  return currentComponentIndex.value != undefined && lowCanvasData.value[currentComponentIndex.value] != currentComponent.value
+})
 
 const handleMouseDown = (e: MouseEvent) => {
   store.setCurrentComponent(props.id);
@@ -63,8 +69,16 @@ const handleMouseDown = (e: MouseEvent) => {
     isMoving.value && store.recordSnapshot();
     store.setMoving(false)
     emitter.emit("unMove");
+    if (isGroupChidren.value) {
+      const { left, top, width, height } = lowCanvasData.value[currentComponentIndex.value!].style
+      const right = left + width, bottom = top + height;
+      const { left: curLeft, top: curTop, width: curWidth, height: curHeight } = currentComponent.value!.style
+      const curRight = curLeft + curWidth, curBottom = curTop + curHeight
+      if (curLeft < -curWidth / 3 || curTop < -curTop / 3 || curRight > right + width / 3 || curBottom > bottom + height / 3) {
+        currentComponent.value?.id && store.spliteSingle(currentComponent.value.id)
+      }
+    }
   };
-
   document.addEventListener("mousemove", move);
   document.addEventListener("mouseup", up);
 };
@@ -78,16 +92,16 @@ const getPointStyle = (point: pointType): StyleValue => {
   let left, top;
 
   if (point.length == 2) {
-    left = hasL ? 0 : canvasData.style.width;
-    top = hasT ? 0 : canvasData.style.height;
+    left = hasL ? 0 : canvasData!.style.width;
+    top = hasT ? 0 : canvasData!.style.height;
   } else {
     if (hasL || hasR) {
-      left = hasL ? 0 : canvasData.style.width;
-      top = canvasData.style.height! / 2;
+      left = hasL ? 0 : canvasData!.style.width;
+      top = canvasData!.style.height! / 2;
     }
     if (hasT || hasB) {
-      left = canvasData.style.width! / 2;
-      top = hasT ? 0 : canvasData.style.height;
+      left = canvasData!.style.width! / 2;
+      top = hasT ? 0 : canvasData!.style.height;
     }
   }
 
@@ -129,6 +143,12 @@ const handlePointDown = (e: MouseEvent, point: pointType) => {
     rotate,
   };
 
+  let chidrenCmp: LowCanvasData[] = [];
+
+  if (currentComponent.value?.label == LabelEnum.group) {
+    chidrenCmp = cloneDeep(currentComponent.value.propValue) as LowCanvasData[]
+  }
+
   const move = (e: MouseEvent) => {
     const curPosition = {
       x: e.clientX - editorRectInfo.left,
@@ -140,6 +160,21 @@ const handlePointDown = (e: MouseEvent, point: pointType) => {
       symmetricPoint,
       center: centerPoint,
     });
+
+    if (chidrenCmp.length > 0) {
+      const x = style.width / width;
+      const y = style.height / height;
+      chidrenCmp.forEach((component) => {
+        const { left, top, width, height } = component.style
+        component.id && store.setComponentStyle(component.id, {
+          left: left * x,
+          width: width * x,
+          top: top * y,
+          height: height * y
+        })
+      })
+    }
+
 
     store.setCurrentComponentStyle(style);
   };

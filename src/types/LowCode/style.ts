@@ -3,17 +3,17 @@ export type ComponentStyle = {
   height: number;
   left: number;
   top: number;
-  right: number;
-  bottom: number;
+  right?: number;
+  bottom?: number;
   rotate: number;
-  borderWidth: number;
-  borderRadius: number;
-  boxShadow: string;
-  justifyContent: string;
-  alignItems: string;
-  background: string;
-  color: string;
-  fontSize: number;
+  borderWidth?: number;
+  borderRadius?: number;
+  boxShadow?: string;
+  justifyContent?: string;
+  alignItems?: string;
+  background?: string;
+  color?: string;
+  fontSize?: number;
 };
 
 export const degFix = ["rotate"];

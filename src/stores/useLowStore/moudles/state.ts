@@ -1,6 +1,6 @@
 import type { LowCanvasType, LowCanvasData } from "@/types";
 import type { ComponentStyle } from "@/types/LowCode/style";
-import { cloneDeep, merge } from "lodash-es";
+import { cloneDeep, isArray, merge } from "lodash-es";
 import { ref, reactive } from "vue";
 import { v4 as uuid } from "uuid";
 const initState = {
@@ -112,20 +112,6 @@ export const useState = () => {
     isMoving.value = value;
   };
 
-  const splite = () => {
-    currentComponent.value?.propValue.forEach((component: LowCanvasData) => {
-      component.style.left! += currentComponent.value?.style.left!;
-      component.style.top! += currentComponent.value?.style.top!;
-      addLowCanvasData(component);
-      component.id &&
-        idMapDataIndex.set(component.id, lowCanvasData.length - 1);
-      component.id &&
-        idMapData.set(component.id, lowCanvasData[lowCanvasData.length - 1]);
-    });
-    currentComponent.value?.id &&
-      deleteComponentData(currentComponent.value?.id);
-  };
-
   return {
     lowCanvasState,
     lowCanvasData,
@@ -145,6 +131,5 @@ export const useState = () => {
     initLowCanvasState,
     initLowCanvasData,
     addLowCanvasData,
-    splite,
   };
 };

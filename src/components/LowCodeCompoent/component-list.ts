@@ -12,11 +12,14 @@ export const componentList: [
 ] = [
   {
     label: LabelEnum.button,
+    name: "button",
     component: () => markRaw(VButton),
     attr: [["props"], ["font", "align", "background", "shadow", "border"]],
     events: {},
     isLock: false,
     style: {
+      left: 0,
+      top: 0,
       width: 90,
       height: 45,
       rotate: 0,
@@ -38,11 +41,14 @@ export const componentList: [
   },
   {
     label: LabelEnum.picture,
+    name: "picture",
     component: () => markRaw(VPicture),
     attr: [[], []],
     events: {},
     isLock: false,
     style: {
+      left: 0,
+      top: 0,
       width: 300,
       height: 200,
       rotate: 0,
@@ -57,11 +63,14 @@ export const componentList: [
   },
   {
     label: LabelEnum.text,
+    name: "text",
     component: () => markRaw(VText),
     attr: [["props"], ["font"]],
     events: {},
     isLock: false,
     style: {
+      left: 0,
+      top: 0,
       width: 90,
       height: 45,
       rotate: 0,

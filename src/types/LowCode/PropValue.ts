@@ -1,6 +1,5 @@
-import type { LabelEnum } from ".";
-
-export type PropValuew = {
+import { LabelEnum, type LowCanvasData } from ".";
+export type PropValue = {
   [LabelEnum.button]: {
     value: string;
   };
@@ -11,4 +10,10 @@ export type PropValuew = {
   [LabelEnum.text]: {
     value: string;
   };
+  [LabelEnum.group]: LowCanvasData<LabelEnum>[];
+};
+
+export type test<T extends LabelEnum = LabelEnum> = {
+  event: T;
+  payload: PropValue[T];
 };
