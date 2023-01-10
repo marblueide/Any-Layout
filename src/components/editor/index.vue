@@ -155,7 +155,6 @@ const handleAreaDwon = (e: MouseEvent) => {
   const data: LowCanvasData[] = []
   selectComponentSet.forEach((id) => {
     data.push(store.getComponentById(id)!)
-
   });
 
   data.forEach(item => {
@@ -174,13 +173,10 @@ const handleAreaDwon = (e: MouseEvent) => {
     });
 
     let index = 0;
-    selectComponentSet.forEach((id) => {
-      const item = store.getComponentById(id)
-      //@ts-ignore
+    data.forEach((item) => {
       const { left, top } = componetPos[index++];
       item && store.setComponentStyle(item.id!, {
         left: left + disX,
-        //@ts-ignore
         top: top + disY,
       });
     });

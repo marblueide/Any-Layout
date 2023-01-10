@@ -25,6 +25,7 @@ import emitter from "@/utils/mitt";
 import { LabelEnum, type pointType } from "@/types";
 import type { LowCanvasData } from '../../types/LowCode/index';
 import { cloneDeep } from "lodash-es";
+import { snapShotEnum, type snapShotType } from "@/types/LowCode/stack";
 
 const props = defineProps<{
   style: StyleValue;
@@ -66,7 +67,20 @@ const handleMouseDown = (e: MouseEvent) => {
   const up = () => {
     document.removeEventListener("mousemove", move);
     document.removeEventListener("mouseup", up);
-    isMoving.value && store.recordSnapshot();
+    isMoving.value && store.recordSnapshot({
+      type: snapShotEnum.move,
+      value: {
+        id: currentComponent.value!.id,
+        current: {
+          left: currentComponent.value!.style.left,
+          top: currentComponent.value!.style.top
+        },
+        before: {
+          left,
+          top
+        }
+      }
+    } as snapShotType<snapShotEnum.move>);
     store.setMoving(false)
     emitter.emit("unMove");
     if (isGroupChidren.value) {
@@ -207,7 +221,13 @@ const handlePointDown = (e: MouseEvent, point: pointType) => {
   const up = () => {
     document.removeEventListener("mousemove", move);
     document.removeEventListener("mouseup", up);
-    store.recordSnapshot();
+    store.recordSnapshot({
+      type: snapShotEnum.style,
+      value: {
+        id: currentComponent.value!.id,
+        style: cloneDeep(currentComponent.value!.style)
+      }
+    } as snapShotType<snapShotEnum.style>);
     store.setMoving(false)
   };
 

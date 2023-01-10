@@ -1,42 +1,17 @@
 <template>
   <div class="component-layer" box-border border="t-1 gray-2">
-    <div
-      class="layer-item"
-      @click="handleClick(item.id)"
-      :class="
-        item.id == currentComponent?.id ? 'bg-blue-100 color-blue-500' : ''
-      "
-      v-for="item in reseverComponentData"
-      :key="item.id"
-      duration-300
-      hover:bg-blue-100
-      hover:color-blue-500
-      px-3
-      py-2
-      flex
-      justify-between
-      items-center
-    >
+    <div class="layer-item" @click="handleClick(item.id)" :class="
+      item.id == currentComponent?.id ? 'bg-blue-100 color-blue-500' : ''
+    " v-for="item in reseverComponentData" :key="item.id" duration-300 hover:bg-blue-100 hover:color-blue-500 px-3
+      py-2 flex justify-between items-center>
       <div class="left">
         <i class="iconfont" :class="item.icon"></i>
         <span ml-1>{{ item.label }}</span>
       </div>
       <div class="right" op-0 grid>
-        <i
-          class="iconfont icon-shangfan"
-          cursor-pointer
-          @click="handleUp(item.id)"
-        ></i>
-        <i
-          class="iconfont icon-xiafan"
-          cursor-pointer
-          @click="handleDown(item.id)"
-        ></i>
-        <i
-          class="iconfont icon-shanchu"
-          cursor-pointer
-          @click="handleDelete(item.id)"
-        ></i>
+        <i class="iconfont icon-shangfan" cursor-pointer @click="handleUp(item.id)"></i>
+        <i class="iconfont icon-xiafan" cursor-pointer @click="handleDown(item.id)"></i>
+        <i class="iconfont icon-shanchu" cursor-pointer @click="handleDelete(item.id)"></i>
       </div>
     </div>
   </div>

@@ -84,6 +84,7 @@ export const useState = () => {
   const deleteComponentData = (id: string) => {
     //删除ComponentData
     const index = idMapDataIndex.get(id);
+    const component = idMapData.get(id);
     if (index != undefined) {
       lowCanvasData.splice(index, 1);
       idMapData.delete(id);
@@ -95,6 +96,10 @@ export const useState = () => {
       if (currentComponent.value == lowCanvasData[index])
         currentComponent.value = undefined;
     }
+    return {
+      index,
+      component,
+    };
   };
 
   const addLowCanvasData = (data: LowCanvasData) => {
@@ -106,6 +111,14 @@ export const useState = () => {
     idMapData.set(data.id as string, lowCanvasData[lowCanvasData.length - 1]);
     idMapDataIndex.set(data.id as string, lowCanvasData.length - 1);
     return lowCanvasData[lowCanvasData.length - 1];
+  };
+
+  const addLowCanvasDataByIndex = (index: number, data: LowCanvasData) => {
+    lowCanvasData.splice(index, 0, data);
+    for (let i = index; i < lowCanvasData.length; i++) {
+      idMapData.set(lowCanvasData[i].id!, lowCanvasData[i]);
+      idMapDataIndex.set(lowCanvasData[i].id!, i);
+    }
   };
 
   const setMoving = (value: boolean) => {
@@ -135,6 +148,7 @@ export const useState = () => {
     initLowCanvasState,
     initLowCanvasData,
     addLowCanvasData,
+    addLowCanvasDataByIndex,
     getComponentById,
   };
 };

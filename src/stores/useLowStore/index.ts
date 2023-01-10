@@ -3,6 +3,8 @@ import { defineStore } from "pinia";
 import { swap } from "@/utils";
 import { useArea, useStack, useState } from "./moudles";
 import type { PropValue } from "../../types/LowCode/PropValue";
+import { snapShotEnum } from "@/types/LowCode/stack";
+import type { snapShotType } from "../../types/LowCode/stack";
 
 //@ts-ignore
 export const useLowStore = defineStore("useLowStore", () => {
@@ -59,13 +61,18 @@ export const useLowStore = defineStore("useLowStore", () => {
     currentComponentIndex.value = undefined;
     idMapData.clear();
     idMapDataIndex.clear();
-    recordSnapshot([]);
+    recordSnapshot({
+      type: snapShotEnum.init,
+    });
   };
 
   const addLowCanvasDataAndSnapshot = (data: LowCanvasData) => {
     // 添加组件
     addLowCanvasData(data);
-    recordSnapshot(lowCanvasData);
+    recordSnapshot({
+      type: snapShotEnum.add,
+      value: data,
+    } as snapShotType<snapShotEnum.add>);
   };
 
   const getCanvasDataById = (id: string) => {
@@ -79,7 +86,10 @@ export const useLowStore = defineStore("useLowStore", () => {
       const [tmp] = swap(lowCanvasData, index, index + 1);
       idMapDataIndex.set(id, index + 1);
       tmp.id && idMapDataIndex.set(tmp.id, index);
-      recordSnapshot();
+      recordSnapshot({
+        type: snapShotEnum.index,
+        value: [index, index + 1],
+      } as snapShotType<snapShotEnum.index>);
     }
   };
 
@@ -90,7 +100,10 @@ export const useLowStore = defineStore("useLowStore", () => {
       const [tmp] = swap(lowCanvasData, index, index - 1);
       idMapDataIndex.set(id, index - 1);
       tmp.id && idMapDataIndex.set(tmp.id, index);
-      recordSnapshot();
+      recordSnapshot({
+        type: snapShotEnum.index,
+        value: [index, index - 1],
+      } as snapShotType<snapShotEnum.index>);
     }
   };
 
@@ -149,7 +162,16 @@ export const useLowStore = defineStore("useLowStore", () => {
     setCurrentProps,
     setLowCanvasData,
     setAreaData,
-    deleteComponentData,
+    deleteComponentData: (id: string) => {
+      const { index, component } = deleteComponentData(id);
+      recordSnapshot({
+        type: snapShotEnum.remove,
+        value: {
+          index: index!,
+          data: component!,
+        },
+      } as snapShotType<snapShotEnum.remove>);
+    },
     upLayerComponentData,
     downLayerComponentData,
     setCurrentComponentStyle,
