@@ -10,7 +10,9 @@ export enum snapShotEnum {
 }
 
 type snapShotEnumValue = {
-  [snapShotEnum.clear]: {};
+  [snapShotEnum.clear]: {
+    value: LowCanvasData[];
+  };
   [snapShotEnum.add]: {
     value: LowCanvasData;
   };

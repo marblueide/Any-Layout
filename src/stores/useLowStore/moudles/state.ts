@@ -34,6 +34,11 @@ export const useState = () => {
     lowCanvasData.splice(0, lowCanvasData.length);
   };
 
+  const initCurrentComponent = () => {
+    currentComponent.value = undefined;
+    currentComponentIndex.value = undefined;
+  };
+
   const setCurrentComponent = (id?: string) => {
     //设置当前活动的组件
     if (id == undefined) {
@@ -145,10 +150,11 @@ export const useState = () => {
     setLowCanvasState,
     setLowCanvasData,
     deleteComponentData,
-    initLowCanvasState,
-    initLowCanvasData,
     addLowCanvasData,
     addLowCanvasDataByIndex,
     getComponentById,
+    initCurrentComponent,
+    initLowCanvasState,
+    initLowCanvasData,
   };
 };

@@ -6,10 +6,15 @@ import { swap } from "@/utils";
 
 const {
   lowCanvasData,
+  idMapData,
+  idMapDataIndex,
   deleteComponentData,
   addLowCanvasDataByIndex,
-  idMapDataIndex,
   setComponentStyle,
+  addLowCanvasData,
+  setLowCanvasData,
+  initLowCanvasData,
+  initCurrentComponent,
 } = useState();
 const stack = reactive<snapShotType[]>([]); //历史栈
 const index = ref<number>(-1); //当前的State在历史栈中的位置
@@ -50,11 +55,13 @@ export const useStack = () => {
     //前进
     if (index.value >= stack.length - 1) return;
     index.value++;
+    const state = stack[index.value];
+    handlerForward[state.type](state as any);
   };
 
   const handlerBack = {
     [snapShotEnum.clear](state: snapShotType<snapShotEnum.clear>) {
-      initStack();
+      setLowCanvasData(state.value);
     },
     [snapShotEnum.add](state: snapShotType<snapShotEnum.add>) {
       state.value.id && deleteComponentData(state.value.id);
@@ -74,6 +81,34 @@ export const useStack = () => {
     [snapShotEnum.compose](state: snapShotType<snapShotEnum.compose>) {
       state.value.forEach((data) => {
         handlerBack[data.type](data as any);
+      });
+    },
+  };
+
+  const handlerForward = {
+    [snapShotEnum.clear](state: snapShotType<snapShotEnum.clear>) {
+      initLowCanvasData();
+      initCurrentComponent();
+      idMapData.clear();
+      idMapDataIndex.clear();
+    },
+    [snapShotEnum.add](state: snapShotType<snapShotEnum.add>) {
+      addLowCanvasData(state.value);
+    },
+    [snapShotEnum.remove](state: snapShotType<snapShotEnum.remove>) {
+      deleteComponentData(state.value.data.id!);
+    },
+    [snapShotEnum.index](state: snapShotType<snapShotEnum.index>) {
+      const [c1, c2] = swap(lowCanvasData, state.value[0], state.value[1]);
+      idMapDataIndex.set(c1, state.value[0]);
+      idMapDataIndex.set(c2, state.value[1]);
+    },
+    [snapShotEnum.style](state: snapShotType<snapShotEnum.style>) {
+      setComponentStyle(state.value.id, state.value.data[1]);
+    },
+    [snapShotEnum.compose](state: snapShotType<snapShotEnum.compose>) {
+      state.value.forEach((data) => {
+        handlerForward[data.type](data as any);
       });
     },
   };

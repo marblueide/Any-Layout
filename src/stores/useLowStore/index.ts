@@ -5,6 +5,7 @@ import { useArea, useStack, useState } from "./moudles";
 import type { PropValue } from "../../types/LowCode/PropValue";
 import { snapShotEnum } from "@/types/LowCode/stack";
 import type { snapShotType } from "../../types/LowCode/stack";
+import { cloneDeep } from "lodash-es";
 
 //@ts-ignore
 export const useLowStore = defineStore("useLowStore", () => {
@@ -37,6 +38,7 @@ export const useLowStore = defineStore("useLowStore", () => {
     initLowCanvasData,
     addLowCanvasData,
     getComponentById,
+    initCurrentComponent,
   } = useState();
 
   const {
@@ -56,14 +58,14 @@ export const useLowStore = defineStore("useLowStore", () => {
 
   const clearCanvas = () => {
     //清空画布
+    recordSnapshot({
+      type: snapShotEnum.clear,
+      value: cloneDeep(lowCanvasData),
+    } as snapShotType<snapShotEnum.clear>);
     initLowCanvasData();
-    currentComponent.value = undefined;
-    currentComponentIndex.value = undefined;
+    initCurrentComponent();
     idMapData.clear();
     idMapDataIndex.clear();
-    recordSnapshot({
-      type: snapShotEnum.init,
-    });
   };
 
   const addLowCanvasDataAndSnapshot = (data: LowCanvasData) => {
