@@ -4,6 +4,8 @@ import { cloneDeep, merge } from "lodash-es";
 import { LabelEnum, type LowCanvasData } from "../../../types/LowCode/index";
 import Group from "@/components/LowCodeCompoent/VGroup/index.vue";
 import { useState } from "./state";
+import { useStack } from "./stack";
+import { type snapShotType, snapShotEnum } from "@/types/LowCode/stack";
 
 const {
   addLowCanvasData,
@@ -12,9 +14,9 @@ const {
   idMapDataIndex,
   lowCanvasData,
   setCurrentComponent,
-  currentComponent,
   getComponentById,
 } = useState();
+const { recordSnapshot } = useStack();
 const areaData = ref<AreaData>({
   left: 0,
   top: 0,
@@ -30,10 +32,22 @@ export const useArea = () => {
   const compose = () => {
     const data = areaData.value.components.map((id) => getComponentById(id));
     const components: LowCanvasData[] = [];
+    const snapShots: snapShotType[] = [];
     data.forEach((component) => {
       if (component && component.label != LabelEnum.group) {
-        component.style.left && (component.style.left -= areaData.value.left);
-        component.style.top && (component.style.top -= areaData.value.top);
+        const { left, top } = component.style;
+        left && (component.style.left -= areaData.value.left);
+        top && (component.style.top -= areaData.value.top);
+        snapShots.push({
+          type: snapShotEnum.style,
+          value: {
+            id: component.id,
+            data: [
+              { left, top },
+              { left: component.style.left, top: component.style.top },
+            ],
+          },
+        } as snapShotType<snapShotEnum.style>);
         components.push(component);
       }
     });
@@ -57,10 +71,23 @@ export const useArea = () => {
       animations: [],
       linkage: [],
     };
+
+    snapShots.push({
+      type: snapShotEnum.add,
+      value: defaultGroup,
+    } as unknown as snapShotType<snapShotEnum.add>);
     const component = addLowCanvasData(defaultGroup);
 
     data.forEach((component) => {
+      console.log(component);
       if (component) {
+        snapShots.push({
+          type: snapShotEnum.remove,
+          value: {
+            index: idMapDataIndex.get(component.id!),
+            data: component,
+          },
+        } as snapShotType<snapShotEnum.remove>);
         component.id && deleteComponentData(component.id);
       }
     });
@@ -72,6 +99,11 @@ export const useArea = () => {
           idMapDataIndex.set(component.id, lowCanvasData.length - 1);
       }
     });
+
+    recordSnapshot({
+      type: snapShotEnum.compose,
+      value: snapShots,
+    } as snapShotType<snapShotEnum.compose>);
 
     areaData.value.components = [];
     isShowArea.value = false;

@@ -9,6 +9,7 @@ const {
   deleteComponentData,
   addLowCanvasDataByIndex,
   idMapDataIndex,
+  setComponentStyle,
 } = useState();
 const stack = reactive<snapShotType[]>([]); //历史栈
 const index = ref<number>(-1); //当前的State在历史栈中的位置
@@ -52,13 +53,14 @@ export const useStack = () => {
   };
 
   const handlerBack = {
-    [snapShotEnum.init](state: snapShotType<snapShotEnum.init>) {
+    [snapShotEnum.clear](state: snapShotType<snapShotEnum.clear>) {
       initStack();
     },
     [snapShotEnum.add](state: snapShotType<snapShotEnum.add>) {
       state.value.id && deleteComponentData(state.value.id);
     },
     [snapShotEnum.remove](state: snapShotType<snapShotEnum.remove>) {
+      console.log(state.value.data);
       addLowCanvasDataByIndex(state.value.index, state.value.data);
     },
     [snapShotEnum.index](state: snapShotType<snapShotEnum.index>) {
@@ -66,12 +68,14 @@ export const useStack = () => {
       idMapDataIndex.set(c1, state.value[0]);
       idMapDataIndex.set(c2, state.value[1]);
     },
-    [snapShotEnum.move](state: snapShotType<snapShotEnum.move>) {},
-    [snapShotEnum.singleStyle](
-      state: snapShotType<snapShotEnum.singleStyle>
-    ) {},
-    [snapShotEnum.style](state: snapShotType<snapShotEnum.style>) {},
-    [snapShotEnum.compose](state: snapShotType<snapShotEnum.compose>) {},
+    [snapShotEnum.style](state: snapShotType<snapShotEnum.style>) {
+      setComponentStyle(state.value.id, state.value.data[0]);
+    },
+    [snapShotEnum.compose](state: snapShotType<snapShotEnum.compose>) {
+      state.value.forEach((data) => {
+        handlerBack[data.type](data as any);
+      });
+    },
   };
 
   return {

@@ -68,19 +68,18 @@ const handleMouseDown = (e: MouseEvent) => {
     document.removeEventListener("mousemove", move);
     document.removeEventListener("mouseup", up);
     isMoving.value && store.recordSnapshot({
-      type: snapShotEnum.move,
+      type: snapShotEnum.style,
       value: {
         id: currentComponent.value!.id,
-        current: {
-          left: currentComponent.value!.style.left,
-          top: currentComponent.value!.style.top
-        },
-        before: {
+        data: [{
           left,
           top
-        }
+        }, {
+          left: currentComponent.value!.style.left,
+          top: currentComponent.value!.style.top
+        }]
       }
-    } as snapShotType<snapShotEnum.move>);
+    } as snapShotType<snapShotEnum.style>);
     store.setMoving(false)
     emitter.emit("unMove");
     if (isGroupChidren.value) {
@@ -225,7 +224,13 @@ const handlePointDown = (e: MouseEvent, point: pointType) => {
       type: snapShotEnum.style,
       value: {
         id: currentComponent.value!.id,
-        style: cloneDeep(currentComponent.value!.style)
+        data: [{
+          width,
+          height,
+          top,
+          left,
+          rotate,
+        }, style]
       }
     } as snapShotType<snapShotEnum.style>);
     store.setMoving(false)

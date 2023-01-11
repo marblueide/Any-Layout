@@ -1,18 +1,16 @@
 import type { LowCanvasData } from "./index";
 import type { ComponentStyle } from "./style";
 export enum snapShotEnum {
-  add,
-  remove,
-  singleStyle,
-  style,
-  move,
-  compose,
-  init,
-  index,
+  add = "add",
+  remove = "remove",
+  style = "style",
+  compose = "compose",
+  clear = "clear",
+  index = "index",
 }
 
 type snapShotEnumValue = {
-  [snapShotEnum.init]: {};
+  [snapShotEnum.clear]: {};
   [snapShotEnum.add]: {
     value: LowCanvasData;
   };
@@ -22,27 +20,14 @@ type snapShotEnumValue = {
       data: LowCanvasData;
     };
   };
-  [snapShotEnum.singleStyle]: {
-    value: LowCanvasData;
-  };
   [snapShotEnum.style]: {
-    value: {};
+    value: {
+      id: string;
+      data: [before: ComponentStyle, current: ComponentStyle];
+    };
   };
   [snapShotEnum.compose]: {
     value: snapShotType[];
-  };
-  [snapShotEnum.move]: {
-    value: {
-      id: string;
-      current: {
-        left: number;
-        top: number;
-      };
-      before: {
-        left: number;
-        top: number;
-      };
-    };
   };
   [snapShotEnum.index]: {
     value: number[];

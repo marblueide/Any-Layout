@@ -50,12 +50,10 @@ const save = () => {
 
 const compose = () => {
   store.compose()
-  store.recordSnapshot()
 }
 
 const splite = () => {
   store.splite()
-  store.recordSnapshot()
 }
 
 const handleInput = (key: string, val: number) => {
