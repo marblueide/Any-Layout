@@ -4,6 +4,7 @@ import VButton from "./VButton/index.vue";
 import VPicture from "./VPicture/index.vue";
 import VText from "./VText/index.vue";
 import { LabelEnum } from "../../types/LowCode/index";
+import { getAllCollapse } from "./attr-list";
 
 export const componentList: [
   LowCanvasData<LabelEnum.button>,
@@ -14,7 +15,7 @@ export const componentList: [
     label: LabelEnum.button,
     name: "button",
     component: () => markRaw(VButton),
-    attr: [["props"], ["font", "align", "background", "shadow", "border"]],
+    collapse: getAllCollapse(),
     events: {},
     isLock: false,
     style: {
@@ -43,7 +44,7 @@ export const componentList: [
     label: LabelEnum.picture,
     name: "picture",
     component: () => markRaw(VPicture),
-    attr: [[], []],
+    collapse: [],
     events: {},
     isLock: false,
     style: {
@@ -65,7 +66,7 @@ export const componentList: [
     label: LabelEnum.text,
     name: "text",
     component: () => markRaw(VText),
-    attr: [["props"], ["font"]],
+    collapse: getAllCollapse(),
     events: {},
     isLock: false,
     style: {
@@ -87,3 +88,11 @@ export const componentList: [
     },
   },
 ];
+
+const initComponentList = () => {
+  componentList.forEach((item) => {
+    item.collapse = getAllCollapse();
+  });
+};
+
+initComponentList();

@@ -1,29 +1,56 @@
 <template>
   <div class="attr">
     <el-tabs class="el-tabs" type="border-card" v-model="activeTab">
-      <el-tab-pane v-for="(tabItem, index) in attrList" :label="tabItem.name" :name="index" :key="index">
-        <KeepAlive>
-          <el-collapse :model-value="tabItem.all()">
-            <el-collapse-item v-for="item in tabItem.data" :name="item.name" :title="item.title"
-              v-show="currentComponent?.attr[index].includes(item.name)">
-              <el-form label-position="top">
-                <component v-for="c in item.components" :is="c"></component>
-              </el-form>
+      <el-form label-position="top">
+        <el-tab-pane v-for="(tabItem, index) in attrList" :label="tabItem.name" :name="index" :key="index">
+          <el-collapse :model-value="currentComponent?.collapse" @change="handleCollapseChange">
+            <el-collapse-item v-for="item in tabItem.data"
+              v-show="getComponents(item.components, tabItem.prop).length != 0" :name="item.title" :title="item.title">
+              <template v-for="data in getComponents(item.components, tabItem.prop)" :key="data.name">
+                <component v-if="data.type != AttrEnum.OTHER" :is="data.component" :type="data.type"
+                  :label="(data as AttrEnumType<AttrEnum.ALL>)?.label"
+                  :step="(data as AttrEnumType<AttrEnum.ALL>)?.step"
+                  :modelValue="currentComponent?.[tabItem.prop][data.name]"
+                  @update:modelValue="handleModelValue(tabItem.prop, data.name, $event)"></component>
+                <component v-else :is="data.component"></component>
+              </template>
             </el-collapse-item>
           </el-collapse>
-        </KeepAlive>
-      </el-tab-pane>
+        </el-tab-pane>
+      </el-form>
     </el-tabs>
   </div>
 </template>
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { useLowStore } from "../../stores/useLowStore";
 import { attrList } from "../LowCodeCompoent/attr-list";
+import { AttrEnum, type AttrEnumType } from '../../types/LowCode/attr';
+import type { LowCanvasData } from '../../types/LowCode/base';
 const store = useLowStore();
 const { currentComponent } = storeToRefs(store);
+
+const getComponents = (data: AttrEnumType<AttrEnum>[], prop: keyof LowCanvasData): AttrEnumType<AttrEnum>[] => {
+  return data.filter(item => currentComponent.value && currentComponent.value[prop]!.hasOwnProperty(item.name))
+}
+
+const handleModelValue = (prop: keyof LowCanvasData, key: string, value: string) => {
+  if (prop == "style") {
+    store.setCurrentComponentStyle({
+      [key]: value
+    })
+  } else if (prop == "propValue") {
+    store.setCurrentProps({
+      [key]: value
+    })
+  }
+}
+
+const handleCollapseChange = (data: string[]) => {
+  store.setCurrentState("collapse", data)
+}
 
 const activeTab = ref(0);
 </script>

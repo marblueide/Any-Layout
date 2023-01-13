@@ -12,8 +12,3 @@ export type PropValue = {
   };
   [LabelEnum.group]: LowCanvasData<LabelEnum>[];
 };
-
-export type test<T extends LabelEnum = LabelEnum> = {
-  event: T;
-  payload: PropValue[T];
-};

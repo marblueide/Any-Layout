@@ -66,6 +66,13 @@ export const useState = () => {
     );
   };
 
+  const setCurrentState = <K extends keyof LowCanvasData = keyof LowCanvasData>(
+    key: K,
+    value: LowCanvasData[K]
+  ) => {
+    currentComponent.value && (currentComponent.value[key] = value);
+  };
+
   const setComponentStyle = (id: string, style: Partial<ComponentStyle>) => {
     const component = idMapData.get(id);
     component && (component.style = merge(component?.style, style));
@@ -146,6 +153,7 @@ export const useState = () => {
     setCurrentComponent,
     setCurrentComponentStyle,
     setCurrentProps,
+    setCurrentState,
     setComponentStyle,
     setLowCanvasState,
     setLowCanvasData,

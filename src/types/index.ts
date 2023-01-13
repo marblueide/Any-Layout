@@ -1,2 +1,2 @@
 export * from "./base";
-export * from "./LowCode/index";
+export * from "./LowCode";

@@ -27,15 +27,6 @@ export const useStack = () => {
     index.value = -1;
   };
 
-  // const recordSnapshot = (state?: LowCanvasData[]) => {
-  //   //添加快照
-  //   stack[++index.value] =
-  //     state != undefined ? cloneDeep(state) : cloneDeep(lowCanvasData);
-  //   if (index.value < stack.length - 1) {
-  //     stack.splice(index.value + 1, stack.length);
-  //   }
-  // };
-
   const recordSnapshot = (data: snapShotType) => {
     stack[++index.value] = data;
     if (index.value < stack.length - 1) {

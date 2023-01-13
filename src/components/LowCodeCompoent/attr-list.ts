@@ -1,71 +1,141 @@
-import Border from "./Attrs/Border.vue";
-import Shadow from "./Attrs/Shadow.vue";
-import Arrangement from "./Attrs/Arrangement.vue";
-import TextVerticalAlign from "./Attrs/TextVerticalAlign.vue";
-import TextHorizontalAlign from "./Attrs/TextHorizontalAlign.vue";
-import TextValue from "./Attrs/TextValue.vue";
-import Background from "./Attrs/Background.vue";
-import FontSize from "./Attrs/Font/FontSize.vue";
-import FontColor from "./Attrs/Font/FontColor.vue";
 import { markRaw } from "vue";
-import type { Attr, AttrComponent } from "../../types/LowCode/index";
+import type { Attr } from "../../types/LowCode/index";
+import { AttrEnum, type AttrEnumType } from "../../types/LowCode/attr";
+import Input from "./Attrs/baseAttr/input.vue";
+import ColorPick from "./Attrs/baseAttr/colorPick.vue";
+import HorizontalAlign from "./Attrs/HorizontalAlign.vue";
+import VerticalAlign from "./Attrs/VerticalAlign.vue";
+import BorderRadius from "./Attrs/BorderRadius.vue";
+import Shadow from "./Attrs/Shadow.vue";
 
-export const baseAttr: AttrComponent = {
-  border: markRaw(Border),
-  shadow: markRaw(Shadow),
-  arrangement: markRaw(Arrangement),
-  textVerticalAlign: markRaw(TextVerticalAlign),
-  textHorizontalAlign: markRaw(TextHorizontalAlign),
-  textValue: markRaw(TextValue),
-  background: markRaw(Background),
-  fontSize: markRaw(FontSize),
-  fontColor: markRaw(FontColor),
-};
 export const attrList: Attr[] = [
   {
     name: "内容",
+    prop: "propValue",
     data: [
       {
-        name: "props",
-        title: "属性",
-        components: [baseAttr.textValue],
+        title: "数据",
+        components: [
+          {
+            name: "value",
+            type: AttrEnum.INPUT,
+            label: "内容",
+            component: markRaw(Input),
+          },
+        ] as [AttrEnumType<AttrEnum.INPUT>],
       },
     ],
-    all() {
-      return this.data.map((item) => item.name);
-    },
   },
   {
     name: "样式",
+    prop: "style",
     data: [
       {
-        name: "font",
-        title: "文本",
-        components: [baseAttr.fontSize, baseAttr.fontColor],
+        title: "基本样式",
+        components: [
+          {
+            name: "left",
+            type: AttrEnum.INPUTNUMBER,
+            label: "X坐标",
+            component: markRaw(Input),
+          },
+          {
+            name: "top",
+            type: AttrEnum.INPUTNUMBER,
+            label: "Y坐标",
+            component: markRaw(Input),
+          },
+          {
+            name: "width",
+            type: AttrEnum.INPUTNUMBER,
+            label: "宽度",
+            component: markRaw(Input),
+          },
+          {
+            name: "height",
+            type: AttrEnum.INPUTNUMBER,
+            label: "高度",
+            component: markRaw(Input),
+          },
+        ] as [
+          AttrEnumType<AttrEnum.INPUTNUMBER>,
+          AttrEnumType<AttrEnum.INPUTNUMBER>,
+          AttrEnumType<AttrEnum.INPUTNUMBER>,
+          AttrEnumType<AttrEnum.INPUTNUMBER>
+        ],
       },
       {
-        name: "align",
+        title: "颜色配置",
+        components: [
+          {
+            name: "background",
+            type: AttrEnum.COLORPick,
+            label: "背景颜色",
+            component: markRaw(ColorPick),
+            predefineColors: [],
+          },
+        ] as [AttrEnumType<AttrEnum.COLORPick>],
+      },
+      {
+        title: "文字",
+        components: [
+          {
+            name: "fontSize",
+            type: AttrEnum.INPUTNUMBER,
+            label: "文字大小",
+            component: markRaw(Input),
+            step: 0.1,
+          },
+        ] as [AttrEnumType<AttrEnum.INPUTNUMBER>],
+      },
+      {
         title: "排列对齐",
-        components: [baseAttr.textVerticalAlign, baseAttr.textHorizontalAlign],
+        components: [
+          {
+            name: "justifyContent",
+            type: AttrEnum.OTHER,
+            component: markRaw(HorizontalAlign),
+          },
+          {
+            name: "alignItems",
+            type: AttrEnum.OTHER,
+            component: markRaw(VerticalAlign),
+          },
+        ] as [AttrEnumType<AttrEnum.OTHER>, AttrEnumType<AttrEnum.OTHER>],
       },
       {
-        name: "background",
-        title: "颜色",
-        components: [baseAttr.background],
-      },
-      {
-        name: "shadow",
-        title: "阴影",
-        components: [baseAttr.shadow],
-      },
-      {
-        name: "border",
-        title: "边框设置",
-        components: [baseAttr.border],
+        title: "边框轮廓",
+        components: [
+          {
+            name: "borderWidth",
+            type: AttrEnum.INPUTNUMBER,
+            label: "边框宽度",
+            component: markRaw(Input),
+          },
+          {
+            name: "borderRadius",
+            type: AttrEnum.OTHER,
+            component: markRaw(BorderRadius),
+          },
+          {
+            name: "boxShadow",
+            type: AttrEnum.OTHER,
+            component: markRaw(Shadow),
+          },
+        ] as [
+          AttrEnumType<AttrEnum.INPUTNUMBER>,
+          AttrEnumType<AttrEnum.OTHER>,
+          AttrEnumType<AttrEnum.OTHER>
+        ],
       },
     ],
-    all() {
-      return this.data.map((item) => item.name);
-    },
   },
 ];
+
+export const getAllCollapse = () => {
+  return attrList
+    .map((item) => {
+      return item.data.map((data) => data.title);
+    })
+    .flat(1);
+};

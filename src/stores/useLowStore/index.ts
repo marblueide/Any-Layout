@@ -32,6 +32,7 @@ export const useLowStore = defineStore("useLowStore", () => {
     setCurrentProps,
     setComponentStyle,
     setLowCanvasState,
+    setCurrentState,
     setLowCanvasData,
     deleteComponentData,
     initLowCanvasState,
@@ -164,6 +165,7 @@ export const useLowStore = defineStore("useLowStore", () => {
     setCurrentProps,
     setLowCanvasData,
     setAreaData,
+    setCurrentState,
     deleteComponentData: (id: string) => {
       const { index, component } = deleteComponentData(id);
       recordSnapshot({

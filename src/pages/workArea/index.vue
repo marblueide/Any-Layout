@@ -76,8 +76,7 @@ const activeName = ref("Administration");
       }
     }
 
-    .right {
-    }
+    .right {}
   }
 }
 </style>

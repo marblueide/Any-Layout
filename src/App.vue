@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { computed } from "vue";
 import { useLowStore } from "./stores/useLowStore";
 
 const store = useLowStore();
