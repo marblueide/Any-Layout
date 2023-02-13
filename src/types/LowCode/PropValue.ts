@@ -1,14 +1,14 @@
 import { LabelEnum, type LowCanvasData } from ".";
+
+export type PropValueType = {
+  value: string;
+  src: string;
+  fit: string;
+};
+
 export type PropValue = {
-  [LabelEnum.button]: {
-    value: string;
-  };
-  [LabelEnum.picture]: {
-    src: string;
-    fit: string;
-  };
-  [LabelEnum.text]: {
-    value: string;
-  };
+  [LabelEnum.button]: Pick<PropValueType, "value">;
+  [LabelEnum.picture]: Pick<PropValueType, "src" | "fit">;
+  [LabelEnum.text]: Pick<PropValueType, "value">;
   [LabelEnum.group]: LowCanvasData<LabelEnum>[];
 };

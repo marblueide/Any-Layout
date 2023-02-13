@@ -7,14 +7,15 @@ import HorizontalAlign from "./Attrs/HorizontalAlign.vue";
 import VerticalAlign from "./Attrs/VerticalAlign.vue";
 import BorderRadius from "./Attrs/BorderRadius.vue";
 import Shadow from "./Attrs/Shadow.vue";
+import Event from "./Attrs/event/index.vue";
 
 export const attrList: Attr[] = [
   {
     name: "内容",
-    prop: "propValue",
     data: [
       {
         title: "数据",
+        prop: "propValue",
         components: [
           {
             name: "value",
@@ -23,6 +24,30 @@ export const attrList: Attr[] = [
             component: markRaw(Input),
           },
         ] as [AttrEnumType<AttrEnum.INPUT>],
+      },
+      {
+        title: "事件",
+        prop: "events",
+        components: [
+          {
+            name: "onClick",
+            label: "onClick",
+            type: AttrEnum.OTHER,
+            component: markRaw(Event),
+          },
+          {
+            name: "onChange",
+            label: "onChange",
+            type: AttrEnum.OTHER,
+            component: markRaw(Event),
+          },
+          {
+            name: "onInput",
+            label: "onInput",
+            type: AttrEnum.OTHER,
+            component: markRaw(Event),
+          },
+        ],
       },
     ],
   },
@@ -93,11 +118,13 @@ export const attrList: Attr[] = [
         components: [
           {
             name: "justifyContent",
+            label: "水平方向",
             type: AttrEnum.OTHER,
             component: markRaw(HorizontalAlign),
           },
           {
             name: "alignItems",
+            label: "垂直方向",
             type: AttrEnum.OTHER,
             component: markRaw(VerticalAlign),
           },
@@ -115,11 +142,13 @@ export const attrList: Attr[] = [
           {
             name: "borderRadius",
             type: AttrEnum.OTHER,
+            label: "borderRadius",
             component: markRaw(BorderRadius),
           },
           {
             name: "boxShadow",
             type: AttrEnum.OTHER,
+            label: "boxShadow",
             component: markRaw(Shadow),
           },
         ] as [

@@ -50,7 +50,7 @@ const base = {
 // https://vitejs.dev/config/
 export default defineConfig(({ command, mode }) => {
   let config = {
-    base: command == "serve" ? "" : "/Any-Layout",
+    base: command == "serve" ? "" : "./",
   };
   return {
     ...base,

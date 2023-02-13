@@ -3,6 +3,7 @@ import type { ComponentStyle } from "@/types/LowCode/style";
 import { cloneDeep, isArray, merge } from "lodash-es";
 import { ref, reactive } from "vue";
 import { v4 as uuid } from "uuid";
+import type { EventType } from "../../../types/LowCode/event";
 const initState = {
   width: 1200,
   height: 720,
@@ -50,6 +51,11 @@ export const useState = () => {
     const index = idMapDataIndex.get(id);
     currentComponentIndex.value = index;
     currentComponent.value = component;
+  };
+
+  const setCUrrentCompoentEvent = (obj: EventType) => {
+    if (!currentComponent.value) return;
+    currentComponent.value.events = merge(currentComponent.value?.events, obj);
   };
 
   const setCurrentComponentStyle = (style: Partial<ComponentStyle>) => {
@@ -157,6 +163,7 @@ export const useState = () => {
     setComponentStyle,
     setLowCanvasState,
     setLowCanvasData,
+    setCUrrentCompoentEvent,
     deleteComponentData,
     addLowCanvasData,
     addLowCanvasDataByIndex,

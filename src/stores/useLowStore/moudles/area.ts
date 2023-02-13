@@ -56,7 +56,6 @@ export const useArea = () => {
       label: LabelEnum.group,
       name: "group",
       component: () => markRaw(Group),
-      attr: [[], []],
       icon: "",
       events: {},
       isLock: false,
@@ -70,6 +69,7 @@ export const useArea = () => {
       propValue: components,
       animations: [],
       linkage: [],
+      collapse: [],
     };
 
     snapShots.push({

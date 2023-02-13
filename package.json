@@ -4,6 +4,7 @@
   "scripts": {
     "dev": "vite",
     "build": "run-p type-check build-only",
+    "build:noCheck":"vite build",
     "preview": "vite preview --port 4173",
     "test:unit": "vitest --environment jsdom",
     "test:e2e": "start-server-and-test preview http://localhost:4173/ 'cypress open --e2e'",
@@ -47,7 +48,7 @@
     "unocss": "^0.46.5",
     "unplugin-auto-import": "^0.11.5",
     "unplugin-vue-components": "^0.22.11",
-    "vite": "^3.0.9",
+    "vite": "^3.2.5",
     "vite-plugin-pages": "^0.27.1",
     "vitest": "^0.23.0",
     "vue-tsc": "^0.40.7"

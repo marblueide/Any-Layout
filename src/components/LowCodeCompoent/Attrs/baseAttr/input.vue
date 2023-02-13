@@ -1,7 +1,7 @@
 <template>
     <el-form-item :label="label">
         <el-input :type="type == 'inputNumber' ? 'number' : 'text'" :modelValue="modelValue" :placeholder="placeholder"
-            @update:modelValue="handlerUpdate" :step="0.1"></el-input>
+            @update:modelValue="handlerUpdate" :step="step"></el-input>
     </el-form-item>
 </template>
 

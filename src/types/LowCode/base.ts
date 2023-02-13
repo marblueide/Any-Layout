@@ -1,5 +1,6 @@
 import type { Component } from "vue";
 import type { DataAnimation, DataLinkage } from ".";
+import type { EventType } from "./event";
 import type { PropValue } from "./PropValue";
 import type { ComponentStyle } from "./style";
 
@@ -27,9 +28,7 @@ export type LowCanvasData<T extends LabelEnum = LabelEnum> = {
   component: () => Component | string;
   collapse: string[];
   icon: string | Component;
-  events: {
-    [k in string]: (...arg: any) => any;
-  };
+  events: EventType;
   isLock: boolean;
   style: ComponentStyle;
   propValue: PropValue[T];

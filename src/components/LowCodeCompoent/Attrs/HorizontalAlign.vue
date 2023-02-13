@@ -3,10 +3,10 @@
     <el-form-item label="水平方向">
       <div class="hz" grid>
         <div v-for="item in defaultTextHorizontalAlign" :class="
-  item.value == currentComponent?.style?.justifyContent
-    ? 'border-black'
-    : 'border-gray-3'
-" p-1 border="1 solid" cursor-pointer hover=" bg-gray-3 " transition
+          item.value == currentComponent?.style?.justifyContent
+            ? 'border-black'
+            : 'border-gray-3'
+        " p-1 border="1 solid" cursor-pointer hover=" bg-gray-3 " transition
           @click="handleChange('justifyContent', item.value)">
           {{ item.title }}
         </div>
@@ -27,8 +27,7 @@ const { currentComponent, handleChange } = useAttr();
 .textAlign {
   font-size: 0.8rem;
 
-  .hz,
-  .vz {
+  .hz {
     width: 100%;
     grid-template-columns: 1fr 1fr 1fr;
     grid-column-gap: 0.5rem;

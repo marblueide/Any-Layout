@@ -32,6 +32,7 @@ export const useLowStore = defineStore("useLowStore", () => {
     setCurrentProps,
     setComponentStyle,
     setLowCanvasState,
+    setCUrrentCompoentEvent,
     setCurrentState,
     setLowCanvasData,
     deleteComponentData,
@@ -39,6 +40,7 @@ export const useLowStore = defineStore("useLowStore", () => {
     initLowCanvasData,
     addLowCanvasData,
     getComponentById,
+
     initCurrentComponent,
   } = useState();
 
@@ -176,6 +178,7 @@ export const useLowStore = defineStore("useLowStore", () => {
         },
       } as snapShotType<snapShotEnum.remove>);
     },
+    setCUrrentCompoentEvent,
     upLayerComponentData,
     downLayerComponentData,
     setCurrentComponentStyle,
