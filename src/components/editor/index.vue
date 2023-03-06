@@ -1,7 +1,7 @@
 <template>
   <div id="editor" class="editor" ref="editorRef" overflow="hidden" :style="editorStyle" @drop="handleDrop"
     @dragover="handleDragOver" @mousedown.stop.prevent="handleMouseDown">
-    <Grid :width="lowCanvasState.width" :height="lowCanvasState.height" />
+    <!-- <Grid :width="lowCanvasState.width" :height="lowCanvasState.height" /> -->
     <Shape v-for="item in lowCanvasData" :id="item.id!" :key="item.id!" :style="getShapeStyle(item.style)">
       <component :is="item.component()" :propValue="item.propValue" :style="getOriginStyle(item.style)">
       </component>

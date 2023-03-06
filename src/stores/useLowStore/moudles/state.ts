@@ -8,7 +8,7 @@ const initState = {
   width: 1200,
   height: 720,
   scale: 1,
-  background: "#fff",
+  background: "#f5f5f5",
   opacity: 1,
 }; //初始化State
 const localCanvasState: LowCanvasType = JSON.parse(
@@ -25,151 +25,149 @@ const idMapData = new Map<string, LowCanvasData>(); //id对应Data
 const idMapDataIndex = new Map<string, number>(); //id对应Data的Index
 const isMoving = ref(false);
 
-export const useState = () => {
-  const initLowCanvasState = () => {
-    //初始化LowCanvasState
-    lowCanvasState.value = cloneDeep(initState);
-  };
+const initLowCanvasState = () => {
+  //初始化LowCanvasState
+  lowCanvasState.value = cloneDeep(initState);
+};
 
-  const initLowCanvasData = () => {
-    lowCanvasData.splice(0, lowCanvasData.length);
-  };
+const initLowCanvasData = () => {
+  lowCanvasData.splice(0, lowCanvasData.length);
+};
 
-  const initCurrentComponent = () => {
+const initCurrentComponent = () => {
+  currentComponent.value = undefined;
+  currentComponentIndex.value = undefined;
+};
+
+const setCurrentComponent = (id?: string) => {
+  //设置当前活动的组件
+  if (id == undefined) {
+    currentComponentIndex.value = -1;
     currentComponent.value = undefined;
-    currentComponentIndex.value = undefined;
-  };
+    return;
+  }
+  const component = idMapData.get(id);
+  const index = idMapDataIndex.get(id);
+  currentComponentIndex.value = index;
+  currentComponent.value = component;
+};
 
-  const setCurrentComponent = (id?: string) => {
-    //设置当前活动的组件
-    if (id == undefined) {
-      currentComponentIndex.value = -1;
-      currentComponent.value = undefined;
-      return;
-    }
-    const component = idMapData.get(id);
-    const index = idMapDataIndex.get(id);
-    currentComponentIndex.value = index;
-    currentComponent.value = component;
-  };
+const setCUrrentCompoentEvent = (obj: EventType) => {
+  if (!currentComponent.value) return;
+  currentComponent.value.events = merge(currentComponent.value?.events, obj);
+};
 
-  const setCUrrentCompoentEvent = (obj: EventType) => {
-    if (!currentComponent.value) return;
-    currentComponent.value.events = merge(currentComponent.value?.events, obj);
-  };
+const setCurrentComponentStyle = (style: Partial<ComponentStyle>) => {
+  //设置当前活动组建的style
+  if (!currentComponent.value) return;
+  currentComponent.value.style = merge(currentComponent.value.style, style);
+};
 
-  const setCurrentComponentStyle = (style: Partial<ComponentStyle>) => {
-    //设置当前活动组建的style
-    if (!currentComponent.value) return;
-    currentComponent.value.style = merge(currentComponent.value.style, style);
-  };
+const setCurrentProps = (obj: any) => {
+  if (!currentComponent.value) return;
+  currentComponent.value.propValue = merge(
+    currentComponent.value.propValue,
+    obj
+  );
+};
 
-  const setCurrentProps = (obj: any) => {
-    if (!currentComponent.value) return;
-    currentComponent.value.propValue = merge(
-      currentComponent.value.propValue,
-      obj
-    );
-  };
+const setCurrentState = <K extends keyof LowCanvasData = keyof LowCanvasData>(
+  key: K,
+  value: LowCanvasData[K]
+) => {
+  currentComponent.value && (currentComponent.value[key] = value);
+};
 
-  const setCurrentState = <K extends keyof LowCanvasData = keyof LowCanvasData>(
-    key: K,
-    value: LowCanvasData[K]
-  ) => {
-    currentComponent.value && (currentComponent.value[key] = value);
-  };
+const setComponentStyle = (id: string, style: Partial<ComponentStyle>) => {
+  const component = idMapData.get(id);
+  component && (component.style = merge(component?.style, style));
+};
 
-  const setComponentStyle = (id: string, style: Partial<ComponentStyle>) => {
-    const component = idMapData.get(id);
-    component && (component.style = merge(component?.style, style));
-  };
+const setLowCanvasState = (obj: Partial<LowCanvasType>) => {
+  lowCanvasState.value = merge(lowCanvasState.value, obj);
+};
 
-  const setLowCanvasState = (obj: Partial<LowCanvasType>) => {
-    lowCanvasState.value = merge(lowCanvasState.value, obj);
-  };
+const setLowCanvasData = (data: LowCanvasData[]) => {
+  //设置组件数组
+  lowCanvasData.splice(0, lowCanvasData.length, ...data);
+  idMapData.clear();
+  idMapDataIndex.clear();
+  lowCanvasData.forEach((item, i) => {
+    item.id && idMapData.set(item.id, item);
+    item.id && idMapDataIndex.set(item.id, i);
+  });
+};
 
-  const setLowCanvasData = (data: LowCanvasData[]) => {
-    //设置组件数组
-    lowCanvasData.splice(0, lowCanvasData.length, ...data);
-    idMapData.clear();
-    idMapDataIndex.clear();
-    lowCanvasData.forEach((item, i) => {
-      item.id && idMapData.set(item.id, item);
-      item.id && idMapDataIndex.set(item.id, i);
-    });
-  };
-
-  const deleteComponentData = (id: string) => {
-    //删除ComponentData
-    const index = idMapDataIndex.get(id);
-    const component = idMapData.get(id);
-    if (index != undefined) {
-      lowCanvasData.splice(index, 1);
-      idMapData.delete(id);
-      idMapDataIndex.delete(id);
-      for (let i = index; i < lowCanvasData.length; i++) {
-        let cur = lowCanvasData[i];
-        idMapDataIndex.set(cur.id!, i);
-      }
-      if (currentComponent.value == lowCanvasData[index])
-        currentComponent.value = undefined;
-    }
-    return {
-      index,
-      component,
-    };
-  };
-
-  const addLowCanvasData = (data: LowCanvasData) => {
-    // 添加组件
-    if (!data.id) {
-      data.id = uuid();
-    }
-    lowCanvasData.push(data);
-    idMapData.set(data.id as string, lowCanvasData[lowCanvasData.length - 1]);
-    idMapDataIndex.set(data.id as string, lowCanvasData.length - 1);
-    return lowCanvasData[lowCanvasData.length - 1];
-  };
-
-  const addLowCanvasDataByIndex = (index: number, data: LowCanvasData) => {
-    lowCanvasData.splice(index, 0, data);
+const deleteComponentData = (id: string) => {
+  //删除ComponentData
+  const index = idMapDataIndex.get(id);
+  const component = idMapData.get(id);
+  if (index != undefined) {
+    lowCanvasData.splice(index, 1);
+    idMapData.delete(id);
+    idMapDataIndex.delete(id);
     for (let i = index; i < lowCanvasData.length; i++) {
-      idMapData.set(lowCanvasData[i].id!, lowCanvasData[i]);
-      idMapDataIndex.set(lowCanvasData[i].id!, i);
+      let cur = lowCanvasData[i];
+      idMapDataIndex.set(cur.id!, i);
     }
-  };
-
-  const setMoving = (value: boolean) => {
-    isMoving.value = value;
-  };
-
-  const getComponentById = (id: string) => {
-    return idMapData.get(id);
-  };
-
+    if (currentComponent.value == lowCanvasData[index])
+      currentComponent.value = undefined;
+  }
   return {
-    lowCanvasState,
-    lowCanvasData,
-    currentComponent,
-    currentComponentIndex,
-    idMapData,
-    idMapDataIndex,
-    isMoving,
-    setMoving,
-    setCurrentComponent,
-    setCurrentComponentStyle,
-    setCurrentProps,
-    setCurrentState,
-    setComponentStyle,
-    setLowCanvasState,
-    setLowCanvasData,
-    setCUrrentCompoentEvent,
-    deleteComponentData,
-    addLowCanvasData,
-    addLowCanvasDataByIndex,
-    getComponentById,
-    initCurrentComponent,
-    initLowCanvasState,
-    initLowCanvasData,
+    index,
+    component,
   };
+};
+
+const addLowCanvasData = (data: LowCanvasData) => {
+  // 添加组件
+  if (!data.id) {
+    data.id = uuid();
+  }
+  lowCanvasData.push(data);
+  idMapData.set(data.id as string, lowCanvasData[lowCanvasData.length - 1]);
+  idMapDataIndex.set(data.id as string, lowCanvasData.length - 1);
+  return lowCanvasData[lowCanvasData.length - 1];
+};
+
+const addLowCanvasDataByIndex = (index: number, data: LowCanvasData) => {
+  lowCanvasData.splice(index, 0, data);
+  for (let i = index; i < lowCanvasData.length; i++) {
+    idMapData.set(lowCanvasData[i].id!, lowCanvasData[i]);
+    idMapDataIndex.set(lowCanvasData[i].id!, i);
+  }
+};
+
+const setMoving = (value: boolean) => {
+  isMoving.value = value;
+};
+
+const getComponentById = (id: string) => {
+  return idMapData.get(id);
+};
+
+export {
+  lowCanvasState,
+  lowCanvasData,
+  currentComponent,
+  currentComponentIndex,
+  idMapData,
+  idMapDataIndex,
+  isMoving,
+  setMoving,
+  setCurrentComponent,
+  setCurrentComponentStyle,
+  setCurrentProps,
+  setCurrentState,
+  setComponentStyle,
+  setLowCanvasState,
+  setLowCanvasData,
+  setCUrrentCompoentEvent,
+  deleteComponentData,
+  addLowCanvasData,
+  addLowCanvasDataByIndex,
+  getComponentById,
+  initCurrentComponent,
+  initLowCanvasState,
+  initLowCanvasData,
 };

@@ -1,58 +1,31 @@
 import type { LowCanvasData, LowCanvasType } from "@/types/LowCode";
 import { defineStore } from "pinia";
 import { swap } from "@/utils";
-import { useArea, useStack, useState } from "./moudles";
+import * as modles from "./moudles";
+
 import type { PropValue } from "../../types/LowCode/PropValue";
 import { snapShotEnum } from "@/types/LowCode/stack";
 import type { snapShotType } from "../../types/LowCode/stack";
 import { cloneDeep } from "lodash-es";
 
+const {
+  initArea,
+  initStack,
+  recordSnapshot,
+  lowCanvasData,
+  currentComponent,
+  currentComponentIndex,
+  idMapData,
+  idMapDataIndex,
+  deleteComponentData,
+  initLowCanvasData,
+  addLowCanvasData,
+  initCurrentComponent,
+  ...exposeModles
+} = modles;
+
 //@ts-ignore
 export const useLowStore = defineStore("useLowStore", () => {
-  const {
-    areaData,
-    isShowArea,
-    setAreaData,
-    initArea,
-    setIsShowArea,
-    compose,
-  } = useArea();
-
-  let {
-    lowCanvasState,
-    lowCanvasData,
-    currentComponent,
-    currentComponentIndex,
-    idMapData,
-    idMapDataIndex,
-    isMoving,
-    setMoving,
-    setCurrentComponent,
-    setCurrentComponentStyle,
-    setCurrentProps,
-    setComponentStyle,
-    setLowCanvasState,
-    setCUrrentCompoentEvent,
-    setCurrentState,
-    setLowCanvasData,
-    deleteComponentData,
-    initLowCanvasState,
-    initLowCanvasData,
-    addLowCanvasData,
-    getComponentById,
-
-    initCurrentComponent,
-  } = useState();
-
-  const {
-    stack,
-    index,
-    initStack,
-    recordSnapshot,
-    backSnapshot,
-    forwardSnapshot,
-  } = useStack();
-
   const init = () => {
     initLowCanvasData();
     initStack();
@@ -146,28 +119,25 @@ export const useLowStore = defineStore("useLowStore", () => {
   };
 
   return {
-    stack,
-    stackIndex: index,
-    lowCanvasState,
+    ...exposeModles,
+    clearCanvas,
+    addLowCanvasDataAndSnapshot,
+    getCanvasDataById,
+    upLayerComponentData,
+    downLayerComponentData,
+    splite,
+    spliteSingle,
+    initArea,
+    initStack,
+    recordSnapshot,
     lowCanvasData,
-    areaData,
-    isShowArea,
     currentComponent,
     currentComponentIndex,
-    isMoving,
-    setMoving,
-    backSnapshot,
-    forwardSnapshot,
-    initStack,
-    initLowCanvasState,
-    addLowCanvasData: addLowCanvasDataAndSnapshot,
-    getCanvasDataById,
-    setCurrentComponent,
-    setComponentStyle,
-    setCurrentProps,
-    setLowCanvasData,
-    setAreaData,
-    setCurrentState,
+    idMapData,
+    idMapDataIndex,
+    initLowCanvasData,
+    addLowCanvasData,
+    initCurrentComponent,
     deleteComponentData: (id: string) => {
       const { index, component } = deleteComponentData(id);
       recordSnapshot({
@@ -178,18 +148,5 @@ export const useLowStore = defineStore("useLowStore", () => {
         },
       } as snapShotType<snapShotEnum.remove>);
     },
-    setCUrrentCompoentEvent,
-    upLayerComponentData,
-    downLayerComponentData,
-    setCurrentComponentStyle,
-    clearCanvas,
-    recordSnapshot,
-    setLowCanvasState,
-    init,
-    setIsShowArea,
-    compose,
-    splite,
-    spliteSingle,
-    getComponentById,
   };
 });

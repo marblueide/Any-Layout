@@ -51,7 +51,7 @@ const activeName = ref("Administration");
     width: 100%;
 
     .center {
-      background: #f5f5f5;
+      background: #fff;
 
       .edit-container {
         width: 100%;

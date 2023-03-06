@@ -44,7 +44,6 @@ const getProp = (tabItem: Attr, item: AttrData) => {
 }
 
 const handleModelValue = (prop: keyof LowCanvasData, key: string, value: string) => {
-  console.log(prop, key, value)
   if (prop == "style") {
     store.setCurrentComponentStyle({
       [key]: value
