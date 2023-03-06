@@ -39,7 +39,6 @@ declare module '@vue/runtime-core' {
     Input: typeof import('./src/components/LowCodeCompoent/Attrs/baseAttr/input.vue')['default']
     MarkLine: typeof import('./src/components/editor/MarkLine.vue')['default']
     NavigateTo: typeof import('./src/components/LowCodeCompoent/Attrs/event/component/NavigateTo.vue')['default']
-    Paste: typeof import('./src/components/LowCodeCompoent/Attrs/event/component/Paste.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     Shadow: typeof import('./src/components/LowCodeCompoent/Attrs/Shadow.vue')['default']
