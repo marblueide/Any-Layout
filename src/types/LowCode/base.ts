@@ -24,6 +24,7 @@ export type LowCanvasType = {
 export type LowCanvasData<T extends LabelEnum = LabelEnum> = {
   id?: string;
   label: T;
+  type:T,
   name: keyof typeof LabelEnum;
   component: () => Component | string;
   collapse: string[];

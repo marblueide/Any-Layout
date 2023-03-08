@@ -259,7 +259,6 @@ const transformCurComponnet = (
 
 <style scoped lang="scss">
 .mark-line {
-  height: 100%;
 
   .line {
     &.xline {

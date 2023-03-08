@@ -13,6 +13,7 @@ export const componentList: [
   LowCanvasData<LabelEnum.text>
 ] = [
   {
+    type:LabelEnum.button,
     label: LabelEnum.button,
     name: "button",
     component: () => markRaw(VButton),
@@ -46,6 +47,7 @@ export const componentList: [
     },
   },
   {
+    type: LabelEnum.picture,
     label: LabelEnum.picture,
     name: "picture",
     component: () => markRaw(VPicture),
@@ -68,6 +70,7 @@ export const componentList: [
     },
   },
   {
+    type:LabelEnum.text,
     label: LabelEnum.text,
     name: "text",
     component: () => markRaw(VText),

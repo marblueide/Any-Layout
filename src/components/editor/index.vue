@@ -1,20 +1,48 @@
 <template>
-  <div id="editor" class="editor" ref="editorRef" overflow="hidden" :style="editorStyle" @drop="handleDrop"
-    @dragover="handleDragOver" @mousedown.stop.prevent="handleMouseDown">
+  <div
+    id="editor"
+    class="editor"
+    ref="editorRef"
+    overflow="hidden"
+    :style="editorStyle"
+    @drop="handleDrop"
+    @dragover="handleDragOver"
+    @mousedown.stop.prevent="handleMouseDown"
+    @contextmenu.stop.prevent="handleContextMenu"
+  >
     <!-- <Grid :width="lowCanvasState.width" :height="lowCanvasState.height" /> -->
-    <Shape v-for="item in lowCanvasData" :id="item.id!" :key="item.id!" :style="getShapeStyle(item.style)">
-      <component :is="item.component()" :propValue="item.propValue" :style="getOriginStyle(item.style)">
+    <Shape
+      v-for="item in lowCanvasData"
+      :id="item.id!"
+      :key="item.id!"
+      :style="getShapeStyle(item.style)"
+    >
+      <component
+        :is="item.component()"
+        :propValue="item.propValue"
+        :style="getOriginStyle(item.style)"
+      >
       </component>
     </Shape>
-    <Area v-bind="{ ...areaData }" v-show="isShowArea" @mousedown.stop.prevent="handleAreaDwon" />
+    <Area
+      v-bind="{ ...areaData }"
+      v-show="isShowArea"
+      @mousedown.stop.prevent="handleAreaDwon"
+    />
     <MarkLine />
+    <ContextMenu />
   </div>
 </template>
 
 <script setup lang="ts">
 import { useLowStore } from "@/stores/useLowStore";
 import { storeToRefs } from "pinia";
-import { computed, ref, reactive, type StyleValue } from "vue";
+import {
+  computed,
+  ref,
+  reactive,
+nextTick,
+} from "vue";
 import {
   getShapeStyle,
   getOriginStyle,
@@ -22,12 +50,19 @@ import {
 } from "../../utils/style";
 import { componentList } from "@/components/LowCodeCompoent/component-list";
 import { cloneDeep } from "lodash-es";
-import type { LowCanvasData } from "../../types/LowCode/index";
+import { MenuShowType, snapShotEnum, type LowCanvasData } from "../../types/LowCode/index";
 import type { ComponentStyle } from "@/types/LowCode/style";
+import ContextMenu from "./ContextMenu.vue";
+import { menuState } from "@/stores/useLowStore/moudles";
 
 const store = useLowStore();
-const { lowCanvasState, lowCanvasData, areaData, isShowArea, currentComponent } =
-  storeToRefs(store);
+const {
+  lowCanvasState,
+  lowCanvasData,
+  areaData,
+  isShowArea,
+  currentComponent,
+} = storeToRefs(store);
 const editorRef = ref();
 let editorRect: DOMRect;
 
@@ -58,19 +93,17 @@ const handleDrop = (e: DragEvent) => {
     left < 0
       ? 0
       : left >= lowCanvasState.value.width - width!
-        ? lowCanvasState.value.width - width!
-        : left;
+      ? lowCanvasState.value.width - width!
+      : left;
   top =
     top < 0
       ? 0
       : top >= lowCanvasState.value.height - height!
-        ? lowCanvasState.value.height - height!
-        : top;
-  //@ts-ignore
+      ? lowCanvasState.value.height - height!
+      : top;
   data.style.left = left;
-  //@ts-ignore
   data.style.top = top;
-  store.addLowCanvasData(data);
+  store.addLowCanvasDataAndSnapshot(data);
 };
 
 const handleDragOver = (e: DragEvent) => {
@@ -79,7 +112,8 @@ const handleDragOver = (e: DragEvent) => {
 
 const selectComponentSet = reactive<Set<string>>(new Set());
 
-const handleMouseDown = (e: MouseEvent) => {
+const handleMouseDown = async (e: MouseEvent) => {
+  e.preventDefault();
   if (!editorRect) editorRect = editorRef.value.getBoundingClientRect();
   const startX = e.clientX;
   const startY = e.clientY;
@@ -145,6 +179,11 @@ const handleMouseDown = (e: MouseEvent) => {
 
   document.addEventListener("mousemove", move);
   document.addEventListener("mouseup", up);
+
+  await nextTick();
+  menuState.value.show && store.setMenuState({
+    show: false,
+  });
 };
 
 const handleAreaDwon = (e: MouseEvent) => {
@@ -152,14 +191,14 @@ const handleAreaDwon = (e: MouseEvent) => {
   const startX = e.clientX;
   const startY = e.clientY;
   const componetPos: ComponentStyle[] = [];
-  const data: LowCanvasData[] = []
+  const data: LowCanvasData[] = [];
   selectComponentSet.forEach((id) => {
-    data.push(store.getComponentById(id)!)
+    data.push(store.getComponentById(id)!);
   });
 
-  data.forEach(item => {
+  data.forEach((item) => {
     componetPos.push(cloneDeep(item.style));
-  })
+  });
 
   const move = (e: MouseEvent) => {
     const endX = e.clientX;
@@ -175,10 +214,11 @@ const handleAreaDwon = (e: MouseEvent) => {
     let index = 0;
     data.forEach((item) => {
       const { left, top } = componetPos[index++];
-      item && store.setComponentStyle(item.id!, {
-        left: left + disX,
-        top: top + disY,
-      });
+      item &&
+        store.setComponentStyle(item.id!, {
+          left: left + disX,
+          top: top + disY,
+        });
     });
   };
 
@@ -188,6 +228,34 @@ const handleAreaDwon = (e: MouseEvent) => {
   };
   document.addEventListener("mousemove", move);
   document.addEventListener("mouseup", up);
+};
+
+const handleContextMenu = (e: MouseEvent) => {
+  let target: HTMLElement = e.target as HTMLElement;
+  let left = e.offsetX,
+    top = e.offsetY,
+    type = MenuShowType.Editor;
+  if (target != editorRef.value) {
+    let stack: HTMLElement[] = [];
+    while (target != editorRef.value) {
+      target.parentNode &&
+        stack.push(target as HTMLElement) &&
+        (target = target.parentNode as HTMLElement);
+    }
+
+    while (stack.length) {
+      let cur = stack.pop();
+      left += cur?.offsetLeft ?? 0;
+      top += cur?.offsetTop ?? 0;
+    }
+  }
+
+  store.setMenuState({
+    show: true,
+    type,
+    left,
+    top,
+  });
 };
 </script>
 
