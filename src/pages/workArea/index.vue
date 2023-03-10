@@ -41,6 +41,8 @@ const store = useLowStore();
 const { currentComponent } = storeToRefs(store);
 
 const activeName = ref("Administration");
+
+
 </script>
 
 <style scoped lang="scss">
@@ -75,8 +77,6 @@ const activeName = ref("Administration");
         }
       }
     }
-
-    .right {}
   }
 }
 </style>

@@ -12,6 +12,7 @@ const {
   initArea,
   initStack,
   recordSnapshot,
+  commitStorage,
   lowCanvasData,
   currentComponent,
   currentComponentIndex,
@@ -34,55 +35,23 @@ export const useLowStore = defineStore("useLowStore", () => {
 
   const clearCanvas = () => {
     //清空画布
+
+    //快照
     recordSnapshot({
       type: snapShotEnum.clear,
       value: cloneDeep(lowCanvasData),
-    } as snapShotType<snapShotEnum.clear>);
+    });
+    commitStorage()
+
+    //初始化操作
     initLowCanvasData();
     initCurrentComponent();
     idMapData.clear();
     idMapDataIndex.clear();
   };
 
-  const addLowCanvasDataAndSnapshot = (data: LowCanvasData) => {
-    // 添加组件
-    addLowCanvasData(data);
-    recordSnapshot({
-      type: snapShotEnum.add,
-      value: data,
-    } as snapShotType<snapShotEnum.add>);
-  };
-
   const getCanvasDataById = (id: string) => {
     return idMapData.get(id);
-  };
-
-  const upLayerComponentData = (id: string) => {
-    //层上移
-    const index = idMapDataIndex.get(id);
-    if (index != undefined && index < lowCanvasData.length - 1) {
-      const [tmp] = swap(lowCanvasData, index, index + 1);
-      idMapDataIndex.set(id, index + 1);
-      tmp.id && idMapDataIndex.set(tmp.id, index);
-      recordSnapshot({
-        type: snapShotEnum.index,
-        value: [index, index + 1],
-      } as snapShotType<snapShotEnum.index>);
-    }
-  };
-
-  const downLayerComponentData = (id: string) => {
-    //层下降
-    const index = idMapDataIndex.get(id);
-    if (index) {
-      const [tmp] = swap(lowCanvasData, index, index - 1);
-      idMapDataIndex.set(id, index - 1);
-      tmp.id && idMapDataIndex.set(tmp.id, index);
-      recordSnapshot({
-        type: snapShotEnum.index,
-        value: [index, index - 1],
-      } as snapShotType<snapShotEnum.index>);
-    }
   };
 
   const splite = () => {
@@ -120,16 +89,15 @@ export const useLowStore = defineStore("useLowStore", () => {
 
   return {
     ...exposeModles,
+    init,
     clearCanvas,
-    addLowCanvasDataAndSnapshot,
     getCanvasDataById,
-    upLayerComponentData,
-    downLayerComponentData,
     splite,
     spliteSingle,
     initArea,
     initStack,
     recordSnapshot,
+    commitStorage,
     lowCanvasData,
     currentComponent,
     currentComponentIndex,
@@ -138,15 +106,6 @@ export const useLowStore = defineStore("useLowStore", () => {
     initLowCanvasData,
     addLowCanvasData,
     initCurrentComponent,
-    deleteComponentData: (id: string) => {
-      const { index, component } = deleteComponentData(id);
-      recordSnapshot({
-        type: snapShotEnum.remove,
-        value: {
-          index: index!,
-          data: component!,
-        },
-      } as snapShotType<snapShotEnum.remove>);
-    },
+    deleteComponentData
   };
 });

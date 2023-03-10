@@ -37,12 +37,7 @@
 <script setup lang="ts">
 import { useLowStore } from "@/stores/useLowStore";
 import { storeToRefs } from "pinia";
-import {
-  computed,
-  ref,
-  reactive,
-nextTick,
-} from "vue";
+import { computed, ref, reactive, nextTick } from "vue";
 import {
   getShapeStyle,
   getOriginStyle,
@@ -50,7 +45,11 @@ import {
 } from "../../utils/style";
 import { componentList } from "@/components/LowCodeCompoent/component-list";
 import { cloneDeep } from "lodash-es";
-import { MenuShowType, snapShotEnum, type LowCanvasData } from "../../types/LowCode/index";
+import {
+  MenuShowType,
+  snapShotEnum,
+  type LowCanvasData,
+} from "../../types/LowCode/index";
 import type { ComponentStyle } from "@/types/LowCode/style";
 import ContextMenu from "./ContextMenu.vue";
 import { menuState } from "@/stores/useLowStore/moudles";
@@ -181,9 +180,10 @@ const handleMouseDown = async (e: MouseEvent) => {
   document.addEventListener("mouseup", up);
 
   await nextTick();
-  menuState.value.show && store.setMenuState({
-    show: false,
-  });
+  menuState.value.show &&
+    store.setMenuState({
+      show: false,
+    });
 };
 
 const handleAreaDwon = (e: MouseEvent) => {
@@ -231,25 +231,9 @@ const handleAreaDwon = (e: MouseEvent) => {
 };
 
 const handleContextMenu = (e: MouseEvent) => {
-  let target: HTMLElement = e.target as HTMLElement;
   let left = e.offsetX,
     top = e.offsetY,
     type = MenuShowType.Editor;
-  if (target != editorRef.value) {
-    let stack: HTMLElement[] = [];
-    while (target != editorRef.value) {
-      target.parentNode &&
-        stack.push(target as HTMLElement) &&
-        (target = target.parentNode as HTMLElement);
-    }
-
-    while (stack.length) {
-      let cur = stack.pop();
-      left += cur?.offsetLeft ?? 0;
-      top += cur?.offsetTop ?? 0;
-    }
-  }
-
   store.setMenuState({
     show: true,
     type,

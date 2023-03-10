@@ -31,6 +31,7 @@ export type LowCanvasData<T extends LabelEnum = LabelEnum> = {
   icon: string | Component;
   events: EventType;
   isLock: boolean;
+  isRoot:boolean;
   style: ComponentStyle;
   propValue: PropValue[T];
   animations: DataAnimation[];

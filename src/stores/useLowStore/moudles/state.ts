@@ -1,9 +1,10 @@
-import type { LowCanvasType, LowCanvasData } from "@/types";
+import { type LowCanvasType, type LowCanvasData, snapShotEnum, type snapShotType } from "@/types";
 import type { ComponentStyle } from "@/types/LowCode/style";
 import { cloneDeep, isArray, merge } from "lodash-es";
 import { ref, reactive } from "vue";
 import { v4 as uuid } from "uuid";
 import type { EventType } from "../../../types/LowCode/event";
+import { commitStorage, recordSnapshot } from "./stack";
 const initState = {
   width: 1200,
   height: 720,
@@ -103,6 +104,7 @@ const deleteComponentData = (id: string) => {
   const index = idMapDataIndex.get(id);
   const component = idMapData.get(id);
   if (index != undefined) {
+    if (currentComponent.value == component) currentComponent.value = undefined;
     lowCanvasData.splice(index, 1);
     idMapData.delete(id);
     idMapDataIndex.delete(id);
@@ -110,8 +112,6 @@ const deleteComponentData = (id: string) => {
       let cur = lowCanvasData[i];
       idMapDataIndex.set(cur.id!, i);
     }
-    if (currentComponent.value == lowCanvasData[index])
-      currentComponent.value = undefined;
   }
   return {
     index,
@@ -119,16 +119,38 @@ const deleteComponentData = (id: string) => {
   };
 };
 
+const deleteComponentDataAndSnapshot = (id:string) => {
+  const {index,component} = deleteComponentData(id)
+  recordSnapshot({
+    type: snapShotEnum.remove,
+    value: {
+      index,
+      data:component
+    },
+  } as snapShotType<snapShotEnum.remove>);
+  commitStorage()
+}
+
 const addLowCanvasData = (data: LowCanvasData) => {
   // 添加组件
   if (!data.id) {
     data.id = uuid();
   }
   lowCanvasData.push(data);
-  idMapData.set(data.id as string, lowCanvasData[lowCanvasData.length - 1]);
-  idMapDataIndex.set(data.id as string, lowCanvasData.length - 1);
+  idMapData.set(data.id, lowCanvasData[lowCanvasData.length - 1]);
+  idMapDataIndex.set(data.id, lowCanvasData.length - 1);
   return lowCanvasData[lowCanvasData.length - 1];
 };
+
+const addLowCanvasDataAndSnapshot = (data:LowCanvasData) => {
+  addLowCanvasData(data);
+
+    recordSnapshot({
+      type: snapShotEnum.add,
+      value: data,
+    });
+    commitStorage()
+}
 
 const addLowCanvasDataByIndex = (index: number, data: LowCanvasData) => {
   lowCanvasData.splice(index, 0, data);
@@ -144,6 +166,31 @@ const setMoving = (value: boolean) => {
 
 const getComponentById = (id: string) => {
   return idMapData.get(id);
+};
+
+const setComponentLayer = (id: string, index: number) => {
+  //设置图层级别
+  const k = idMapDataIndex.get(id);
+  const data = idMapData.get(id);
+  console.log(k, index);
+  if (k == index) return;
+  console.log(k != undefined && data && k < lowCanvasData.length);
+  if (k != undefined && data && k < lowCanvasData.length) {
+    lowCanvasData.splice(k, 1);
+    lowCanvasData.splice(index, 0, data);
+    let i = k;
+    if (k > index) {
+      i = index;
+    }
+    for (; i < lowCanvasData.length; i++) {
+      idMapDataIndex.set(lowCanvasData[i].id!, i);
+    }
+    recordSnapshot({
+      type: snapShotEnum.index,
+      value: [k, index],
+    });
+    commitStorage()
+  }
 };
 
 export {
@@ -164,10 +211,13 @@ export {
   setLowCanvasData,
   setCUrrentCompoentEvent,
   deleteComponentData,
+  deleteComponentDataAndSnapshot,
   addLowCanvasData,
   addLowCanvasDataByIndex,
   getComponentById,
   initCurrentComponent,
   initLowCanvasState,
   initLowCanvasData,
+  setComponentLayer,
+  addLowCanvasDataAndSnapshot
 };

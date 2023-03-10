@@ -16,35 +16,49 @@ import { snapShotEnum } from "../../../types/LowCode/stack";
 import { swap } from "@/utils";
 
 const stack = reactive<snapShotType[]>([]); //历史栈
-const index = ref<number>(-1); //当前的State在历史栈中的位置
+const stackIndex = ref<number>(-1); //当前的State在历史栈中的位置
+const storage = ref<snapShotType[]>([]);
 
 const initStack = () => {
   //初始化Stack
   if (stack.length == 0) return;
   stack.splice(0, stack.length);
-  index.value = -1;
+  stackIndex.value = -1;
 };
 
 const recordSnapshot = (data: snapShotType) => {
-  stack[++index.value] = data;
-  if (index.value < stack.length - 1) {
-    stack.splice(index.value + 1, stack.length);
+  storage.value.push(data);
+};
+
+const commitStorage = () => {
+  if (storage.value.length == 0) return;
+  console.log(storage.value)
+  stack[++stackIndex.value] =
+    storage.value.length == 1
+      ? storage.value[0]
+      : {
+          type: snapShotEnum.compose,
+          value: storage.value,
+        };
+  if (stackIndex.value < stack.length - 1) {
+    stack.splice(stackIndex.value + 1, stack.length);
   }
+  storage.value = [];
 };
 
 const backSnapshot = () => {
   //后退
   if (stack.length < 0) return;
-  const state = stack[index.value];
+  const state = stack[stackIndex.value];
   handlerBack[state.type](state as any);
-  index.value--;
+  stackIndex.value--;
 };
 
 const forwardSnapshot = () => {
   //前进
-  if (index.value >= stack.length - 1) return;
-  index.value++;
-  const state = stack[index.value];
+  if (stackIndex.value >= stack.length - 1) return;
+  stackIndex.value++;
+  const state = stack[stackIndex.value];
   handlerForward[state.type](state as any);
 };
 
@@ -104,9 +118,10 @@ const handlerForward = {
 
 export {
   stack,
-  index,
+  stackIndex,
   initStack,
   recordSnapshot,
   backSnapshot,
   forwardSnapshot,
+  commitStorage,
 };

@@ -1,10 +1,16 @@
-import { MenuShowType, type LowCanvasData, type MenuState } from "@/types";
+import {
+  MenuShowType,
+  snapShotEnum,
+  type LowCanvasData,
+  type MenuState,
+  type snapShotType,
+} from "@/types";
 import { merge, cloneDeep, curry } from "lodash-es";
 import { ref } from "vue";
 import { v4 as uuid } from "uuid";
 import {
-  addLowCanvasData,
-  deleteComponentData,
+  addLowCanvasDataAndSnapshot,
+  deleteComponentDataAndSnapshot,
   idMapData,
   idMapDataIndex,
   lowCanvasData,
@@ -38,7 +44,7 @@ const paste = curry((isMenu: boolean) => {
       data.style.left += 20;
       data.style.top += 20;
     }
-    addLowCanvasData(data);
+    addLowCanvasDataAndSnapshot(data)
   };
 });
 
@@ -46,21 +52,20 @@ const shear = (id: string) => {
   const component = idMapData.get(id);
   if (!component) return;
   copyData.value = component;
-  deleteComponentData(id);
+  deleteComponentDataAndSnapshot(id)
 };
 
-const delet = (id:string) => {
-  deleteComponentData(id);
+const delet = (id: string) => {
+  deleteComponentDataAndSnapshot(id)
 };
 
-const top = (id:string) => {
-  const index = idMapDataIndex.get(id)
-  index != undefined &&
-    setComponentLayer(id, lowCanvasData.length - 1);
+const top = (id: string) => {
+  const index = idMapDataIndex.get(id);
+  index != undefined && setComponentLayer(id, lowCanvasData.length - 1);
 };
 
-const bottom = (id:string) => {
-  const index = idMapDataIndex.get(id)
+const bottom = (id: string) => {
+  const index = idMapDataIndex.get(id);
   index != undefined && setComponentLayer(id, 0);
 };
 

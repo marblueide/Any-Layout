@@ -5,7 +5,7 @@ import VPicture from "./VPicture/index.vue";
 import VText from "./VText/index.vue";
 import { LabelEnum } from "../../types/LowCode/index";
 import { getAllCollapse } from "./attr-list";
-import { EventEnum, EventTypeEnum } from "@/types/LowCode/event";
+import { EventTypeEnum } from "@/types/LowCode/event";
 
 export const componentList: [
   LowCanvasData<LabelEnum.button>,
@@ -13,7 +13,7 @@ export const componentList: [
   LowCanvasData<LabelEnum.text>
 ] = [
   {
-    type:LabelEnum.button,
+    type: LabelEnum.button,
     label: LabelEnum.button,
     name: "button",
     component: () => markRaw(VButton),
@@ -24,6 +24,7 @@ export const componentList: [
       },
     },
     isLock: false,
+    isRoot: true,
     style: {
       left: 0,
       top: 0,
@@ -54,6 +55,7 @@ export const componentList: [
     collapse: [],
     events: {},
     isLock: false,
+    isRoot: true,
     style: {
       left: 0,
       top: 0,
@@ -70,13 +72,14 @@ export const componentList: [
     },
   },
   {
-    type:LabelEnum.text,
+    type: LabelEnum.text,
     label: LabelEnum.text,
     name: "text",
     component: () => markRaw(VText),
     collapse: getAllCollapse(),
     events: {},
     isLock: false,
+    isRoot: true,
     style: {
       left: 0,
       top: 0,

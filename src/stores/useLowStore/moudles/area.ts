@@ -12,7 +12,7 @@ import {
   setCurrentComponent,
   getComponentById,
 } from "./state";
-import { recordSnapshot } from "./stack";
+import { commitStorage, recordSnapshot } from "./stack";
 import { type snapShotType, snapShotEnum } from "@/types/LowCode/stack";
 const areaData = ref<AreaData>({
   left: 0,
@@ -28,13 +28,13 @@ const setAreaData = (obj: Partial<AreaData>) => {
 const compose = () => {
   const data = areaData.value.components.map((id) => getComponentById(id));
   const components: LowCanvasData[] = [];
-  const snapShots: snapShotType[] = [];
   data.forEach((component) => {
     if (component && component.label != LabelEnum.group) {
       const { left, top } = component.style;
-      left && (component.style.left -= areaData.value.left);
-      top && (component.style.top -= areaData.value.top);
-      snapShots.push({
+      component.style.left -= areaData.value.left;
+      component.style.top -= areaData.value.top;
+      component.isRoot = false
+      recordSnapshot({
         type: snapShotEnum.style,
         value: {
           id: component.id,
@@ -49,12 +49,14 @@ const compose = () => {
   });
 
   const defaultGroup: LowCanvasData = {
+    type: LabelEnum.group,
     label: LabelEnum.group,
     name: "group",
     component: () => markRaw(Group),
     icon: "",
     events: {},
     isLock: false,
+    isRoot:true,
     style: {
       left: areaData.value.left,
       top: areaData.value.top,
@@ -68,16 +70,15 @@ const compose = () => {
     collapse: [],
   };
 
-  snapShots.push({
+  recordSnapshot({
     type: snapShotEnum.add,
     value: defaultGroup,
-  } as unknown as snapShotType<snapShotEnum.add>);
+  });
   const component = addLowCanvasData(defaultGroup);
 
   data.forEach((component) => {
-    console.log(component);
     if (component) {
-      snapShots.push({
+      recordSnapshot({
         type: snapShotEnum.remove,
         value: {
           index: idMapDataIndex.get(component.id!),
@@ -96,10 +97,8 @@ const compose = () => {
     }
   });
 
-  recordSnapshot({
-    type: snapShotEnum.compose,
-    value: snapShots,
-  } as snapShotType<snapShotEnum.compose>);
+  //提交快照
+  commitStorage();
 
   areaData.value.components = [];
   isShowArea.value = false;

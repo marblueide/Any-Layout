@@ -60,7 +60,7 @@ const handleClick = (id: string | undefined) => {
 };
 
 const handleDelete = (id: string | undefined) => {
-  id && store.deleteComponentData(id);
+  id && store.deleteComponentDataAndSnapshot(id);
 };
 
 const handleUp = (id: string | undefined) => {
