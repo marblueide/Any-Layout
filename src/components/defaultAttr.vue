@@ -34,12 +34,14 @@
 </template>
 
 <script setup lang="ts">
+import { appStore } from "@/stores";
 import { useLowStore } from "@/stores/useLowStore";
 import { storeToRefs } from "pinia";
 import type { LowCanvasType } from "../types/LowCode/index";
 
 const store = useLowStore();
-const { lowCanvasState } = storeToRefs(store);
+const { lowCanvasState } = storeToRefs(appStore.state);
+const { setLowCanvasState } = appStore.state;
 
 const handleChange = <
   k extends keyof LowCanvasType,
@@ -53,7 +55,7 @@ const handleChange = <
     //@ts-ignore
     v = "#fff";
   }
-  store.setLowCanvasState({
+  setLowCanvasState({
     [key]: v,
   });
 };

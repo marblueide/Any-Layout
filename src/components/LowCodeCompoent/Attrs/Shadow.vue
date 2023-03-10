@@ -18,7 +18,6 @@
 
 <script setup lang="ts">
 import { defaultShadow } from "./attr.type";
-import { toRefs } from "vue";
 import { useAttr } from "./useAttr";
 
 const { currentComponent, handleChange } = useAttr();

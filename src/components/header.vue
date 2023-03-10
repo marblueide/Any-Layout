@@ -20,27 +20,28 @@
 </template>
 
 <script setup lang="ts">
-import { useLowStore } from "@/stores/useLowStore";
-import { values } from "lodash-es";
+import { appStore } from "@/stores";
 import { storeToRefs } from "pinia";
 
-const store = useLowStore();
-const { lowCanvasState, lowCanvasData, stackIndex, stack, areaData, currentComponent } = storeToRefs(store);
+const { lowCanvasState, lowCanvasData, currentComponent } = storeToRefs(appStore.state);
+const {stackIndex, stack} = storeToRefs(appStore.stack)
+const {areaData} = storeToRefs(appStore.area)
+const {clearCanvas,splite} = appStore.lowStore
+const {setLowCanvasState} = appStore.state
+const {compose} = appStore.area
+
+const {backSnapshot,forwardSnapshot} = appStore.stack
 
 const handleBack = () => {
-  store.backSnapshot();
+  backSnapshot();
 };
 
 const handleForward = () => {
-  store.forwardSnapshot();
-};
-
-const clearCanvas = () => {
-  store.clearCanvas();
+  forwardSnapshot();
 };
 
 const init = () => {
-  store.init();
+  init();
 };
 
 const save = () => {
@@ -48,16 +49,8 @@ const save = () => {
   localStorage.setItem("CanvasData", JSON.stringify(lowCanvasData.value));
 };
 
-const compose = () => {
-  store.compose()
-}
-
-const splite = () => {
-  store.splite()
-}
-
 const handleInput = (key: string, val: number) => {
-  store.setLowCanvasState({
+  setLowCanvasState({
     [key]: val,
   });
 }

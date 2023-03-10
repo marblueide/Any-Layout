@@ -16,7 +16,7 @@
         v-for="item in menuList"
         :key="item.label"
         @mousedown.stop
-
+        v-show="menuShowList[menuState.type].includes(item.type)"
         @click.stop="handleClick(item)"
       >
         {{ item.label }}
@@ -26,19 +26,20 @@
 </template>
 
 <script setup lang="ts">
+import { appStore } from "@/stores";
 import { useLowStore } from "@/stores/useLowStore";
 import { storeToRefs } from "pinia";
 import { computed } from "vue";
-import { menuList, type menuObj } from "./data";
+import { menuList, type menuObj,menuShowList } from "./data";
 
 const store = useLowStore();
-const { menuState, currentComponent } = storeToRefs(store);
+const { currentComponent } = storeToRefs(appStore.state);
+const { menuState } = storeToRefs(appStore.contextMenu);
+const {setMenuState} = appStore.contextMenu
 
 const handleClick = (item:menuObj) => {
-  console.log(item.label,55555555)
-  console.log(item.fn)
   item.fn(currentComponent.value?.id)
-  store.setMenuState({
+  setMenuState({
     show:false
   })
 }

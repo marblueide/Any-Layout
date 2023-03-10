@@ -1,5 +1,3 @@
-import type { LowCanvasData } from ".";
-
 export type MenuState = {
   type:MenuShowType
   left: number;
@@ -12,6 +10,7 @@ export enum MenuShowType {
   Editor = "Editor",
   Component = "Component",
   Group = "Group",
+  Area = "Area"
 }
 
 export enum MenuType {

@@ -33,12 +33,11 @@ import componentListVue from "@/components/componentList.vue";
 import componentLayer from "@/components/componentLayer.vue";
 import Editor from "@/components/editor/index.vue";
 import Attr from "@/components/editor/Attr.vue";
-import { useLowStore } from "../../stores/useLowStore";
 import { storeToRefs } from "pinia";
 import { ref } from "vue";
+import { appStore } from "@/stores";
 
-const store = useLowStore();
-const { currentComponent } = storeToRefs(store);
+const { currentComponent } = storeToRefs(appStore.state);
 
 const activeName = ref("Administration");
 

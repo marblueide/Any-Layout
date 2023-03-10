@@ -47,21 +47,24 @@ import { componentList } from "@/components/LowCodeCompoent/component-list";
 import { cloneDeep } from "lodash-es";
 import {
   MenuShowType,
-  snapShotEnum,
   type LowCanvasData,
 } from "../../types/LowCode/index";
 import type { ComponentStyle } from "@/types/LowCode/style";
 import ContextMenu from "./ContextMenu.vue";
-import { menuState } from "@/stores/useLowStore/moudles";
+import { appStore } from "@/stores";
 
-const store = useLowStore();
+const { lowCanvasState, lowCanvasData } = storeToRefs(appStore.state);
+const { areaData, isShowArea } = storeToRefs(appStore.area);
+const { menuState } = storeToRefs(appStore.contextMenu);
 const {
-  lowCanvasState,
-  lowCanvasData,
-  areaData,
-  isShowArea,
-  currentComponent,
-} = storeToRefs(store);
+  addLowCanvasDataAndSnapshot,
+  setCurrentComponent,
+  getComponentById,
+  setComponentStyle,
+} = appStore.state;
+const { setIsShowArea, setAreaData } = appStore.area;
+const { setMenuState } = appStore.contextMenu;
+
 const editorRef = ref();
 let editorRect: DOMRect;
 
@@ -102,7 +105,7 @@ const handleDrop = (e: DragEvent) => {
       : top;
   data.style.left = left;
   data.style.top = top;
-  store.addLowCanvasDataAndSnapshot(data);
+  addLowCanvasDataAndSnapshot(data);
 };
 
 const handleDragOver = (e: DragEvent) => {
@@ -117,10 +120,10 @@ const handleMouseDown = async (e: MouseEvent) => {
   const startX = e.clientX;
   const startY = e.clientY;
 
-  store.setCurrentComponent();
-  store.setIsShowArea(true);
+  setCurrentComponent();
+  setIsShowArea(true);
   selectComponentSet.clear();
-  store.setAreaData({
+  setAreaData({
     left: startX - editorRect.left,
     top: startY - editorRect.top,
     width: 0,
@@ -131,7 +134,7 @@ const handleMouseDown = async (e: MouseEvent) => {
   const move = (e: MouseEvent) => {
     const endX = e.clientX;
     const endY = e.clientY;
-    store.setAreaData({
+    setAreaData({
       width: endX - startX,
       height: endY - startY,
     });
@@ -165,7 +168,7 @@ const handleMouseDown = async (e: MouseEvent) => {
       }
     });
     if (selectComponentSet.size > 1) {
-      store.setAreaData({
+      setAreaData({
         left: l,
         top: t,
         width: r - l,
@@ -173,7 +176,7 @@ const handleMouseDown = async (e: MouseEvent) => {
         components: [...selectComponentSet],
       });
     }
-    store.setIsShowArea(selectComponentSet.size > 1);
+    setIsShowArea(selectComponentSet.size > 1);
   };
 
   document.addEventListener("mousemove", move);
@@ -181,7 +184,7 @@ const handleMouseDown = async (e: MouseEvent) => {
 
   await nextTick();
   menuState.value.show &&
-    store.setMenuState({
+    setMenuState({
       show: false,
     });
 };
@@ -193,7 +196,7 @@ const handleAreaDwon = (e: MouseEvent) => {
   const componetPos: ComponentStyle[] = [];
   const data: LowCanvasData[] = [];
   selectComponentSet.forEach((id) => {
-    data.push(store.getComponentById(id)!);
+    data.push(getComponentById(id)!);
   });
 
   data.forEach((item) => {
@@ -206,7 +209,7 @@ const handleAreaDwon = (e: MouseEvent) => {
     const disX = endX - startX;
     const disY = endY - startY;
 
-    store.setAreaData({
+    setAreaData({
       left: left + disX,
       top: top + disY,
     });
@@ -215,7 +218,7 @@ const handleAreaDwon = (e: MouseEvent) => {
     data.forEach((item) => {
       const { left, top } = componetPos[index++];
       item &&
-        store.setComponentStyle(item.id!, {
+        setComponentStyle(item.id!, {
           left: left + disX,
           top: top + disY,
         });
@@ -234,7 +237,7 @@ const handleContextMenu = (e: MouseEvent) => {
   let left = e.offsetX,
     top = e.offsetY,
     type = MenuShowType.Editor;
-  store.setMenuState({
+  setMenuState({
     show: true,
     type,
     left,

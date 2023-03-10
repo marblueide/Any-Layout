@@ -20,24 +20,22 @@
     
 <script setup lang='ts'>
 import { eventList, eventSelect, eventComponent } from './event.list';
-import { ref, toRefs, watch } from 'vue';
-import { useLowStore } from '@/stores/useLowStore';
 import { storeToRefs } from 'pinia';
 import type { EventEnum, EventTypeEnum } from '@/types/LowCode/event';
+import { appStore } from '@/stores';
 
-const store = useLowStore()
-const { currentComponent } = storeToRefs(store)
-
+const { currentComponent } = storeToRefs(appStore.state)
+const {setCUrrentCompoentEvent} = appStore.state
 
 const handleChangeType = (value: EventTypeEnum) => {
-    store.setCUrrentCompoentEvent({
+    setCUrrentCompoentEvent({
         [props.label]: eventList[value]
     })
 }
 
 const handleChange = (key: string, value: EventTypeEnum) => {
     console.log(key,value)
-    store.setCUrrentCompoentEvent({
+    setCUrrentCompoentEvent({
         [props.label]: {
             [key]: value
         }

@@ -1,7 +1,14 @@
 <template>
   <div class="mark-line">
-    <div class="line" v-for="item in lines" absolute :class="item.includes('x') ? 'xline' : 'yline'" bg-blue-2
-      :style="getShapeStyle(lineState[item].style)" v-show="lineState[item].isShow"></div>
+    <div
+      class="line"
+      v-for="item in lines"
+      absolute
+      :class="item.includes('x') ? 'xline' : 'yline'"
+      bg-blue-2
+      :style="getShapeStyle(lineState[item].style)"
+      v-show="lineState[item].isShow"
+    ></div>
   </div>
 </template>
 
@@ -11,9 +18,15 @@ import { getShapeStyle, getComponentRotatedStyle } from "@/utils/style";
 import emitter from "@/utils/mitt";
 import { useLowStore } from "../../stores/useLowStore";
 import { storeToRefs } from "pinia";
-import { clone, cloneDeep, isNil } from 'lodash-es';
+import { clone, cloneDeep, isNil } from "lodash-es";
 import type { ComponentStyle } from "../../types/LowCode/style";
 import { LabelEnum, type LowCanvasData } from "@/types";
+import { appStore } from "@/stores";
+
+const { currentComponent, lowCanvasData, currentComponentIndex } = storeToRefs(
+  appStore.state
+);
+const { setCurrentComponentStyle } = appStore.state;
 
 type line = "xt" | "xc" | "xb" | "yl" | "yc" | "yr";
 type topLine = "xt" | "xc" | "xb";
@@ -75,7 +88,6 @@ const lineState = reactive<{
 const lines: line[] = ["xt", "xc", "xb", "yl", "yc", "yr"];
 const diff = 10;
 const store = useLowStore();
-const { currentComponent, lowCanvasData, currentComponentIndex } = storeToRefs(store);
 
 emitter.on("move", ({ isDown, isLeft }) => {
   showLine(isDown, isLeft);
@@ -92,37 +104,41 @@ const hideLine = () => {
 };
 
 const isGroup = computed(() => {
-  return !isNil(currentComponentIndex.value) && lowCanvasData.value[currentComponentIndex.value!] != currentComponent.value
-})
+  return (
+    !isNil(currentComponentIndex.value) &&
+    lowCanvasData.value[currentComponentIndex.value!] != currentComponent.value
+  );
+});
 
 const components = computed(() => {
-  const arr: LowCanvasData[] = []
+  const arr: LowCanvasData[] = [];
   lowCanvasData.value.forEach((component) => {
     arr.push(component);
-    if (Array.isArray(component.propValue) && currentComponent.value?.label != LabelEnum.group) {
-      component.propValue.forEach(c => {
-        const cloneC = cloneDeep(c)
-        cloneC.style.left += component.style.left
-        cloneC.style.top += component.style.top
-        arr.push(cloneC)
-      })
+    if (
+      Array.isArray(component.propValue) &&
+      currentComponent.value?.label != LabelEnum.group
+    ) {
+      component.propValue.forEach((c) => {
+        const cloneC = cloneDeep(c);
+        cloneC.style.left += component.style.left;
+        cloneC.style.top += component.style.top;
+        arr.push(cloneC);
+      });
     }
-  })
-  return arr
-})
+  });
+  return arr;
+});
 
 const showLine = (isDown: boolean, isLeft: boolean) => {
   if (!currentComponent.value) return;
-  const cloneCurStyle = cloneDeep(currentComponent.value?.style)
-  const groupC = lowCanvasData.value[currentComponentIndex.value!]
+  const cloneCurStyle = cloneDeep(currentComponent.value?.style);
+  const groupC = lowCanvasData.value[currentComponentIndex.value!];
   if (isGroup.value) {
     //判断是否是组合内的组件
-    cloneCurStyle.left! += groupC.style.left!
-    cloneCurStyle.top! += groupC.style.top!
+    cloneCurStyle.left! += groupC.style.left!;
+    cloneCurStyle.top! += groupC.style.top!;
   }
-  const currentStyle = getComponentRotatedStyle(
-    cloneCurStyle
-  );
+  const currentStyle = getComponentRotatedStyle(cloneCurStyle);
 
   const {
     left: curLeft,
@@ -219,15 +235,17 @@ const showLine = (isDown: boolean, isLeft: boolean) => {
           needShow.push(condition.line);
           lineState[condition.line].style[key as "top" | "left"] =
             condition.lineValue;
-          const val = isGroup.value ? condition.curValue - groupC.style[key as "top" | "left"]! : condition.curValue
-          store.setCurrentComponentStyle({
+          const val = isGroup.value
+            ? condition.curValue - groupC.style[key as "top" | "left"]!
+            : condition.curValue;
+          setCurrentComponentStyle({
             [key]:
               rotate != 0
                 ? transformCurComponnet(
-                  key as "top" | "left",
-                  val,
-                  currentStyle
-                )
+                    key as "top" | "left",
+                    val,
+                    currentStyle
+                  )
                 : val,
           });
         }
@@ -259,7 +277,6 @@ const transformCurComponnet = (
 
 <style scoped lang="scss">
 .mark-line {
-
   .line {
     &.xline {
       height: 2px;

@@ -47,28 +47,31 @@ import { useLowStore } from "@/stores/useLowStore";
 import { storeToRefs } from "pinia";
 import { computed, toRaw } from "vue";
 import { cloneDeep } from "lodash-es";
+import { appStore } from "@/stores";
 
 const store = useLowStore();
-const { currentComponent, lowCanvasData } = storeToRefs(store);
+const { currentComponent, lowCanvasData } = storeToRefs(appStore.state);
+const { setCurrentComponent, deleteComponentDataAndSnapshot } = appStore.state;
+const { up, down } = appStore.contextMenu;
 
 const reseverComponentData = computed(() => {
   return cloneDeep(lowCanvasData.value).reverse();
 });
 
 const handleClick = (id: string | undefined) => {
-  id && store.setCurrentComponent(id);
+  id && setCurrentComponent(id);
 };
 
 const handleDelete = (id: string | undefined) => {
-  id && store.deleteComponentDataAndSnapshot(id);
+  id && deleteComponentDataAndSnapshot(id);
 };
 
 const handleUp = (id: string | undefined) => {
-  id && store.up(id);
+  id && up(id);
 };
 
 const handleDown = (id: string | undefined) => {
-  id && store.down(id);
+  id && down(id);
 };
 </script>
 

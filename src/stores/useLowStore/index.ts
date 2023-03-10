@@ -1,32 +1,27 @@
 import type { LowCanvasData, LowCanvasType } from "@/types/LowCode";
-import { defineStore } from "pinia";
-import { swap } from "@/utils";
-import * as modles from "./moudles";
-
-import type { PropValue } from "../../types/LowCode/PropValue";
+import { defineStore, storeToRefs } from "pinia";
+import { useArea, useContextMenu, useLowCodeState, useStack } from "./moudles";
 import { snapShotEnum } from "@/types/LowCode/stack";
-import type { snapShotType } from "../../types/LowCode/stack";
 import { cloneDeep } from "lodash-es";
 
-const {
-  initArea,
-  initStack,
-  recordSnapshot,
-  commitStorage,
-  lowCanvasData,
-  currentComponent,
-  currentComponentIndex,
-  idMapData,
-  idMapDataIndex,
-  deleteComponentData,
-  initLowCanvasData,
-  addLowCanvasData,
-  initCurrentComponent,
-  ...exposeModles
-} = modles;
-
-//@ts-ignore
 export const useLowStore = defineStore("useLowStore", () => {
+  const { initArea } = useArea();
+
+  const { initStack, recordSnapshot, commitStorage } = useStack();
+
+  const state = useLowCodeState();
+  const {
+    lowCanvasData,
+    idMapData,
+    idMapDataIndex,
+    deleteComponentData,
+    initLowCanvasData,
+    addLowCanvasData,
+    initCurrentComponent,
+  } = state;
+
+  const { currentComponent, currentComponentIndex } = storeToRefs(state);
+
   const init = () => {
     initLowCanvasData();
     initStack();
@@ -41,7 +36,7 @@ export const useLowStore = defineStore("useLowStore", () => {
       type: snapShotEnum.clear,
       value: cloneDeep(lowCanvasData),
     });
-    commitStorage()
+    commitStorage();
 
     //初始化操作
     initLowCanvasData();
@@ -88,24 +83,10 @@ export const useLowStore = defineStore("useLowStore", () => {
   };
 
   return {
-    ...exposeModles,
     init,
     clearCanvas,
     getCanvasDataById,
     splite,
     spliteSingle,
-    initArea,
-    initStack,
-    recordSnapshot,
-    commitStorage,
-    lowCanvasData,
-    currentComponent,
-    currentComponentIndex,
-    idMapData,
-    idMapDataIndex,
-    initLowCanvasData,
-    addLowCanvasData,
-    initCurrentComponent,
-    deleteComponentData
   };
 });

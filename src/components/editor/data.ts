@@ -1,10 +1,14 @@
-import { bottom, copy, delet, down, paste, shear,top, up } from "@/stores/useLowStore/moudles";
-import { MenuType } from "@/types";
+import { useContextMenu } from "@/stores/useLowStore/moudles";
+import { MenuShowType, MenuType } from "@/types";
+import { difference } from "lodash-es";
+import pinia from "@/stores/pinia"
+
+const { bottom, copy, delet, down, paste, shear, top, up } = useContextMenu(pinia);
 
 export type menuObj = {
   type: MenuType;
   label: string;
-  fn: (...args:any[]) => void;
+  fn: (...args: any[]) => void;
 };
 
 export const menuList: menuObj[] = [
@@ -48,4 +52,31 @@ export const menuList: menuObj[] = [
     label: "下移",
     fn: down,
   },
+  {
+    type: MenuType.Group,
+    label: "组合",
+    fn: copy,
+  },
+  {
+    type: MenuType.Splite,
+    label: "拆分",
+    fn: copy,
+  },
 ];
+
+const allMenuShowType: (keyof typeof MenuType)[] = Object.keys(
+  MenuType
+) as (keyof typeof MenuType)[];
+
+export const menuShowList: Record<MenuShowType, (keyof typeof MenuType)[]> = {
+  [MenuShowType.Component]: difference(allMenuShowType, ["Group", "Splite"]),
+  [MenuShowType.Editor]: ["Paste"],
+  [MenuShowType.Group]: difference(allMenuShowType, ["Group"]),
+  [MenuShowType.Area]: difference(allMenuShowType, [
+    "Splite",
+    "Bottom",
+    "Top",
+    "Up",
+    "Down",
+  ]),
+};

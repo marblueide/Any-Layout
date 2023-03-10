@@ -48,14 +48,25 @@ import { LabelEnum, type pointType } from "@/types";
 import { MenuShowType, type LowCanvasData } from "../../types/LowCode/index";
 import { cloneDeep } from "lodash-es";
 import { snapShotEnum, type snapShotType } from "@/types/LowCode/stack";
+import { appStore } from "@/stores";
+
+const store = useLowStore();
+const { currentComponent, isMoving, lowCanvasData, currentComponentIndex } =
+  storeToRefs(appStore.state);
+const {
+  setCurrentComponent,
+  setMoving,
+  setCurrentComponentStyle,
+  setComponentStyle,
+} = appStore.state;
+const { recordSnapshot, commitStorage } = appStore.stack;
+const { spliteSingle, getCanvasDataById } = appStore.lowStore;
+const { setMenuState } = appStore.contextMenu;
 
 const props = defineProps<{
   style: StyleValue;
   id: string;
 }>();
-const store = useLowStore();
-const { currentComponent, isMoving, lowCanvasData, currentComponentIndex } =
-  storeToRefs(store);
 const pointList: pointType[] = ["lt", "t", "rt", "r", "rb", "b", "lb", "l"];
 const shapeRef = ref();
 
@@ -67,19 +78,19 @@ const isGroupChidren = computed(() => {
 });
 
 const handleMouseDown = (e: MouseEvent) => {
-  store.setCurrentComponent(props.id);
+  setCurrentComponent(props.id);
   const { left, top } = currentComponent.value!.style;
   const startX = e.clientX;
   const startY = e.clientY;
 
-  store.setMoving(false);
+  setMoving(false);
   const move = async (e: MouseEvent) => {
-    !isMoving.value && store.setMoving(true);
+    !isMoving.value && setMoving(true);
     const endX = e.clientX;
     const endY = e.clientY;
     const curX = endX - startX + left;
     const curY = endY - startY + top;
-    store.setCurrentComponentStyle({
+    setCurrentComponentStyle({
       left: curX,
       top: curY,
     });
@@ -96,7 +107,7 @@ const handleMouseDown = (e: MouseEvent) => {
 
     //收集快照
     isMoving.value &&
-      store.recordSnapshot({
+      recordSnapshot({
         type: snapShotEnum.style,
         value: {
           id: currentComponent.value!.id,
@@ -112,9 +123,9 @@ const handleMouseDown = (e: MouseEvent) => {
           ],
         },
       } as snapShotType<snapShotEnum.style>);
-    store.commitStorage();
+    commitStorage();
 
-    store.setMoving(false);
+    setMoving(false);
     emitter.emit("unMove");
     if (isGroupChidren.value) {
       const { left, top, width, height } =
@@ -135,8 +146,7 @@ const handleMouseDown = (e: MouseEvent) => {
         curRight > right + width / 3 ||
         curBottom > bottom + height / 3
       ) {
-        currentComponent.value?.id &&
-          store.spliteSingle(currentComponent.value.id);
+        currentComponent.value?.id && spliteSingle(currentComponent.value.id);
       }
     }
   };
@@ -145,7 +155,7 @@ const handleMouseDown = (e: MouseEvent) => {
 };
 
 const getPointStyle = (point: pointType): StyleValue => {
-  const canvasData = store.getCanvasDataById(props.id);
+  const canvasData = getCanvasDataById(props.id);
   let hasT = point.includes("t");
   let hasB = point.includes("b");
   let hasL = point.includes("l");
@@ -173,7 +183,7 @@ const getPointStyle = (point: pointType): StyleValue => {
 };
 
 const handlePointDown = (e: MouseEvent, point: pointType) => {
-  store.setCurrentComponent(props.id);
+  setCurrentComponent(props.id);
   let { width, height, left, top, rotate } = currentComponent.value!.style;
 
   if (isGroupChidren.value) {
@@ -183,7 +193,7 @@ const handlePointDown = (e: MouseEvent, point: pointType) => {
     top += t;
   }
 
-  store.setMoving(true);
+  setMoving(true);
 
   const editorRectInfo = document
     .querySelector("#editor")!
@@ -238,7 +248,7 @@ const handlePointDown = (e: MouseEvent, point: pointType) => {
       chidrenCmp.forEach((component) => {
         const { left, top, width, height } = component.style;
         component.id &&
-          store.setComponentStyle(component.id, {
+          setComponentStyle(component.id, {
             left: left * x,
             width: width * x,
             top: top * y,
@@ -257,7 +267,7 @@ const handlePointDown = (e: MouseEvent, point: pointType) => {
       style.left -= l;
       style.top -= t;
       if (style.top + style.height > height) {
-        store.setComponentStyle(
+        setComponentStyle(
           lowCanvasData.value[currentComponentIndex.value!].id!,
           {
             height: style.top + style.height,
@@ -267,7 +277,7 @@ const handlePointDown = (e: MouseEvent, point: pointType) => {
 
       if (style.left + style.width > width) {
         console.log(width);
-        store.setComponentStyle(
+        setComponentStyle(
           lowCanvasData.value[currentComponentIndex.value!].id!,
           {
             width: style.left + style.width,
@@ -275,7 +285,7 @@ const handlePointDown = (e: MouseEvent, point: pointType) => {
         );
       }
     }
-    store.setCurrentComponentStyle(style);
+    setCurrentComponentStyle(style);
   };
 
   const up = () => {
@@ -283,7 +293,7 @@ const handlePointDown = (e: MouseEvent, point: pointType) => {
     document.removeEventListener("mouseup", up);
 
     //收集快照
-    store.recordSnapshot({
+    recordSnapshot({
       type: snapShotEnum.style,
       value: {
         id: currentComponent.value!.id,
@@ -299,9 +309,9 @@ const handlePointDown = (e: MouseEvent, point: pointType) => {
         ],
       },
     } as snapShotType<snapShotEnum.style>);
-    store.commitStorage();
+    commitStorage();
 
-    store.setMoving(false);
+    setMoving(false);
   };
 
   document.addEventListener("mousemove", move);
@@ -327,13 +337,13 @@ const handleRatation = (e: MouseEvent) => {
     const rotateDegreeAfter =
       Math.atan2(curY - centerY, curX - centerX) / (Math.PI / 180);
     endRotate = rotate + rotateDegreeAfter - rotateDegreeBefore;
-    store.setCurrentComponentStyle({
+    setCurrentComponentStyle({
       rotate: endRotate,
     });
   };
 
   const up = () => {
-    store.recordSnapshot({
+    recordSnapshot({
       type: snapShotEnum.style,
       value: {
         id: currentComponent.value!.id,
@@ -347,7 +357,7 @@ const handleRatation = (e: MouseEvent) => {
         ],
       },
     } as snapShotType<snapShotEnum.style>);
-    store.commitStorage();
+    commitStorage();
     document.removeEventListener("mousemove", move);
     document.removeEventListener("mouseup", up);
   };
@@ -365,12 +375,12 @@ const handleContextMenu = (e: MouseEvent) => {
       : MenuShowType.Component;
   let l = e.offsetX + left;
   let t = e.offsetY + top;
-  if(isGroupChidren.value){
-    const father = lowCanvasData.value[currentComponentIndex.value!]
-    l += father.style.left
-    t += father.style.top
+  if (isGroupChidren.value) {
+    const father = lowCanvasData.value[currentComponentIndex.value!];
+    l += father.style.left;
+    t += father.style.top;
   }
-  store.setMenuState({
+  setMenuState({
     show: true,
     type,
     left: l,

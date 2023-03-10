@@ -2,18 +2,50 @@
   <div class="attr">
     <el-tabs class="el-tabs" type="border-card" v-model="activeTab">
       <el-form label-position="top">
-        <el-tab-pane v-for="(tabItem, index) in attrList" :label="tabItem.name" :name="index" :key="index">
-          <el-collapse :model-value="currentComponent?.collapse || allCollapse" @change="handleCollapseChange">
-            <el-collapse-item v-for="item in tabItem.data"
-              v-show="getComponents(item.components, getProp(tabItem, item)).length != 0" :name="item.title"
-              :title="item.title">
-              <template v-for="data in getComponents(item.components, getProp(tabItem, item))" :key="data.name">
-                <component v-if="data.type != AttrEnum.OTHER" :is="data.component" :type="data.type"
+        <el-tab-pane
+          v-for="(tabItem, index) in attrList"
+          :label="tabItem.name"
+          :name="index"
+          :key="index"
+        >
+          <el-collapse
+            :model-value="currentComponent?.collapse || allCollapse"
+            @change="handleCollapseChange"
+          >
+            <el-collapse-item
+              v-for="item in tabItem.data"
+              v-show="
+                getComponents(item.components, getProp(tabItem, item)).length !=
+                0
+              "
+              :name="item.title"
+              :title="item.title"
+            >
+              <template
+                v-for="data in getComponents(
+                  item.components,
+                  getProp(tabItem, item)
+                )"
+                :key="data.name"
+              >
+                <component
+                  v-if="data.type != AttrEnum.OTHER"
+                  :is="data.component"
+                  :type="data.type"
                   :label="(data as AttrEnumType<AttrEnum.ALL>)?.label"
                   :step="(data as AttrEnumType<AttrEnum.ALL>)?.step"
-                  :modelValue="currentComponent?.[getProp(tabItem, item)][data.name]"
-                  @update:modelValue="handleModelValue(getProp(tabItem, item), data.name, $event)"></component>
-                <component v-else :is="data.component" :label="data.label"></component>
+                  :modelValue="
+                    currentComponent?.[getProp(tabItem, item)][data.name]
+                  "
+                  @update:modelValue="
+                    handleModelValue(getProp(tabItem, item), data.name, $event)
+                  "
+                ></component>
+                <component
+                  v-else
+                  :is="data.component"
+                  :label="data.label"
+                ></component>
               </template>
             </el-collapse-item>
           </el-collapse>
@@ -27,37 +59,56 @@
 import { storeToRefs } from "pinia";
 import { ref } from "vue";
 import { useLowStore } from "../../stores/useLowStore";
-import { attrList, getAllCollapse } from '../LowCodeCompoent/attr-list';
-import { AttrEnum, type AttrEnumType, type AttrData, type Attr } from '../../types/LowCode/attr';
-import type { LowCanvasData } from '../../types/LowCode/base';
+import { attrList, getAllCollapse } from "../LowCodeCompoent/attr-list";
+import {
+  AttrEnum,
+  type AttrEnumType,
+  type AttrData,
+  type Attr,
+} from "../../types/LowCode/attr";
+import type { LowCanvasData } from "../../types/LowCode/base";
+import { appStore } from "@/stores";
 const store = useLowStore();
-const { currentComponent } = storeToRefs(store);
+const { currentComponent } = storeToRefs(appStore.state);
+const { setCurrentComponentStyle, setCurrentProps, setCurrentState } =
+  appStore.state;
 
-const allCollapse = getAllCollapse()
+const allCollapse = getAllCollapse();
 
-const getComponents = (data: AttrEnumType<AttrEnum>[], prop: keyof LowCanvasData): AttrEnumType<AttrEnum>[] => {
-  return data.filter(item => currentComponent.value && currentComponent.value[prop]!.hasOwnProperty(item.name))
-}
+const getComponents = (
+  data: AttrEnumType<AttrEnum>[],
+  prop: keyof LowCanvasData
+): AttrEnumType<AttrEnum>[] => {
+  return data.filter(
+    (item) =>
+      currentComponent.value &&
+      currentComponent.value[prop]!.hasOwnProperty(item.name)
+  );
+};
 
 const getProp = (tabItem: Attr, item: AttrData) => {
-  return 'prop' in tabItem ? tabItem.prop : item.prop!
-}
+  return "prop" in tabItem ? tabItem.prop : item.prop!;
+};
 
-const handleModelValue = (prop: keyof LowCanvasData, key: string, value: string) => {
+const handleModelValue = (
+  prop: keyof LowCanvasData,
+  key: string,
+  value: string
+) => {
   if (prop == "style") {
-    store.setCurrentComponentStyle({
-      [key]: value
-    })
+    setCurrentComponentStyle({
+      [key]: value,
+    });
   } else if (prop == "propValue") {
-    store.setCurrentProps({
-      [key]: value
-    })
+    setCurrentProps({
+      [key]: value,
+    });
   }
-}
+};
 
 const handleCollapseChange = (data: string[]) => {
-  store.setCurrentState("collapse", data)
-}
+  setCurrentState("collapse", data);
+};
 
 const activeTab = ref(0);
 </script>
@@ -105,7 +156,5 @@ const activeTab = ref(0);
       padding-bottom: 0;
     }
   }
-
-
 }
 </style>
