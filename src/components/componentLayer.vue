@@ -43,13 +43,11 @@
 </template>
 
 <script setup lang="ts">
-import { useLowStore } from "@/stores/useLowStore";
 import { storeToRefs } from "pinia";
 import { computed, toRaw } from "vue";
 import { cloneDeep } from "lodash-es";
 import { appStore } from "@/stores";
 
-const store = useLowStore();
 const { currentComponent, lowCanvasData } = storeToRefs(appStore.state);
 const { setCurrentComponent, deleteComponentDataAndSnapshot } = appStore.state;
 const { up, down } = appStore.contextMenu;

@@ -1,9 +1,5 @@
 <script setup lang="ts">
-import { storeToRefs } from "pinia";
-import { useLowStore } from "./stores/useLowStore";
 
-const store = useLowStore();
-const { lowCanvasState } = storeToRefs(store);
 </script>
 
 <template>

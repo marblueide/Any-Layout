@@ -58,7 +58,6 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
 import { ref } from "vue";
-import { useLowStore } from "../../stores/useLowStore";
 import { attrList, getAllCollapse } from "../LowCodeCompoent/attr-list";
 import {
   AttrEnum,
@@ -68,7 +67,8 @@ import {
 } from "../../types/LowCode/attr";
 import type { LowCanvasData } from "../../types/LowCode/base";
 import { appStore } from "@/stores";
-const store = useLowStore();
+
+
 const { currentComponent } = storeToRefs(appStore.state);
 const { setCurrentComponentStyle, setCurrentProps, setCurrentState } =
   appStore.state;

@@ -1,9 +1,4 @@
-import {
-  type LowCanvasType,
-  type LowCanvasData,
-  snapShotEnum,
-  type snapShotType,
-} from "@/types";
+import type { LowCanvasType, LowCanvasData } from "@/types";
 import type { ComponentStyle } from "@/types/LowCode/style";
 import { cloneDeep, isArray, merge } from "lodash-es";
 import { ref, reactive } from "vue";
@@ -21,9 +16,6 @@ const initState = {
 }; //初始化State
 
 export const useLowCodeState = defineStore("lowCodeState", () => {
-
-  const {commitStorage, recordSnapshot} = useStack()
-
   const localCanvasState: LowCanvasType = JSON.parse(
     localStorage.getItem("CanvasState") ?? JSON.stringify(initState)
   ); //获取localStorage中保存的State
@@ -132,18 +124,6 @@ export const useLowCodeState = defineStore("lowCodeState", () => {
     };
   };
 
-  const deleteComponentDataAndSnapshot = (id: string) => {
-    const { index, component } = deleteComponentData(id);
-    recordSnapshot({
-      type: snapShotEnum.remove,
-      value: {
-        index,
-        data: component,
-      },
-    } as snapShotType<snapShotEnum.remove>);
-    commitStorage();
-  };
-
   const addLowCanvasData = (data: LowCanvasData) => {
     // 添加组件
     if (!data.id) {
@@ -153,16 +133,6 @@ export const useLowCodeState = defineStore("lowCodeState", () => {
     idMapData.set(data.id, lowCanvasData[lowCanvasData.length - 1]);
     idMapDataIndex.set(data.id, lowCanvasData.length - 1);
     return lowCanvasData[lowCanvasData.length - 1];
-  };
-
-  const addLowCanvasDataAndSnapshot = (data: LowCanvasData) => {
-    addLowCanvasData(data);
-
-    recordSnapshot({
-      type: snapShotEnum.add,
-      value: data,
-    });
-    commitStorage();
   };
 
   const addLowCanvasDataByIndex = (index: number, data: LowCanvasData) => {
@@ -179,29 +149,6 @@ export const useLowCodeState = defineStore("lowCodeState", () => {
 
   const getComponentById = (id: string) => {
     return idMapData.get(id);
-  };
-
-  const setComponentLayer = (id: string, index: number) => {
-    //设置图层级别
-    const k = idMapDataIndex.get(id);
-    const data = idMapData.get(id);
-    if (k == index) return;
-    if (k != undefined && data && k < lowCanvasData.length) {
-      lowCanvasData.splice(k, 1);
-      lowCanvasData.splice(index, 0, data);
-      let i = k;
-      if (k > index) {
-        i = index;
-      }
-      for (; i < lowCanvasData.length; i++) {
-        idMapDataIndex.set(lowCanvasData[i].id!, i);
-      }
-      recordSnapshot({
-        type: snapShotEnum.index,
-        value: [k, index],
-      });
-      commitStorage();
-    }
   };
 
   return {
@@ -222,14 +169,11 @@ export const useLowCodeState = defineStore("lowCodeState", () => {
     setLowCanvasData,
     setCUrrentCompoentEvent,
     deleteComponentData,
-    deleteComponentDataAndSnapshot,
     addLowCanvasData,
     addLowCanvasDataByIndex,
     getComponentById,
     initCurrentComponent,
     initLowCanvasState,
     initLowCanvasData,
-    setComponentLayer,
-    addLowCanvasDataAndSnapshot,
   };
 });

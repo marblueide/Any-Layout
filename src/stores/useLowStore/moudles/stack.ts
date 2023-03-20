@@ -36,7 +36,6 @@ export const useStack = defineStore("stack", () => {
 
   const commitStorage = () => {
     if (storage.value.length == 0) return;
-    console.log(storage.value);
     stack[++stackIndex.value] =
       storage.value.length == 1
         ? storage.value[0]

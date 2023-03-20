@@ -1,9 +1,11 @@
-import { useContextMenu } from "@/stores/useLowStore/moudles";
 import { MenuShowType, MenuType } from "@/types";
 import { difference } from "lodash-es";
-import pinia from "@/stores/pinia"
+import { appStore } from "@/stores";
 
-const { bottom, copy, delet, down, paste, shear, top, up } = useContextMenu(pinia);
+const { bottom, copy, delet, down, paste, shear, top, up } =
+  appStore.contextMenu;
+const { compose } = appStore.area;
+const {splite} = appStore.lowStore
 
 export type menuObj = {
   type: MenuType;
@@ -55,12 +57,12 @@ export const menuList: menuObj[] = [
   {
     type: MenuType.Group,
     label: "组合",
-    fn: copy,
+    fn: compose,
   },
   {
     type: MenuType.Splite,
     label: "拆分",
-    fn: copy,
+    fn: splite,
   },
 ];
 

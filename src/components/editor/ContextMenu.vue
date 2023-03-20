@@ -27,18 +27,22 @@
 
 <script setup lang="ts">
 import { appStore } from "@/stores";
-import { useLowStore } from "@/stores/useLowStore";
+import { MenuShowType } from "@/types";
 import { storeToRefs } from "pinia";
 import { computed } from "vue";
 import { menuList, type menuObj,menuShowList } from "./data";
 
-const store = useLowStore();
 const { currentComponent } = storeToRefs(appStore.state);
 const { menuState } = storeToRefs(appStore.contextMenu);
+const {areaData} = storeToRefs(appStore.area)
 const {setMenuState} = appStore.contextMenu
 
 const handleClick = (item:menuObj) => {
-  item.fn(currentComponent.value?.id)
+  if(menuState.value.type == MenuShowType.Area){
+    item.fn(...areaData.value.components)
+  }else{
+    item.fn(currentComponent.value?.id)
+  }
   setMenuState({
     show:false
   })

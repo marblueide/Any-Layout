@@ -41,7 +41,6 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
 import { computed, ref, type StyleValue } from "vue";
-import { useLowStore } from "../../stores/useLowStore";
 import { calculateComponentPositonAndSize } from "../../utils/calculateComponentPositonAndSize";
 import emitter from "@/utils/mitt";
 import { LabelEnum, type pointType } from "@/types";
@@ -50,7 +49,7 @@ import { cloneDeep } from "lodash-es";
 import { snapShotEnum, type snapShotType } from "@/types/LowCode/stack";
 import { appStore } from "@/stores";
 
-const store = useLowStore();
+
 const { currentComponent, isMoving, lowCanvasData, currentComponentIndex } =
   storeToRefs(appStore.state);
 const {

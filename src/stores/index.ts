@@ -12,8 +12,8 @@ export interface IAppStore {
 export const appStore:IAppStore = {} as IAppStore
 
 export const registerStore = () => {
-    appStore.lowStore = useLowStore()
     appStore.state = useLowCodeState()
+    appStore.lowStore = useLowStore()
     appStore.stack = useStack()
     appStore.area = useArea()
     appStore.contextMenu = useContextMenu()

@@ -16,7 +16,6 @@
 import { computed, reactive } from "vue";
 import { getShapeStyle, getComponentRotatedStyle } from "@/utils/style";
 import emitter from "@/utils/mitt";
-import { useLowStore } from "../../stores/useLowStore";
 import { storeToRefs } from "pinia";
 import { clone, cloneDeep, isNil } from "lodash-es";
 import type { ComponentStyle } from "../../types/LowCode/style";
@@ -87,7 +86,6 @@ const lineState = reactive<{
 
 const lines: line[] = ["xt", "xc", "xb", "yl", "yc", "yr"];
 const diff = 10;
-const store = useLowStore();
 
 emitter.on("move", ({ isDown, isLeft }) => {
   showLine(isDown, isLeft);

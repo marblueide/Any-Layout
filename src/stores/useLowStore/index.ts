@@ -1,7 +1,7 @@
 import type { LowCanvasData, LowCanvasType } from "@/types/LowCode";
 import { defineStore, storeToRefs } from "pinia";
 import { useArea, useContextMenu, useLowCodeState, useStack } from "./moudles";
-import { snapShotEnum } from "@/types/LowCode/stack";
+import { snapShotEnum, type snapShotType } from "@/types/LowCode/stack";
 import { cloneDeep } from "lodash-es";
 
 export const useLowStore = defineStore("useLowStore", () => {
@@ -82,11 +82,59 @@ export const useLowStore = defineStore("useLowStore", () => {
     }
   };
 
+  const addLowCanvasDataAndSnapshot = (data: LowCanvasData) => {
+    addLowCanvasData(data);
+
+    recordSnapshot({
+      type: snapShotEnum.add,
+      value: data,
+    });
+    commitStorage();
+  };
+
+  const deleteComponentDataAndSnapshot = (id: string) => {
+    const { index, component } = deleteComponentData(id);
+    recordSnapshot({
+      type: snapShotEnum.remove,
+      value: {
+        index,
+        data: component,
+      },
+    } as snapShotType<snapShotEnum.remove>);
+    commitStorage();
+  };
+
+  const setComponentLayer = (id: string, index: number) => {
+    //设置图层级别
+    const k = idMapDataIndex.get(id);
+    const data = idMapData.get(id);
+    if (k == index) return;
+    if (k != undefined && data && k < lowCanvasData.length) {
+      lowCanvasData.splice(k, 1);
+      lowCanvasData.splice(index, 0, data);
+      let i = k;
+      if (k > index) {
+        i = index;
+      }
+      for (; i < lowCanvasData.length; i++) {
+        idMapDataIndex.set(lowCanvasData[i].id!, i);
+      }
+      recordSnapshot({
+        type: snapShotEnum.index,
+        value: [k, index],
+      });
+      commitStorage();
+    }
+  };
+
   return {
     init,
     clearCanvas,
     getCanvasDataById,
     splite,
     spliteSingle,
+    addLowCanvasDataAndSnapshot,
+    deleteComponentDataAndSnapshot,
+    setComponentLayer
   };
 });

@@ -26,7 +26,7 @@ import { storeToRefs } from "pinia";
 const { lowCanvasState, lowCanvasData, currentComponent } = storeToRefs(appStore.state);
 const {stackIndex, stack} = storeToRefs(appStore.stack)
 const {areaData} = storeToRefs(appStore.area)
-const {clearCanvas,splite} = appStore.lowStore
+const {clearCanvas,splite,init} = appStore.lowStore
 const {setLowCanvasState} = appStore.state
 const {compose} = appStore.area
 
@@ -39,11 +39,6 @@ const handleBack = () => {
 const handleForward = () => {
   forwardSnapshot();
 };
-
-const init = () => {
-  init();
-};
-
 const save = () => {
   localStorage.setItem("CanvasState", JSON.stringify(lowCanvasState.value));
   localStorage.setItem("CanvasData", JSON.stringify(lowCanvasData.value));

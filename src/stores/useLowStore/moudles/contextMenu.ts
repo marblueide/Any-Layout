@@ -6,20 +6,23 @@ import {
   type snapShotType,
 } from "@/types";
 import { merge, cloneDeep, curry } from "lodash-es";
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { v4 as uuid } from "uuid";
 import { useLowCodeState } from "./state";
-import { defineStore } from "pinia";
+import { defineStore, storeToRefs } from "pinia";
+import { useLowStore } from "..";
+import { useArea } from "./area";
 
 export const useContextMenu = defineStore("contextMenu", () => {
+  const { idMapData, idMapDataIndex, lowCanvasData, getComponentById } =
+    useLowCodeState();
+  const { areaData } = storeToRefs(useArea());
+
   const {
     addLowCanvasDataAndSnapshot,
     deleteComponentDataAndSnapshot,
-    idMapData,
-    idMapDataIndex,
-    lowCanvasData,
     setComponentLayer,
-  } = useLowCodeState();
+  } = useLowStore();
 
   const menuState = ref<MenuState>({
     type: MenuShowType.Editor,
@@ -33,7 +36,8 @@ export const useContextMenu = defineStore("contextMenu", () => {
   const copy = (...ids: string[]) => {
     const componets: LowCanvasData[] = [];
     for (let id of ids) {
-      const component = idMapData.get(id);
+      const component = getComponentById(id);
+      console.log(component);
       if (!component) continue;
       componets.push(component);
     }
@@ -46,13 +50,25 @@ export const useContextMenu = defineStore("contextMenu", () => {
       const datas = cloneDeep(copyData.value);
       for (let data of datas) {
         data.id = uuid();
+        let left = data.style.left,
+          top = data.style.top;
         if (isMenu) {
-          data.style.left = menuState.value.left;
-          data.style.top = menuState.value.top;
+          if (datas.length > 1) {
+            console.log(areaData.value,menuState.value)
+            left += menuState.value.left - areaData.value.left;
+            top += menuState.value.top - areaData.value.top;
+          } else {
+            left = menuState.value.left;
+            top = menuState.value.top;
+          }
         } else {
-          data.style.left += 20;
-          data.style.top += 20;
+          left += 20;
+          top += 20;
         }
+        
+
+        data.style.left = left;
+        data.style.top = top;
         addLowCanvasDataAndSnapshot(data);
       }
     };
