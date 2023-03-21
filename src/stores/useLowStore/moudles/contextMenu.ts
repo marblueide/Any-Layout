@@ -85,8 +85,10 @@ export const useContextMenu = defineStore("contextMenu", () => {
     copyData.value = componets;
   };
 
-  const delet = (id: string) => {
-    deleteComponentDataAndSnapshot(id);
+  const delet = (...ids: string[]) => {
+    for(let id of ids){
+      deleteComponentDataAndSnapshot(id);
+    }
   };
 
   const top = (id: string) => {

@@ -30,23 +30,25 @@ import { appStore } from "@/stores";
 import { MenuShowType } from "@/types";
 import { storeToRefs } from "pinia";
 import { computed } from "vue";
-import { menuList, type menuObj,menuShowList } from "./data";
+import { menuList, type menuObj, menuShowList } from "./data";
 
 const { currentComponent } = storeToRefs(appStore.state);
 const { menuState } = storeToRefs(appStore.contextMenu);
-const {areaData} = storeToRefs(appStore.area)
-const {setMenuState} = appStore.contextMenu
+const { areaData } = storeToRefs(appStore.area);
+const { hideArea } = appStore.area;
+const { setMenuState } = appStore.contextMenu;
 
-const handleClick = (item:menuObj) => {
-  if(menuState.value.type == MenuShowType.Area){
-    item.fn(...areaData.value.components)
-  }else{
-    item.fn(currentComponent.value?.id)
+const handleClick = (item: menuObj) => {
+  if (menuState.value.type == MenuShowType.Area) {
+    item.fn(...areaData.value.components);
+    hideArea();
+  } else {
+    item.fn(currentComponent.value?.id);
   }
   setMenuState({
-    show:false
-  })
-}
+    show: false,
+  });
+};
 
 const pointStyle = computed(() => {
   return {
