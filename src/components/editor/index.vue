@@ -55,7 +55,7 @@ const { areaData, isShowArea } = storeToRefs(appStore.area);
 const { menuState } = storeToRefs(appStore.contextMenu);
 const { setCurrentComponent, getComponentById, setComponentStyle } =
   appStore.state;
-const { setIsShowArea, setAreaData } = appStore.area;
+const { setIsShowArea, setAreaData,hideArea,showArea } = appStore.area;
 const { setMenuState } = appStore.contextMenu;
 const { addLowCanvasDataAndSnapshot } = appStore.lowStore;
 
@@ -112,14 +112,19 @@ const handleMouseDown = async (e: MouseEvent) => {
   const startX = e.clientX;
   const startY = e.clientY;
 
+  //设置当前的组件为undefine
   setCurrentComponent();
-  setIsShowArea(false)
+  //area不显示
+  hideArea()
+  //清空area选择的状态，开始新的一轮
   selectComponentSet.clear();
+  //初始化area
   setAreaData({
-    width:0,
-    top:0,
-    components:[]
-  })
+    width: 0,
+    top: 0,
+    components: [],
+  });
+  //记录area的left，top
   const data = {
     left: startX - editorRect.left,
     top: startY - editorRect.top,
@@ -130,25 +135,29 @@ const handleMouseDown = async (e: MouseEvent) => {
     if (once) {
       once = false;
       setAreaData(data);
-      setIsShowArea(true);
+      showArea();
     }
     const endX = e.clientX;
     const endY = e.clientY;
     const width = endX - startX;
     const height = endY - startY;
-    const left = width > 0 ? data.left : endX - editorRect.left
-    const top =  height > 0 ? data.top : endY - editorRect.top
+    const left = width > 0 ? data.left : endX - editorRect.left;
+    const top = height > 0 ? data.top : endY - editorRect.top;
     setAreaData({
       width: width > 0 ? width : -width,
       height: height > 0 ? height : -height,
       left,
-      top
+      top,
     });
   };
 
   const up = () => {
     document.removeEventListener("mousemove", move);
     document.removeEventListener("mouseup", up);
+
+    /**
+     * 计算area选中了哪些组件
+     */
     let l = Infinity,
       t = Infinity,
       r = -Infinity,

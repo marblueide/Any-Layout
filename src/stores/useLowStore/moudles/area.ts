@@ -125,6 +125,16 @@ export const useArea = defineStore("area", () => {
     isShowArea.value = value;
   };
 
+  const hideArea = () => {
+    if(!isShowArea.value) return
+    isShowArea.value = false
+  }
+
+  const showArea = () => {
+    if(isShowArea.value) return
+    isShowArea.value = true
+  }
+
   return {
     areaData,
     isShowArea,
@@ -132,5 +142,7 @@ export const useArea = defineStore("area", () => {
     initArea,
     compose,
     setIsShowArea,
+    hideArea,
+    showArea
   };
 });

@@ -7,6 +7,8 @@ export {}
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
+    AceDitor: typeof import('./src/components/AceDitor.vue')['default']
+    AceEditor: typeof import('./src/components/AceEditor.vue')['default']
     Area: typeof import('./src/components/editor/Area.vue')['default']
     Attr: typeof import('./src/components/editor/Attr.vue')['default']
     BorderRadius: typeof import('./src/components/LowCodeCompoent/Attrs/BorderRadius.vue')['default']

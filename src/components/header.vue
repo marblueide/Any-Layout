@@ -1,6 +1,6 @@
 <template>
-  <div class="editor-header" box-border h-20 border="b-1 gray-2" items-center p-4 flex>
-    <el-button m-x-1>JSON</el-button>
+  <div class="editor-header" box-border h-20 border="b-1 gray-2" items-center p-4 flex @click="handleHeadDown">
+    <el-button m-x-1 @click.stop="triggerAce">JSON</el-button>
     <el-button m-x-1 @click="handleBack" :disabled="stackIndex == -1">撤销</el-button>
     <el-button m-x-1 @click="handleForward" :disabled="stackIndex == stack.length - 1">回退</el-button>
     <el-button m-x-1>预览</el-button>
@@ -16,12 +16,14 @@
       <el-input :model-value="lowCanvasState.height" type="number" @input="handleInput('height', +$event)">
       </el-input>
     </div>
+    <AceEditor/>
   </div>
 </template>
 
 <script setup lang="ts">
 import { appStore } from "@/stores";
 import { storeToRefs } from "pinia";
+import AceEditor from "./AceEditor.vue";
 
 const { lowCanvasState, lowCanvasData, currentComponent } = storeToRefs(appStore.state);
 const {stackIndex, stack} = storeToRefs(appStore.stack)
@@ -29,6 +31,7 @@ const {areaData} = storeToRefs(appStore.area)
 const {clearCanvas,splite,init} = appStore.lowStore
 const {setLowCanvasState} = appStore.state
 const {compose} = appStore.area
+const {triggerAce,hideAce} = appStore.ace
 
 const {backSnapshot,forwardSnapshot} = appStore.stack
 
@@ -49,10 +52,16 @@ const handleInput = (key: string, val: number) => {
     [key]: val,
   });
 }
+
+const handleHeadDown = () => {
+  hideAce()
+}
+
 </script>
 
 <style lang="scss" scoped>
 .editor-header {
+  position: relative;
   .canvas-size {
     grid-template-columns: auto 1fr 1fr;
     grid-column-gap: 0.5rem;

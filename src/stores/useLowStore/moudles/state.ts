@@ -1,7 +1,7 @@
 import type { LowCanvasType, LowCanvasData } from "@/types";
 import type { ComponentStyle } from "@/types/LowCode/style";
 import { cloneDeep, isArray, merge } from "lodash-es";
-import { ref, reactive } from "vue";
+import { ref, reactive,isReactive } from "vue";
 import { v4 as uuid } from "uuid";
 import type { EventType } from "../../../types/LowCode/event";
 import { useStack } from "./stack";
@@ -43,6 +43,17 @@ export const useLowCodeState = defineStore("lowCodeState", () => {
     currentComponent.value = undefined;
     currentComponentIndex.value = undefined;
   };
+
+  const setComponent = (id:string,data:LowCanvasData) => {
+    //合并component
+    let component = idMapData.get(id);
+    component && Object.assign(component,data)
+  }
+
+  const setCanvasState = (data:LowCanvasType) => {
+    //合并CanvasState
+    Object.assign(lowCanvasState.value,data)
+  }
 
   const setCurrentComponent = (id?: string) => {
     //设置当前活动的组件
@@ -175,5 +186,7 @@ export const useLowCodeState = defineStore("lowCodeState", () => {
     initCurrentComponent,
     initLowCanvasState,
     initLowCanvasData,
+    setComponent,
+    setCanvasState,
   };
 });
