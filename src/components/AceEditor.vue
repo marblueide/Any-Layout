@@ -6,6 +6,7 @@
     bg-white
     b="1 gray-3"
     m-1
+    @click.stop
   >
     <div id="ace-content" ref="aceContent"></div>
     <el-button class="reset" @click="handleReSet" m-1>重置</el-button>

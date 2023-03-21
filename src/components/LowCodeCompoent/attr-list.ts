@@ -14,6 +14,7 @@ export const attrList: Attr[] = [
     name: "内容",
     data: [
       {
+        name:'data',
         title: "数据",
         prop: "propValue",
         components: [
@@ -26,6 +27,7 @@ export const attrList: Attr[] = [
         ] as [AttrEnumType<AttrEnum.INPUT>],
       },
       {
+        name:"event",
         title: "事件",
         prop: "events",
         components: [
@@ -57,6 +59,7 @@ export const attrList: Attr[] = [
     data: [
       {
         title: "基本样式",
+        name:"baseStyle",
         components: [
           {
             name: "left",
@@ -90,6 +93,7 @@ export const attrList: Attr[] = [
         ],
       },
       {
+        name:"colorConfig",
         title: "颜色配置",
         components: [
           {
@@ -102,6 +106,7 @@ export const attrList: Attr[] = [
         ] as [AttrEnumType<AttrEnum.COLORPick>],
       },
       {
+        name:"font",
         title: "文字",
         components: [
           {
@@ -114,6 +119,7 @@ export const attrList: Attr[] = [
         ] as [AttrEnumType<AttrEnum.INPUTNUMBER>],
       },
       {
+        name:"align",
         title: "排列对齐",
         components: [
           {
@@ -131,6 +137,7 @@ export const attrList: Attr[] = [
         ] as [AttrEnumType<AttrEnum.OTHER>, AttrEnumType<AttrEnum.OTHER>],
       },
       {
+        name:"border",
         title: "边框轮廓",
         components: [
           {
@@ -164,7 +171,7 @@ export const attrList: Attr[] = [
 export const getAllCollapse = () => {
   return attrList
     .map((item) => {
-      return item.data.map((data) => data.title);
+      return item.data.map((data) => data.name);
     })
     .flat(1);
 };

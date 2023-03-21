@@ -40,6 +40,7 @@ declare module '@vue/runtime-core' {
     Header: typeof import('./src/components/header.vue')['default']
     HorizontalAlign: typeof import('./src/components/LowCodeCompoent/Attrs/HorizontalAlign.vue')['default']
     Input: typeof import('./src/components/LowCodeCompoent/Attrs/baseAttr/input.vue')['default']
+    Main: typeof import('./src/components/main.vue')['default']
     MarkLine: typeof import('./src/components/editor/MarkLine.vue')['default']
     NavigateTo: typeof import('./src/components/LowCodeCompoent/Attrs/event/component/NavigateTo.vue')['default']
     RightMenu: typeof import('./src/components/editor/RightMenu.vue')['default']

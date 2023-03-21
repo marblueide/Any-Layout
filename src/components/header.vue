@@ -30,7 +30,7 @@ const {stackIndex, stack} = storeToRefs(appStore.stack)
 const {areaData} = storeToRefs(appStore.area)
 const {clearCanvas,splite,init} = appStore.lowStore
 const {setLowCanvasState} = appStore.state
-const {compose} = appStore.area
+const {compose,hideArea} = appStore.area
 const {triggerAce,hideAce} = appStore.ace
 
 const {backSnapshot,forwardSnapshot} = appStore.stack
@@ -55,6 +55,7 @@ const handleInput = (key: string, val: number) => {
 
 const handleHeadDown = () => {
   hideAce()
+  hideArea()
 }
 
 </script>

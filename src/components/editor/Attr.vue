@@ -18,7 +18,7 @@
                 getComponents(item.components, getProp(tabItem, item)).length !=
                 0
               "
-              :name="item.title"
+              :name="item.name"
               :title="item.title"
             >
               <template
@@ -87,6 +87,7 @@ const getComponents = (
 };
 
 const getProp = (tabItem: Attr, item: AttrData) => {
+  //判断prop是否在Attr类型里还是在AttrData类型里
   return "prop" in tabItem ? tabItem.prop : item.prop!;
 };
 

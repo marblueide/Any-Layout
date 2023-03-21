@@ -42,7 +42,6 @@ const activeName = ref("Administration");
 const handleMainDown = () => {
   hideAce();
   hideArea();
-  console.log(111111)
 };
 </script>
 

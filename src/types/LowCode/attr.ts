@@ -35,6 +35,7 @@ export type AttrComponent = {
 };
 
 export type AttrData = {
+  name:string;
   title: string;
   prop?: keyof LowCanvasData;
   components: AttrEnumType[];

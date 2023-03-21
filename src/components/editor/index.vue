@@ -7,7 +7,7 @@
     :style="editorStyle"
     @drop="handleDrop"
     @dragover="handleDragOver"
-    @mousedown.stop.prevent="handleMouseDown"
+    @mousedown.prevent="handleMouseDown"
     @contextmenu.stop.prevent="handleContextMenu"
   >
     <!-- <Grid :width="lowCanvasState.width" :height="lowCanvasState.height" /> -->

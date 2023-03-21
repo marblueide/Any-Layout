@@ -17,7 +17,7 @@ export const componentList: [
     label: LabelEnum.button,
     name: "button",
     component: () => markRaw(VButton),
-    collapse: getAllCollapse(),
+    collapse: [],
     events: {
       onClick: {
         type: EventTypeEnum.None,
@@ -62,6 +62,7 @@ export const componentList: [
       width: 300,
       height: 200,
       rotate: 0,
+      borderWidth: 2,
     },
     icon: "icon-tupian",
     animations: [],
@@ -76,7 +77,7 @@ export const componentList: [
     label: LabelEnum.text,
     name: "text",
     component: () => markRaw(VText),
-    collapse: getAllCollapse(),
+    collapse: [],
     events: {},
     isLock: false,
     isRoot: true,
