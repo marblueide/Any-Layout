@@ -7,6 +7,7 @@ import {registerStore} from "@/stores/index"
 import "uno.css";
 import "normalize.css";
 import "./styles/global.scss";
+import 'element-plus/dist/index.css'
 
 const app = createApp(App);
 

@@ -8,6 +8,24 @@
 <script setup lang="ts">
 import Header from "@/components/header.vue";
 import Main from "@/components/main.vue";
+import { onMounted, onUnmounted } from "vue";
+import {downKeys,keysMapFn,singleKey} from "@/components/editor/event"
+
+const handleKeyDown = (e:KeyboardEvent) => {
+  e.preventDefault()
+  console.log(e.keyCode,keysMapFn[e.keyCode])
+  if(e.ctrlKey && typeof keysMapFn[e.keyCode] == 'function'){
+    keysMapFn[e.keyCode]()
+  }
+}
+
+onMounted(() => {
+  window.addEventListener('keydown',handleKeyDown)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('keydown',handleKeyDown)
+})
 </script>
 
 <style scoped lang="scss">

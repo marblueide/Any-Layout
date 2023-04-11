@@ -30,7 +30,7 @@ import { appStore } from "@/stores";
 import { MenuShowType } from "@/types";
 import { storeToRefs } from "pinia";
 import { computed } from "vue";
-import { menuList, type menuObj, menuShowList } from "./data";
+import { menuList, type menuObj, menuShowList } from "./event";
 
 const { currentComponent } = storeToRefs(appStore.state);
 const { menuState } = storeToRefs(appStore.contextMenu);

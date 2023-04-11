@@ -40,7 +40,7 @@
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { computed, ref, type StyleValue } from "vue";
+import { computed, ref, type StyleValue ,defineExpose} from "vue";
 import { calculateComponentPositonAndSize } from "../../utils/calculateComponentPositonAndSize";
 import emitter from "@/utils/mitt";
 import { LabelEnum, type pointType } from "@/types";
@@ -78,12 +78,14 @@ const isGroupChidren = computed(() => {
 
 const handleMouseDown = (e: MouseEvent) => {
   setCurrentComponent(props.id);
+  console.log(currentComponent.value,props.id)
   const { left, top } = currentComponent.value!.style;
   const startX = e.clientX;
   const startY = e.clientY;
 
   setMoving(false);
   const move = async (e: MouseEvent) => {
+    // console.log(e)
     !isMoving.value && setMoving(true);
     const endX = e.clientX;
     const endY = e.clientY;
@@ -386,6 +388,10 @@ const handleContextMenu = (e: MouseEvent) => {
     top: t,
   });
 };
+
+defineExpose({
+  ref:shapeRef
+})
 </script>
 
 <style scoped lang="scss">

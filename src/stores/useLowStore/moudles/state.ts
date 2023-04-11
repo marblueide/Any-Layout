@@ -8,12 +8,13 @@ import { useStack } from "./stack";
 import { defineStore } from "pinia";
 
 const initState = {
-  width: 1200,
-  height: 720,
+  height: window.innerHeight,
   scale: 1,
   background: "#f5f5f5",
   opacity: 1,
 }; //初始化State
+
+console.log(window.innerHeight)
 
 export const useLowCodeState = defineStore("lowCodeState", () => {
   const localCanvasState: LowCanvasType = JSON.parse(
@@ -30,10 +31,16 @@ export const useLowCodeState = defineStore("lowCodeState", () => {
   const idMapDataIndex = new Map<string, number>(); //id对应Data的Index
   const isMoving = ref(false);
 
-  const initLowCanvasState = () => {
-    //初始化LowCanvasState
-    lowCanvasState.value = cloneDeep(initState);
-  };
+  localInit()
+  function localInit(){
+    //初始化
+    lowCanvasData.forEach((item,index) => {
+      idMapData.set(item.id!,item)
+      idMapDataIndex.set(item.id!,index)
+    })
+  }
+
+  
 
   const initLowCanvasData = () => {
     lowCanvasData.splice(0, lowCanvasData.length);
@@ -162,6 +169,12 @@ export const useLowCodeState = defineStore("lowCodeState", () => {
     return idMapData.get(id);
   };
 
+  const save = () => {
+    localStorage.setItem("CanvasState", JSON.stringify(lowCanvasState.value));
+    localStorage.setItem("CanvasData", JSON.stringify(lowCanvasData));
+    console.log(JSON.stringify(lowCanvasData))
+  }
+
   return {
     lowCanvasState,
     lowCanvasData,
@@ -184,9 +197,9 @@ export const useLowCodeState = defineStore("lowCodeState", () => {
     addLowCanvasDataByIndex,
     getComponentById,
     initCurrentComponent,
-    initLowCanvasState,
     initLowCanvasData,
     setComponent,
     setCanvasState,
+    save
   };
 });

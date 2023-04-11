@@ -57,7 +57,6 @@ export const useArea = defineStore("area", () => {
       type: LabelEnum.group,
       label: LabelEnum.group,
       name: "group",
-      component: () => markRaw(Group),
       icon: "",
       events: {},
       isLock: false,

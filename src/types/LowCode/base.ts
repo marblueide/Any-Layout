@@ -5,16 +5,15 @@ import type { PropValue } from "./PropValue";
 import type { ComponentStyle } from "./style";
 
 export enum LabelEnum {
-  button = "按钮",
-  picture = "图片",
-  text = "文本",
-  group = "组合",
+  button = "button", //按钮
+  picture = "picture", //图片
+  text = "text",  //文本
+  group = "group",  //组合
 }
 
 export type pointType = "lt" | "t" | "rt" | "r" | "rb" | "b" | "lb" | "l";
 
 export type LowCanvasType = {
-  width: number;
   height: number;
   scale: number;
   background: string;
@@ -26,7 +25,6 @@ export type LowCanvasData<T extends LabelEnum = LabelEnum> = {
   label: T;
   type:T,
   name: keyof typeof LabelEnum;
-  component: () => Component | string;
   collapse: string[];
   icon: string | Component;
   events: EventType;

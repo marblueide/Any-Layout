@@ -14,14 +14,16 @@ export enum MenuShowType {
 }
 
 export enum MenuType {
-  Copy = "Copy",
-  Paste = "Paste",
-  Shear = "Shear",
-  Delete = "Delete",
-  Top = "Top",
-  Bottom = "Bottom",
-  Up = "Up",
-  Down = "Down",
-  Group = "Group",
-  Splite = "Splite"
+  Copy = "Copy",  //复制
+  Paste = "Paste",  //黏贴
+  Shear = "Shear",  //剪切
+  Delete = "Delete", //删除
+  Top = "Top",  //置顶
+  Bottom = "Bottom",  //置底
+  Up = "Up",   //层上移
+  Down = "Down",  //层下移
+  Group = "Group", //组合
+  Splite = "Splite",  //拆分
+  Save = "Save", //保存
+  Cancel = 'Cancel' //撤销
 }

@@ -1,50 +1,56 @@
 <template>
-  <div
-    id="editor"
-    class="editor"
-    ref="editorRef"
-    overflow="hidden"
-    :style="editorStyle"
-    @drop="handleDrop"
-    @dragover="handleDragOver"
-    @mousedown.prevent="handleMouseDown"
-    @contextmenu.stop.prevent="handleContextMenu"
-  >
-    <!-- <Grid :width="lowCanvasState.width" :height="lowCanvasState.height" /> -->
-    <Shape
-      v-for="item in lowCanvasData"
-      :id="item.id!"
-      :key="item.id!"
-      :style="getShapeStyle(item.style)"
-    >
-      <component
-        :is="item.component()"
-        :propValue="item.propValue"
-        :style="getOriginStyle(item.style)"
-      >
-      </component>
-    </Shape>
-    <Area
-      v-bind="{ ...areaData }"
-      v-show="isShowArea"
-      @mousedown.stop.prevent="handleAreaDwon"
-      @contextMenu="handleAreaContextMenu"
-    />
-    <MarkLine />
-    <ContextMenu />
+  <div class="center" flex-1 p-5 overflow="hidden" ref="centerRef">
+    <el-scrollbar>
+      <div class="edit-container">
+        <div
+          id="editor"
+          class="editor"
+          ref="editorRef"
+          overflow="hidden"
+          :style="editorStyle"
+          @drop="handleDrop"
+          @dragover="handleDragOver"
+          @mousedown.prevent="handleMouseDown"
+          @contextmenu.stop.prevent="handleContextMenu"
+        >
+          <!-- <Grid :width="lowCanvasState.width" :height="lowCanvasState.height" /> -->
+          <Shape
+            v-for="item in lowCanvasData"
+            :id="item.id!"
+            :key="item.id!"
+            :style="getShapeStyle(item.style)"
+          >
+            <component
+              :is="labelEnumMapComponent[item.type]"
+              :propValue="item.propValue"
+              :style="getOriginStyle(item.style)"
+            >
+            </component>
+          </Shape>
+          <Area
+            v-bind="{ ...areaData }"
+            v-show="isShowArea"
+            @mousedown.stop.prevent="handleAreaDwon"
+            @contextMenu="handleAreaContextMenu"
+          />
+          <MarkLine />
+          <ContextMenu />
+        </div>
+      </div>
+    </el-scrollbar>
   </div>
 </template>
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { computed, ref, reactive, nextTick } from "vue";
+import { computed, ref, reactive, nextTick, onMounted } from "vue";
 import {
   getShapeStyle,
   getOriginStyle,
   getComponentRotatedStyle,
 } from "../../utils/style";
-import { componentList } from "@/components/LowCodeCompoent/component-list";
-import { cloneDeep } from "lodash-es";
+import { componentList, labelEnumMapComponent } from "@/components/LowCodeCompoent/component-list";
+import { cloneDeep, entries } from "lodash-es";
 import { MenuShowType, type LowCanvasData } from "../../types/LowCode/index";
 import type { ComponentStyle } from "@/types/LowCode/style";
 import ContextMenu from "./ContextMenu.vue";
@@ -55,16 +61,17 @@ const { areaData, isShowArea } = storeToRefs(appStore.area);
 const { menuState } = storeToRefs(appStore.contextMenu);
 const { setCurrentComponent, getComponentById, setComponentStyle } =
   appStore.state;
-const { setIsShowArea, setAreaData,hideArea,showArea } = appStore.area;
+const { setIsShowArea, setAreaData, hideArea, showArea } = appStore.area;
 const { setMenuState } = appStore.contextMenu;
 const { addLowCanvasDataAndSnapshot } = appStore.lowStore;
 
 const editorRef = ref();
+const centerRef = ref()
 let editorRect: DOMRect;
+let centerRect: DOMRect
 
 const editorStyle = computed(() => {
   return {
-    width: lowCanvasState.value.width + "px",
     height: lowCanvasState.value.height + "px",
     background: lowCanvasState.value.background,
     opacity: lowCanvasState.value.opacity,
@@ -79,15 +86,15 @@ const handleDrop = (e: DragEvent) => {
     componentList[e.dataTransfer?.getData("index") as unknown as number]
   );
   if (!data) return;
-  if (!editorRect) editorRect = editorRef.value.getBoundingClientRect();
+  if(!editorRect) editorRect = editorRef.value.getBoundingClientRect();
   const { width, height } = data.style;
   let left = e.clientX - editorRect.x - width / 2;
   let top = e.clientY - editorRect.y - height! / 2;
   left =
     left < 0
       ? 0
-      : left >= lowCanvasState.value.width - width!
-      ? lowCanvasState.value.width - width!
+      : left >= editorRect.width - width!
+      ? editorRect.width - width!
       : left;
   top =
     top < 0
@@ -109,13 +116,15 @@ const selectComponentSet = reactive<Set<string>>(new Set());
 const handleMouseDown = async (e: MouseEvent) => {
   e.preventDefault();
   if (!editorRect) editorRect = editorRef.value.getBoundingClientRect();
+  if(!centerRect) centerRect = centerRef.value.getBoundingClientRect()
+  console.log(centerRect)
   const startX = e.clientX;
   const startY = e.clientY;
 
   //设置当前的组件为undefine
   setCurrentComponent();
   //area不显示
-  hideArea()
+  hideArea();
   //清空area选择的状态，开始新的一轮
   selectComponentSet.clear();
   //初始化area
@@ -269,10 +278,28 @@ const handleAreaContextMenu = (e: MouseEvent) => {
     top,
   });
 };
+
+const handleShapeDrag = () => {
+  //处理
+}
+
+window.addEventListener('resize',() => {
+  editorRect = editorRef.value.getBoundingClientRect();
+  centerRect = centerRef.value.getBoundingClientRect();
+})
 </script>
 
 <style scoped lang="scss">
-.editor {
-  position: relative;
+.center {
+  background: #fff;
+
+  .edit-container {
+    width: 100%;
+    height: 100%;
+    .editor {
+      position: relative;
+      background: #f5f5f5;
+    }
+  }
 }
 </style>

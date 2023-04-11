@@ -7,3 +7,21 @@ export const swap = (arr: any[], i: number, j: number) => {
   arr[j] = tmp;
   return [arr[i], arr[j]];
 };
+
+export const compose =
+  (...fns: ((...args: any[]) => void)[]) =>
+  (...args: any[]) =>
+    fns.reduce(
+      (val: any, fn: (...args: any[]) => void) =>
+        fn.apply(null, [].concat(val)),
+      args
+    );
+
+export const composeRight =
+  (...fns: ((...args: any[]) => void)[]) =>
+  (...args: any[]) =>
+    fns.reduceRight(
+      (val: any, fn: (...args: any[]) => void) =>
+        fn.apply(null, [].concat(val)),
+      args
+    );

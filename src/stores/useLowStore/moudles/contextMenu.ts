@@ -33,6 +33,13 @@ export const useContextMenu = defineStore("contextMenu", () => {
 
   const copyData = ref<LowCanvasData[]>([]);
 
+  let dis = 20;
+
+  watch(copyData,() => {
+    dis = 20
+  })
+
+
   const copy = (...ids: string[]) => {
     const componets: LowCanvasData[] = [];
     for (let id of ids) {
@@ -44,7 +51,7 @@ export const useContextMenu = defineStore("contextMenu", () => {
     copyData.value = componets;
   };
 
-  const paste = curry((isMenu: boolean) => {
+  const paste = curry((isMenu: boolean = false) => {
     return () => {
       if (!copyData.value) return;
       const datas = cloneDeep(copyData.value);
@@ -54,7 +61,6 @@ export const useContextMenu = defineStore("contextMenu", () => {
           top = data.style.top;
         if (isMenu) {
           if (datas.length > 1) {
-            console.log(areaData.value,menuState.value)
             left += menuState.value.left - areaData.value.left;
             top += menuState.value.top - areaData.value.top;
           } else {
@@ -62,10 +68,10 @@ export const useContextMenu = defineStore("contextMenu", () => {
             top = menuState.value.top;
           }
         } else {
-          left += 20;
-          top += 20;
+          left += dis;
+          top += dis;
         }
-        
+        dis += 20
 
         data.style.left = left;
         data.style.top = top;

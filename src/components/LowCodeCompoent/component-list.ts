@@ -1,11 +1,13 @@
 import type { LowCanvasData } from "@/types/LowCode/index";
-import { markRaw } from "vue";
+import { markRaw, type Component } from "vue";
 import VButton from "./VButton/index.vue";
 import VPicture from "./VPicture/index.vue";
 import VText from "./VText/index.vue";
+import VGroup from "./VGroup/index.vue";
 import { LabelEnum } from "../../types/LowCode/index";
 import { getAllCollapse } from "./attr-list";
 import { EventTypeEnum } from "@/types/LowCode/event";
+import {pick,omit} from "lodash-es"
 
 export const componentList: [
   LowCanvasData<LabelEnum.button>,
@@ -16,7 +18,6 @@ export const componentList: [
     type: LabelEnum.button,
     label: LabelEnum.button,
     name: "button",
-    component: () => markRaw(VButton),
     collapse: [],
     events: {
       onClick: {
@@ -51,7 +52,6 @@ export const componentList: [
     type: LabelEnum.picture,
     label: LabelEnum.picture,
     name: "picture",
-    component: () => markRaw(VPicture),
     collapse: [],
     events: {},
     isLock: false,
@@ -76,7 +76,6 @@ export const componentList: [
     type: LabelEnum.text,
     label: LabelEnum.text,
     name: "text",
-    component: () => markRaw(VText),
     collapse: [],
     events: {},
     isLock: false,
@@ -100,6 +99,15 @@ export const componentList: [
     },
   },
 ];
+
+export const labelEnumMapComponent:Record<LabelEnum,Component> = {
+  [LabelEnum.button]: markRaw(VButton),
+  [LabelEnum.picture]: markRaw(VPicture),
+  [LabelEnum.text]: markRaw(VText),
+  [LabelEnum.group]: markRaw(VGroup)
+}
+
+export const labelEnumMapCGorup = omit(labelEnumMapComponent,[LabelEnum.group])
 
 const initComponentList = () => {
   componentList.forEach((item) => {
