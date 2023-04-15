@@ -1,6 +1,6 @@
 <template>
   <div class="main" flex flex-1 overflow="hidden" @mousedown="handleMainDown">
-    <div class="left" w-65 bg-white border-r-1 border-gray-2>
+    <div class="left" bg-white border-r-1 border-gray-2 transition-all-500 overflow-hidden :class="{'w-65':!isPreView,'w-0':isPreView}">
       <el-tabs type="border-card" class="el-tabs" v-model="activeName">
         <el-tab-pane label="资源管理" name="Administration">
           <componentLayer></componentLayer>
@@ -17,7 +17,7 @@
         </div>
       </el-scrollbar>
     </div>
-    <div class="right" w-75 bg-white border-l-1 border-gray-2>
+    <div class="right"  bg-white border-l-1 border-gray-2 transition-all-500 overflow-hidden  :class="{'w-75':!isPreView,'w-0':isPreView}">
       <Attr v-show="currentComponent" />
       <default-attr v-show="!currentComponent"></default-attr>
     </div>
@@ -33,7 +33,7 @@ import { storeToRefs } from "pinia";
 import { ref } from "vue";
 import { appStore } from "@/stores";
 
-const { currentComponent } = storeToRefs(appStore.state);
+const { currentComponent,isPreView } = storeToRefs(appStore.state);
 const { hideAce } = appStore.ace;
 const { hideArea } = appStore.area;
 

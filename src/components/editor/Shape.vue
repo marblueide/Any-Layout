@@ -16,11 +16,11 @@
       class="rataion-point"
       absolute
       @mousedown.stop.prevent="handleRatation"
-      v-show="currentComponent?.id == id"
+      v-show="currentComponent?.id == id && !isPreView"
     >
       <i class="iconfont icon-xuanzhuan" color-blue-3 cursor-grab></i>
     </div>
-    <template v-if="currentComponent?.id == id">
+    <template v-if="currentComponent?.id == id && !isPreView">
       <div
         class="shape-point"
         @mousedown.stop.prevent="handlePointDown($event, point)"
@@ -50,7 +50,7 @@ import { snapShotEnum, type snapShotType } from "@/types/LowCode/stack";
 import { appStore } from "@/stores";
 
 
-const { currentComponent, isMoving, lowCanvasData, currentComponentIndex } =
+const { currentComponent, isMoving, lowCanvasData, currentComponentIndex,isPreView } =
   storeToRefs(appStore.state);
 const {
   setCurrentComponent,
@@ -77,6 +77,8 @@ const isGroupChidren = computed(() => {
 });
 
 const handleMouseDown = (e: MouseEvent) => {
+  if(isPreView.value) return ;
+  console.log(5555555555555)
   setCurrentComponent(props.id);
   console.log(currentComponent.value,props.id)
   const { left, top } = currentComponent.value!.style;
@@ -368,7 +370,7 @@ const handleRatation = (e: MouseEvent) => {
 };
 
 const handleContextMenu = (e: MouseEvent) => {
-  if (!currentComponent.value) return;
+  if (!currentComponent.value || isPreView.value) return;
   let { left, top } = currentComponent.value.style;
   let type =
     currentComponent.value.type == LabelEnum.group

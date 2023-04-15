@@ -29,7 +29,8 @@ export const useLowCodeState = defineStore("lowCodeState", () => {
   const currentComponentIndex = ref<number>();
   const idMapData = new Map<string, LowCanvasData>(); //id对应Data
   const idMapDataIndex = new Map<string, number>(); //id对应Data的Index
-  const isMoving = ref(false);
+  const isMoving = ref(false);//是否移动
+  const isPreView = ref(false); //预览
 
   localInit()
   function localInit(){
@@ -38,6 +39,10 @@ export const useLowCodeState = defineStore("lowCodeState", () => {
       idMapData.set(item.id!,item)
       idMapDataIndex.set(item.id!,index)
     })
+  }
+
+  const triggerPreView = () => {
+    isPreView.value = !isPreView.value
   }
 
   
@@ -75,9 +80,9 @@ export const useLowCodeState = defineStore("lowCodeState", () => {
     currentComponent.value = component;
   };
 
-  const setCUrrentCompoentEvent = (obj: EventType) => {
+  const setCUrrentCompoentEvent = (obj: EventType,isMerge:boolean = true) => {
     if (!currentComponent.value) return;
-    currentComponent.value.events = merge(currentComponent.value?.events, obj);
+    currentComponent.value.events = isMerge ? merge(currentComponent.value.events,obj) : obj
   };
 
   const setCurrentComponentStyle = (style: Partial<ComponentStyle>) => {
@@ -183,6 +188,7 @@ export const useLowCodeState = defineStore("lowCodeState", () => {
     idMapData,
     idMapDataIndex,
     isMoving,
+    isPreView,
     setMoving,
     setCurrentComponent,
     setCurrentComponentStyle,
@@ -200,6 +206,7 @@ export const useLowCodeState = defineStore("lowCodeState", () => {
     initLowCanvasData,
     setComponent,
     setCanvasState,
-    save
+    save,
+    triggerPreView,
   };
 });

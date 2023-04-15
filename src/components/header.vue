@@ -9,6 +9,7 @@
     <el-button m-x-1 @click="init">初始化</el-button>
     <el-button m-x-1 @click="compose" :disabled="areaData.components.length == 0">组合</el-button>
     <el-button m-x-1 @click="splite" :disabled="!Array.isArray(currentComponent?.propValue)">拆分</el-button>
+    <el-button m-x-1 @click="triggerPreView" >预览</el-button>
     <!-- <div class="canvas-size" grid h-10 w-80 items-center mx-2>
       <span color-gray-7>画布大小</span>
       <el-input :model-value="lowCanvasState.width" type="number" @input="handleInput('width', +$event)">
@@ -29,7 +30,7 @@ const { currentComponent } = storeToRefs(appStore.state);
 const {stackIndex, stack} = storeToRefs(appStore.stack)
 const {areaData} = storeToRefs(appStore.area)
 const {clearCanvas,splite,init} = appStore.lowStore
-const {setLowCanvasState,save} = appStore.state
+const {setLowCanvasState,save,triggerPreView} = appStore.state
 const {compose,hideArea} = appStore.area
 const {triggerAce,hideAce} = appStore.ace
 

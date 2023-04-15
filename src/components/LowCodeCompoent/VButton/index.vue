@@ -11,19 +11,37 @@
     hover="bg-lightblue-1 color-blue-5 border-blue-2"
     transition
     v-bind="{ ...propValue }"
+    @click="handleClick"
   >
     {{ propValue.value }}
   </button>
 </template>
 
 <script setup lang="ts">
+import type { EventType } from "@/types/LowCode/event";
 import type { StyleValue } from "vue";
-const propps = defineProps<{
+import { eventList } from "../Attrs/event/event.list";
+import { storeToRefs } from "pinia";
+import { appStore } from "@/stores";
+
+const { isPreView } = storeToRefs(appStore.state);
+
+const props = defineProps<{
   propValue: {
     value: string;
   };
   style?: StyleValue;
+  events: EventType;
 }>();
+
+const handleClick = () => {
+  if (!isPreView.value) return;
+  if (props.events.hasOwnProperty("onClick")) {
+    const data = props.events["onClick"];
+    if (!data) return;
+    eventList[data.type](data);
+  }
+};
 </script>
 
 <style scoped lang="scss">

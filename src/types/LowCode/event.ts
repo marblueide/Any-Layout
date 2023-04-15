@@ -4,7 +4,6 @@ export enum EventTypeEnum {
   ShowAlert = "showAlert",
   DownLoad = "downLoad",
   Copy = "copy",
-  Paste = "paste",
 }
 
 export enum EventEnum {
@@ -45,7 +44,7 @@ export type EventEnumType = {
   [EventTypeEnum.NavigateTo]: {
     type: EventTypeEnum.NavigateTo;
     subType: NavigateToTypeEnum;
-    value: string;
+    url: string;
     target: NavigateToOpenType;
   };
   [EventTypeEnum.ShowAlert]: {
@@ -62,10 +61,7 @@ export type EventEnumType = {
   [EventTypeEnum.Copy]: {
     type: EventTypeEnum.Copy;
     value: string;
-  };
-  [EventTypeEnum.Paste]: {
-    type: EventTypeEnum.Paste;
-  };
+  }
   [EventTypeEnum.None]: {
     type: EventTypeEnum.None;
   };
@@ -76,8 +72,8 @@ export type EventEnumTypeOption =
   | EventEnumType[EventTypeEnum.ShowAlert]
   | EventEnumType[EventTypeEnum.DownLoad]
   | EventEnumType[EventTypeEnum.Copy]
-  | EventEnumType[EventTypeEnum.Paste]
   | EventEnumType[EventTypeEnum.None];
+
 export type EventType = {
   [k in EventEnum]?: EventEnumTypeOption;
 };

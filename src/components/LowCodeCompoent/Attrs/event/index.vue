@@ -19,7 +19,7 @@
 </template>
     
 <script setup lang='ts'>
-import { eventList, eventSelect, eventComponent } from './event.list';
+import { eventDefaultList, eventSelect, eventComponent } from './event.list';
 import { storeToRefs } from 'pinia';
 import type { EventEnum, EventTypeEnum } from '@/types/LowCode/event';
 import { appStore } from '@/stores';
@@ -28,9 +28,10 @@ const { currentComponent } = storeToRefs(appStore.state)
 const {setCUrrentCompoentEvent} = appStore.state
 
 const handleChangeType = (value: EventTypeEnum) => {
+    console.log(value)
     setCUrrentCompoentEvent({
-        [props.label]: eventList[value]
-    })
+        [props.label]: eventDefaultList[value]
+    },false)
 }
 
 const handleChange = (key: string, value: EventTypeEnum) => {

@@ -12,15 +12,15 @@ import { onMounted, onUnmounted } from "vue";
 import {downKeys,keysMapFn,singleKey} from "@/components/editor/event"
 
 const handleKeyDown = (e:KeyboardEvent) => {
-  e.preventDefault()
-  console.log(e.keyCode,keysMapFn[e.keyCode])
+  // e.preventDefault()
   if(e.ctrlKey && typeof keysMapFn[e.keyCode] == 'function'){
     keysMapFn[e.keyCode]()
+    return false
   }
 }
 
 onMounted(() => {
-  window.addEventListener('keydown',handleKeyDown)
+  window.addEventListener("keydown",handleKeyDown)
 })
 
 onUnmounted(() => {

@@ -1,4 +1,3 @@
-import type { Component } from "vue";
 import {
   type EventEnumType,
   EventTypeEnum,
@@ -9,22 +8,25 @@ import {
   DownLoadType,
 } from "../../../../types/LowCode/event";
 import { markRaw } from "vue";
+import router from "@/router/index";
 import NavigateTo from "./component/NavigateTo.vue";
 import ShowAlert from "./component/ShowAlert.vue";
-import DownLoad from "./component/DownLoad.vue"
-import Copy from "./component/Copy.vue"
+import DownLoad from "./component/DownLoad.vue";
+import Copy from "./component/Copy.vue";
+import { ElMessage } from "element-plus";
+import axios from "@/api/config/axios";
 
 type SelectType<T = string> = {
   value: T;
   label: string;
 };
 
-export const eventList: EventEnumType = {
+export const eventDefaultList: EventEnumType = {
   //Event的默认值
   [EventTypeEnum.NavigateTo]: {
     type: EventTypeEnum.NavigateTo,
     subType: NavigateToTypeEnum.Url,
-    value: "",
+    url: "",
     target: NavigateToOpenType.Cur,
   },
   [EventTypeEnum.ShowAlert]: {
@@ -42,11 +44,75 @@ export const eventList: EventEnumType = {
     type: EventTypeEnum.Copy,
     value: "",
   },
-  [EventTypeEnum.Paste]: {
-    type: EventTypeEnum.Paste,
-  },
   [EventTypeEnum.None]: {
     type: EventTypeEnum.None,
+  },
+};
+
+export const eventList: Record<EventTypeEnum, (...args: any[]) => void> = {
+  [EventTypeEnum.None]: () => {
+    return;
+  },
+  [EventTypeEnum.NavigateTo]: ({
+    url,
+    subType,
+    target,
+  }: EventEnumType[EventTypeEnum.NavigateTo]) => {
+    try {
+      const path = url.match(/http:\/\/|https:\/\//) ? url : `https://${url}`;
+      if (target == NavigateToOpenType.Cur) {
+        window.open(path, "_self");
+      } else if (target == NavigateToOpenType.New) {
+        window.open(path, "_blank");
+      }
+    } catch (error) {
+      console.log(error,'请输入正确的地址')
+      ElMessage({
+        type:"error",
+        message:"请输入正确的地址"
+      })
+    }
+  },
+  [EventTypeEnum.ShowAlert]: ({
+    subType: type,
+    message,
+  }: EventEnumType[EventTypeEnum.ShowAlert]) => {
+    ElMessage({
+      type: type as any,
+      message: message as string,
+    });
+  },
+  [EventTypeEnum.DownLoad]: async ({
+    url,
+    name,
+    subType: type,
+  }: EventEnumType[EventTypeEnum.DownLoad]) => {
+    let res = await axios({
+      url,
+      responseType: "blob",
+    });
+    const blob = new Blob([res.data], { type: res.headers["content-type"] });
+    const link = document.createElement("a");
+    link.href = window.URL.createObjectURL(blob);
+    link.download = name.endsWith(type) ? name : `${name}.${type}`;
+    document.body.appendChild(link);
+    link.click();
+    document.removeChild(link);
+  },
+  [EventTypeEnum.Copy]: ({ value }: EventEnumType[EventTypeEnum.Copy]) => {
+   try {
+    navigator.clipboard.writeText(value);
+    ElMessage({
+      type:"success",
+      message:"复制成功"
+    })
+   } catch (error) {
+    console.log(error,'复制失败')
+    ElMessage({
+      type:"error",
+      message:"复制失败"
+    })
+   }
   },
 };
 
@@ -69,10 +135,6 @@ export const eventSelect: SelectType[] = [
     label: "复制",
   },
   {
-    value: EventTypeEnum.Paste,
-    label: "粘贴",
-  },
-  {
     value: EventTypeEnum.ShowAlert,
     label: "消息提示",
   },
@@ -83,7 +145,6 @@ export const eventComponent = {
   [EventTypeEnum.NavigateTo]: markRaw(NavigateTo),
   [EventTypeEnum.ShowAlert]: markRaw(ShowAlert),
   [EventTypeEnum.Copy]: markRaw(Copy),
-  [EventTypeEnum.Paste]: undefined,
   [EventTypeEnum.DownLoad]: markRaw(DownLoad),
 };
 
@@ -117,33 +178,33 @@ export const ShowAlertSelect: SelectType[] = [
   },
 ];
 
-export const DownLoadSelect:SelectType[] = [
+export const DownLoadSelect: SelectType[] = [
   {
-    label:DownLoadType.TXT,
-    value:DownLoadType.TXT,
+    label: DownLoadType.TXT,
+    value: DownLoadType.TXT,
   },
   {
-    label:DownLoadType.HTML,
-    value:DownLoadType.HTML
+    label: DownLoadType.HTML,
+    value: DownLoadType.HTML,
   },
   {
-    label:DownLoadType.JSON,
-    value:DownLoadType.JSON
+    label: DownLoadType.JSON,
+    value: DownLoadType.JSON,
   },
   {
-    label:DownLoadType.JPEG,
-    value:DownLoadType.JPEG
+    label: DownLoadType.JPEG,
+    value: DownLoadType.JPEG,
   },
   {
-    label:DownLoadType.JPG,
-    value:DownLoadType.JPG
+    label: DownLoadType.JPG,
+    value: DownLoadType.JPG,
   },
   {
-    label:DownLoadType.PNG,
-    value:DownLoadType.PNG
+    label: DownLoadType.PNG,
+    value: DownLoadType.PNG,
   },
   {
-    label:DownLoadType.SVG,
-    value:DownLoadType.SVG
+    label: DownLoadType.SVG,
+    value: DownLoadType.SVG,
   },
-]
+];

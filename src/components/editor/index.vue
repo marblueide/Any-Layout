@@ -24,6 +24,7 @@
               :is="labelEnumMapComponent[item.type]"
               :propValue="item.propValue"
               :style="getOriginStyle(item.style)"
+              :events="item.events"
             >
             </component>
           </Shape>
@@ -117,7 +118,6 @@ const handleMouseDown = async (e: MouseEvent) => {
   e.preventDefault();
   if (!editorRect) editorRect = editorRef.value.getBoundingClientRect();
   if(!centerRect) centerRect = centerRef.value.getBoundingClientRect()
-  console.log(centerRect)
   const startX = e.clientX;
   const startY = e.clientY;
 
