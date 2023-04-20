@@ -16,6 +16,7 @@ const base = {
     vue(),
     Pages({
       exclude: ["**/components/*.vue"],
+      routeStyle:"nuxt"
     }),
     AutoImport({
       imports: ["vue", "vue-router", "pinia"],

@@ -30,37 +30,14 @@ export type AttrComponent = {
   type: AttrEnum;
   label: string;
   component: Component;
-  predefineColors: string[];
+  predefineColors?: string[];
   step?: number;
+  props?:Record<string,any>
 };
 
 export type AttrData = {
   name:string;
   title: string;
   prop?: keyof LowCanvasData;
-  components: AttrEnumType[];
-};
-
-export type AttrEnumType<T extends AttrEnum = AttrEnum> = {
-  [K in keyof AttrEnumMap[T]]: AttrEnumMap[T][K];
-};
-
-type AttrDefaultComponent = Pick<
-  AttrComponent,
-  "component" | "name" | "type" | "label" | "step"
->;
-
-export type AttrEnumMap = {
-  [AttrEnum.INPUT]: AttrDefaultComponent;
-  [AttrEnum.INPUTNUMBER]: AttrDefaultComponent;
-  [AttrEnum.SELECT]: AttrDefaultComponent;
-  [AttrEnum.OTHER]: Pick<
-    AttrComponent,
-    "component" | "name" | "type" | "label"
-  >;
-  [AttrEnum.COLORPick]: Pick<
-    AttrComponent,
-    "component" | "name" | "type" | "label" | "predefineColors"
-  >;
-  [AttrEnum.ALL]: AttrComponent;
+  components: AttrComponent[];
 };
