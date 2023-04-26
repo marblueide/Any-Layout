@@ -14,6 +14,7 @@ export type ComponentStyle = {
   background?: string;
   color?: string;
   fontSize?: number;
+  textIndent?:string
 };
 
 export const degFix = ["rotate"];
@@ -25,6 +26,7 @@ export const noneFix = [
   "alignItems",
   "background",
   "color",
+  'textIndent'
 ];
 export const shapeStyle = [
   "left",

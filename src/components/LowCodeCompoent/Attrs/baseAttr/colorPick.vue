@@ -7,9 +7,11 @@
 </template>
 
 <script setup lang="ts">
+import type { AttrEnum } from '@/types';
+
 const props = withDefaults(
     defineProps<{
-        type: "colorPick";
+        type: AttrEnum.COLORPick;
         label: string;
         modelValue: any;
         predefineColors?: string[]

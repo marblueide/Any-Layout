@@ -4,6 +4,7 @@ import { AttrEnum } from "../../types/LowCode/attr";
 import Input from "./Attrs/baseAttr/input.vue";
 import Select from "./Attrs/baseAttr/select.vue";
 import ColorPick from "./Attrs/baseAttr/colorPick.vue";
+import InputType from "./Attrs/baseAttr/inputType.vue";
 import HorizontalAlign from "./Attrs/HorizontalAlign.vue";
 import VerticalAlign from "./Attrs/VerticalAlign.vue";
 import BorderRadius from "./Attrs/BorderRadius.vue";
@@ -168,6 +169,27 @@ export const attrList: Attr[] = [
             component: markRaw(Input),
             step: 0.1,
           },
+          {
+            name:'textIndent',
+            type:AttrEnum.INPUTTYPE,
+            label:"文本缩进",
+            component:markRaw(InputType),
+            selectOptions:[
+              {
+                value:'px',
+                label:'px'
+              },
+              {
+                value:'em',
+                label:'em'
+              },
+              {
+                value:'%',
+                label:'%'
+              },
+            ],
+            defaultOption:'px'
+          }
         ],
       },
       {

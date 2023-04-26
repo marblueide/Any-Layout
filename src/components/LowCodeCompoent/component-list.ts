@@ -5,6 +5,7 @@ import VPicture from "./VPicture/index.vue";
 import VText from "./VText/index.vue";
 import VGroup from "./VGroup/index.vue";
 import Echart from "./Echart/indedx.vue";
+import VContainer from "./VContainer/index.vue";
 import { LabelEnum } from "../../types/LowCode/index";
 import { getAllCollapse } from "./attr-list";
 import { EventTypeEnum } from "@/types/LowCode/event";
@@ -15,6 +16,7 @@ export const componentList: [
   LowCanvasData<LabelEnum.button>,
   LowCanvasData<LabelEnum.picture>,
   LowCanvasData<LabelEnum.text>,
+  LowCanvasData<LabelEnum.container>,
 ] = [
   {
     type: LabelEnum.button,
@@ -96,14 +98,47 @@ export const componentList: [
       alignItems: "center",
       color: "#000",
       fontSize: 16,
+      textIndent:'0'
     },
     animations: [],
-    icon: "icon-anniu",
+    icon: "icon-ziti",
     linkage: [],
     propValue: {
-      value: "按钮",
+      value: "请输入",
     },
   },
+  {
+    type: LabelEnum.container,
+    label: LabelEnum.container,
+    name: "button",
+    collapse: [],
+    events: {
+      
+    },
+    isLock: false,
+    isRoot: true,
+    style: {
+      left: 0,
+      top: 0,
+      width: 300,
+      height: 200,
+      rotate: 0,
+      borderWidth: 2,
+      borderRadius: 0,
+      boxShadow: "none",
+      justifyContent: "center",
+      alignItems: "center",
+      background: "#fff",
+      color: "#000",
+      fontSize: 16,
+    },
+    animations: [],
+    icon: "icon-checkbox",
+    linkage: [],
+    propValue: {
+      
+    },
+  }
 ];
 
 // const temporarily = [
@@ -143,6 +178,7 @@ export const labelEnumMapComponent: Record<LabelEnum, Component> = {
   [LabelEnum.picture]: markRaw(VPicture),
   [LabelEnum.text]: markRaw(VText),
   [LabelEnum.group]: markRaw(VGroup),
+  [LabelEnum.container]:markRaw(VContainer)
 };
 
 export const labelEnumMapCGorup = omit(labelEnumMapComponent, [

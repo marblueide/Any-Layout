@@ -13,4 +13,5 @@ export type PropValue = {
   [LabelEnum.picture]: Pick<PropValueType, "src" | "fit">;
   [LabelEnum.text]: Pick<PropValueType, "value">;
   [LabelEnum.group]: LowCanvasData<LabelEnum>[];
+  [LabelEnum.container]: {}
 };
