@@ -31,9 +31,7 @@
                 <component
                   v-if="data.type != AttrEnum.OTHER"
                   :is="data.component"
-                  :type="data.type"
-                  :label="(data as AttrEnumType<AttrEnum.ALL>)?.label"
-                  :step="(data as AttrEnumType<AttrEnum.ALL>)?.step"
+                  v-bind="data"
                   :modelValue="
                     currentComponent?.[getProp(tabItem, item)][data.name]
                   "
@@ -61,9 +59,9 @@ import { ref } from "vue";
 import { attrList, getAllCollapse } from "../LowCodeCompoent/attr-list";
 import {
   AttrEnum,
-  type AttrEnumType,
   type AttrData,
   type Attr,
+type AttrComponent,
 } from "../../types/LowCode/attr";
 import type { LowCanvasData } from "../../types/LowCode/base";
 import { appStore } from "@/stores";
@@ -76,9 +74,9 @@ const { setCurrentComponentStyle, setCurrentProps, setCurrentState } =
 const allCollapse = getAllCollapse();
 
 const getComponents = (
-  data: AttrEnumType<AttrEnum>[],
+  data: AttrComponent[],
   prop: keyof LowCanvasData
-): AttrEnumType<AttrEnum>[] => {
+) => {
   return data.filter(
     (item) =>
       currentComponent.value &&

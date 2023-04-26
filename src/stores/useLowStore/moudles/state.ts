@@ -1,7 +1,7 @@
-import type { LowCanvasType, LowCanvasData } from "@/types";
+import type { LowCanvasType, LowCanvasData, PropValueType } from "@/types";
 import type { ComponentStyle } from "@/types/LowCode/style";
 import { cloneDeep, isArray, merge } from "lodash-es";
-import { ref, reactive,isReactive } from "vue";
+import { ref, reactive, isReactive } from "vue";
 import { v4 as uuid } from "uuid";
 import type { EventType } from "../../../types/LowCode/event";
 import { useStack } from "./stack";
@@ -14,7 +14,7 @@ const initState = {
   opacity: 1,
 }; //初始化State
 
-console.log(window.innerHeight)
+console.log(window.innerHeight);
 
 export const useLowCodeState = defineStore("lowCodeState", () => {
   const localCanvasState: LowCanvasType = JSON.parse(
@@ -29,23 +29,21 @@ export const useLowCodeState = defineStore("lowCodeState", () => {
   const currentComponentIndex = ref<number>();
   const idMapData = new Map<string, LowCanvasData>(); //id对应Data
   const idMapDataIndex = new Map<string, number>(); //id对应Data的Index
-  const isMoving = ref(false);//是否移动
+  const isMoving = ref(false); //是否移动
   const isPreView = ref(false); //预览
 
-  localInit()
-  function localInit(){
+  localInit();
+  function localInit() {
     //初始化
-    lowCanvasData.forEach((item,index) => {
-      idMapData.set(item.id!,item)
-      idMapDataIndex.set(item.id!,index)
-    })
+    lowCanvasData.forEach((item, index) => {
+      idMapData.set(item.id!, item);
+      idMapDataIndex.set(item.id!, index);
+    });
   }
 
   const triggerPreView = () => {
-    isPreView.value = !isPreView.value
-  }
-
-  
+    isPreView.value = !isPreView.value;
+  };
 
   const initLowCanvasData = () => {
     lowCanvasData.splice(0, lowCanvasData.length);
@@ -56,16 +54,16 @@ export const useLowCodeState = defineStore("lowCodeState", () => {
     currentComponentIndex.value = undefined;
   };
 
-  const setComponent = (id:string,data:LowCanvasData) => {
+  const setComponent = (id: string, data: LowCanvasData) => {
     //合并component
     let component = idMapData.get(id);
-    component && Object.assign(component,data)
-  }
+    component && Object.assign(component, data);
+  };
 
-  const setCanvasState = (data:LowCanvasType) => {
+  const setCanvasState = (data: LowCanvasType) => {
     //合并CanvasState
-    Object.assign(lowCanvasState.value,data)
-  }
+    Object.assign(lowCanvasState.value, data);
+  };
 
   const setCurrentComponent = (id?: string) => {
     //设置当前活动的组件
@@ -80,23 +78,28 @@ export const useLowCodeState = defineStore("lowCodeState", () => {
     currentComponent.value = component;
   };
 
-  const setCUrrentCompoentEvent = (obj: EventType,isMerge:boolean = true) => {
+  const setCUrrentCompoentEvent = (obj: EventType, isMerge: boolean = true) => {
     if (!currentComponent.value) return;
-    currentComponent.value.events = isMerge ? merge(currentComponent.value.events,obj) : obj
+    currentComponent.value.events = isMerge
+      ? merge(currentComponent.value.events, obj)
+      : obj;
   };
 
   const setCurrentComponentStyle = (style: Partial<ComponentStyle>) => {
     //设置当前活动组建的style
     if (!currentComponent.value) return;
-    currentComponent.value.style = merge(currentComponent.value.style, style);
+    for(const prop in style){
+      //@ts-ignore
+      currentComponent.value.style[prop] = style[prop]
+    }
   };
 
-  const setCurrentProps = (obj: any) => {
+  const setCurrentProps = (propValue: Partial<PropValueType>) => {
     if (!currentComponent.value) return;
-    currentComponent.value.propValue = merge(
-      currentComponent.value.propValue,
-      obj
-    );
+    for(const prop in propValue){
+      //@ts-ignore
+      currentComponent.value.propValue[prop] = propValue[prop]
+    }
   };
 
   const setCurrentState = <K extends keyof LowCanvasData = keyof LowCanvasData>(
@@ -177,8 +180,8 @@ export const useLowCodeState = defineStore("lowCodeState", () => {
   const save = () => {
     localStorage.setItem("CanvasState", JSON.stringify(lowCanvasState.value));
     localStorage.setItem("CanvasData", JSON.stringify(lowCanvasData));
-    console.log(JSON.stringify(lowCanvasData))
-  }
+    console.log(JSON.stringify(lowCanvasData));
+  };
 
   return {
     lowCanvasState,

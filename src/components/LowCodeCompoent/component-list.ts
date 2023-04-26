@@ -4,15 +4,17 @@ import VButton from "./VButton/index.vue";
 import VPicture from "./VPicture/index.vue";
 import VText from "./VText/index.vue";
 import VGroup from "./VGroup/index.vue";
+import Echart from "./Echart/indedx.vue";
 import { LabelEnum } from "../../types/LowCode/index";
 import { getAllCollapse } from "./attr-list";
 import { EventTypeEnum } from "@/types/LowCode/event";
-import {pick,omit} from "lodash-es"
+import { pick, omit } from "lodash-es";
+import { LinePresets } from "./Echart/Presets/line";
 
 export const componentList: [
   LowCanvasData<LabelEnum.button>,
   LowCanvasData<LabelEnum.picture>,
-  LowCanvasData<LabelEnum.text>
+  LowCanvasData<LabelEnum.text>,
 ] = [
   {
     type: LabelEnum.button,
@@ -53,7 +55,11 @@ export const componentList: [
     label: LabelEnum.picture,
     name: "picture",
     collapse: [],
-    events: {},
+    events: {
+      onClick: {
+        type: EventTypeEnum.None,
+      },
+    },
     isLock: false,
     isRoot: true,
     style: {
@@ -100,14 +106,48 @@ export const componentList: [
   },
 ];
 
-export const labelEnumMapComponent:Record<LabelEnum,Component> = {
+// const temporarily = [
+//   {
+//     type: LabelEnum.echart,
+//     label: LabelEnum.echart,
+//     name: "button",
+//     collapse: [],
+//     events: {
+//       onClick: {
+//         type: EventTypeEnum.None,
+//       },
+//     },
+//     isLock: false,
+//     isRoot: true,
+//     style: {
+//       left: 0,
+//       top: 0,
+//       width: 300,
+//       height: 200,
+//       rotate: 0,
+//       borderWidth: 0,
+//       borderRadius: 0,
+//       boxShadow: "none",
+//     },
+//     animations: [],
+//     icon: "icon-anniu",
+//     linkage: [],
+//     propValue: {
+//       echartOption: LinePresets[0].value,
+//     },
+//   },
+// ];
+
+export const labelEnumMapComponent: Record<LabelEnum, Component> = {
   [LabelEnum.button]: markRaw(VButton),
   [LabelEnum.picture]: markRaw(VPicture),
   [LabelEnum.text]: markRaw(VText),
-  [LabelEnum.group]: markRaw(VGroup)
-}
+  [LabelEnum.group]: markRaw(VGroup),
+};
 
-export const labelEnumMapCGorup = omit(labelEnumMapComponent,[LabelEnum.group])
+export const labelEnumMapCGorup = omit(labelEnumMapComponent, [
+  LabelEnum.group,
+]);
 
 const initComponentList = () => {
   componentList.forEach((item) => {

@@ -4,6 +4,7 @@ import type { PropValueType } from "./PropValue";
 import type { ComponentStyle } from "./style";
 import type { LabelEnum } from "./base";
 import type { EventEnum } from "./event";
+import * as echarts from 'echarts';
 
 export type Attr =
   | {
@@ -32,7 +33,8 @@ export type AttrComponent = {
   component: Component;
   predefineColors?: string[];
   step?: number;
-  props?:Record<string,any>
+  selectOptions?:{value:any,label:any}[]
+  echartOption?:echarts.EChartsCoreOption
 };
 
 export type AttrData = {

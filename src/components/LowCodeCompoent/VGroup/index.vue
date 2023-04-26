@@ -28,7 +28,7 @@ import(new URL('@/components/LowCodeCompoent/component-list',import.meta.url).hr
     isShow.value = true
 })
 
-const propps = defineProps<{
+const props = defineProps<{
   propValue: LowCanvasData[];
   style: StyleValue;
 }>();

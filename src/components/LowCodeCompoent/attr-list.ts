@@ -1,20 +1,22 @@
 import { markRaw } from "vue";
 import type { Attr } from "../../types/LowCode/index";
-import { AttrEnum, type AttrEnumType } from "../../types/LowCode/attr";
+import { AttrEnum } from "../../types/LowCode/attr";
 import Input from "./Attrs/baseAttr/input.vue";
+import Select from "./Attrs/baseAttr/select.vue";
 import ColorPick from "./Attrs/baseAttr/colorPick.vue";
 import HorizontalAlign from "./Attrs/HorizontalAlign.vue";
 import VerticalAlign from "./Attrs/VerticalAlign.vue";
 import BorderRadius from "./Attrs/BorderRadius.vue";
 import Shadow from "./Attrs/Shadow.vue";
 import Event from "./Attrs/event/index.vue";
+import { barPresets,LinePresets,piePresets } from "./Echart/Presets/line";
 
 export const attrList: Attr[] = [
   {
     name: "内容",
     data: [
       {
-        name:'data',
+        name: "data",
         title: "数据",
         prop: "propValue",
         components: [
@@ -24,10 +26,65 @@ export const attrList: Attr[] = [
             label: "内容",
             component: markRaw(Input),
           },
-        ] as [AttrEnumType<AttrEnum.INPUT>],
+          {
+            name: "src",
+            type: AttrEnum.INPUT,
+            label: "图片地址",
+            component: markRaw(Input),
+          },
+          {
+            name: "fit",
+            type: AttrEnum.SELECT,
+            label: "图片填充方式",
+            component: markRaw(Select),
+            selectOptions: [
+              {
+                value: "fit",
+                label: "fit",
+              },
+              {
+                value: "contain",
+                label: "contain",
+              },
+              {
+                value: "cover",
+                label: "cover",
+              },
+              {
+                value: "none",
+                label: "none",
+              },
+              {
+                value: "scale-down",
+                label: "scale-down",
+              },
+            ],
+          },
+          {
+            name:"echartOption",
+            type: AttrEnum.SELECT,
+            label:"折线图预设",
+            component:markRaw(Select),
+            selectOptions:LinePresets
+          },
+          {
+            name:"echartOption",
+            type: AttrEnum.SELECT,
+            label:"柱状图预设",
+            component:markRaw(Select),
+            selectOptions:barPresets
+          },
+          {
+            name:"echartOption",
+            type: AttrEnum.SELECT,
+            label:"饼图预设",
+            component:markRaw(Select),
+            selectOptions:piePresets
+          }
+        ],
       },
       {
-        name:"event",
+        name: "event",
         title: "事件",
         prop: "events",
         components: [
@@ -59,7 +116,7 @@ export const attrList: Attr[] = [
     data: [
       {
         title: "基本样式",
-        name:"baseStyle",
+        name: "baseStyle",
         components: [
           {
             name: "left",
@@ -85,15 +142,10 @@ export const attrList: Attr[] = [
             label: "高度",
             component: markRaw(Input),
           },
-        ] as [
-          AttrEnumType<AttrEnum.INPUTNUMBER>,
-          AttrEnumType<AttrEnum.INPUTNUMBER>,
-          AttrEnumType<AttrEnum.INPUTNUMBER>,
-          AttrEnumType<AttrEnum.INPUTNUMBER>
         ],
       },
       {
-        name:"colorConfig",
+        name: "colorConfig",
         title: "颜色配置",
         components: [
           {
@@ -103,10 +155,10 @@ export const attrList: Attr[] = [
             component: markRaw(ColorPick),
             predefineColors: [],
           },
-        ] as [AttrEnumType<AttrEnum.COLORPick>],
+        ],
       },
       {
-        name:"font",
+        name: "font",
         title: "文字",
         components: [
           {
@@ -116,10 +168,10 @@ export const attrList: Attr[] = [
             component: markRaw(Input),
             step: 0.1,
           },
-        ] as [AttrEnumType<AttrEnum.INPUTNUMBER>],
+        ],
       },
       {
-        name:"align",
+        name: "align",
         title: "排列对齐",
         components: [
           {
@@ -134,10 +186,10 @@ export const attrList: Attr[] = [
             type: AttrEnum.OTHER,
             component: markRaw(VerticalAlign),
           },
-        ] as [AttrEnumType<AttrEnum.OTHER>, AttrEnumType<AttrEnum.OTHER>],
+        ],
       },
       {
-        name:"border",
+        name: "border",
         title: "边框轮廓",
         components: [
           {
@@ -158,10 +210,6 @@ export const attrList: Attr[] = [
             label: "boxShadow",
             component: markRaw(Shadow),
           },
-        ] as [
-          AttrEnumType<AttrEnum.INPUTNUMBER>,
-          AttrEnumType<AttrEnum.OTHER>,
-          AttrEnumType<AttrEnum.OTHER>
         ],
       },
     ],

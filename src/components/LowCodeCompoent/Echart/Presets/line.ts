@@ -1,8 +1,8 @@
 import type * as echarts from "echarts";
 
 type Presets = {
-  name: string;
-  option: echarts.EChartsOption;
+  label: string;
+  value: echarts.EChartsOption;
 };
 
 const colors = ["#5470C6", "#EE6666"];
@@ -15,8 +15,8 @@ for (let i = 1; i < 20000; i++) {
 }
 export const LinePresets: Presets[] = [
   {
-    name: "堆叠面积图",
-    option: {
+    label: "堆叠面积图",
+    value: {
       title: {
         text: "Stacked Area Chart",
       },
@@ -114,8 +114,8 @@ export const LinePresets: Presets[] = [
     },
   },
   {
-    name: "多 X 轴",
-    option: {
+    label: "多 X 轴",
+    value: {
       color: colors,
       tooltip: {
         trigger: "none",
@@ -218,8 +218,8 @@ export const LinePresets: Presets[] = [
     },
   },
   {
-    name: "时间轴折线图",
-    option: {
+    label: "时间轴折线图",
+    value: {
       tooltip: {
         trigger: "axis",
         position: function (pt) {
@@ -274,8 +274,8 @@ export const LinePresets: Presets[] = [
 
 export const barPresets: Presets[] = [
   {
-    name: "基本柱状图",
-    option: {
+    label: "基本柱状图",
+    value: {
       legend: {},
       tooltip: {},
       dataset: {
@@ -295,8 +295,8 @@ export const barPresets: Presets[] = [
     },
   },
   {
-    name: "极坐标柱状图标签",
-    option: {
+    label: "极坐标柱状图标签",
+    value: {
       title: [
         {
           text: "Tangential Polar Bar Label Position (middle)",
@@ -330,8 +330,8 @@ export const barPresets: Presets[] = [
 
 export const piePresets: Presets[] = [
   {
-    name: "基本饼图",
-    option: {
+    label: "基本饼图",
+    value: {
       title: {
         text: "Referer of a Website",
         subtext: "Fake Data",
@@ -368,8 +368,8 @@ export const piePresets: Presets[] = [
     },
   },
   {
-    name: "环状图",
-    option: {
+    label: "环状图",
+    value: {
       tooltip: {
         trigger: "item",
       },
@@ -414,8 +414,8 @@ export const piePresets: Presets[] = [
     },
   },
   {
-    name: "基础南丁格尔玫瑰图",
-    option: {
+    label: "基础南丁格尔玫瑰图",
+    value: {
       legend: {
         top: "bottom",
       },

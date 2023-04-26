@@ -7,7 +7,7 @@
 </template>
     
 <script setup lang='ts'>
-import Echarts from "@/components/LowCodeCompoent/Echart/Base.vue"
+import Echarts from "@/components/LowCodeCompoent/Echart/indedx.vue.js"
 import { reactive } from "vue";
 const option = reactive<echarts.EChartsCoreOption>({
     xAxis: {

@@ -1,9 +1,11 @@
 import { LabelEnum, type LowCanvasData } from ".";
+import type * as echarts from 'echarts';
 
 export type PropValueType = {
   value: string;
   src: string;
   fit: string;
+  echartOption: echarts.EChartsCoreOption
 };
 
 export type PropValue = {
