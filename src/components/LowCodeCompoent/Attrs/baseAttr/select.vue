@@ -1,25 +1,21 @@
 <template>
-    <el-form-item :label="label">
-        <el-select :model-value="modelValue" :placeholder="placeholder" @change="handlerUpdate">
-            <el-option v-for="item in selectOptions" :key="item.value" :label="item.label" :value="item.value" />
-        </el-select>
-    </el-form-item>
+    <el-select :model-value="modelValue" :placeholder="placeholder" @change="handlerUpdate">
+        <el-option v-for="item in selectOptions" :key="item.value" :label="item.label" :value="item.value" />
+    </el-select>
 </template>
 
 <script setup lang="ts">
 const props = withDefaults(
     defineProps<{
-        label?: string;
         modelValue: any;
         placeholder?: string
         selectOptions: {
-                value: any,
-                label: any
-            }[]
+            value: any,
+            label: any
+        }[]
     }>(),
     {
         placeholder: "请选择",
-        label: "选择框"
     }
 );
 

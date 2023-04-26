@@ -71,6 +71,8 @@ export const componentList: [
       height: 200,
       rotate: 0,
       borderWidth: 2,
+      boxShadow: "none",
+      borderRadius: 0,
     },
     icon: "icon-tupian",
     animations: [],

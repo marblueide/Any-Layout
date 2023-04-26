@@ -1,15 +1,12 @@
 <template>
-    <el-form-item :label="label">
-        <el-input :type="type == 'inputNumber' ? 'number' : 'text'" :modelValue="modelValue" :placeholder="placeholder"
-            @update:modelValue="handlerUpdate" :step="step"></el-input>
-    </el-form-item>
+    <el-input :type="type == 'inputNumber' ? 'number' : 'text'" :modelValue="modelValue" :placeholder="placeholder"
+        @update:modelValue="handlerUpdate" :step="step"></el-input>
 </template>
 
 <script setup lang="ts">
 const props = withDefaults(
     defineProps<{
         type: "input" | "inputNumber";
-        label: string;
         modelValue: any;
         placeholder?: string;
         step?: number
@@ -29,6 +26,4 @@ function handlerUpdate(value: string) {
 }
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

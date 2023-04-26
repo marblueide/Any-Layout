@@ -1,16 +1,13 @@
 <template>
   <div class="textAlign">
-    <el-form-item label="垂直方向方向">
-      <div class="vz" grid>
-        <div v-for="item in defaultTextverticalAlign" :class="
-  item.value == currentComponent?.style?.alignItems
-    ? 'border-black'
-    : 'border-gray-3'
-" p-1 border="1 solid" cursor-pointer hover=" bg-gray-3 " transition @click="handleChange('alignItems', item.value)">
-          {{ item.title }}
-        </div>
+    <div class="vz" grid>
+      <div v-for="item in defaultTextverticalAlign" :class="item.value == currentComponent?.style?.alignItems
+          ? 'border-black'
+          : 'border-gray-3'
+        " p-1 border="1 solid" cursor-pointer hover=" bg-gray-3 " transition @click="handleChange('alignItems', item.value)">
+        {{ item.title }}
       </div>
-    </el-form-item>
+    </div>
   </div>
 </template>
 

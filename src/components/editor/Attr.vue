@@ -28,6 +28,7 @@
                 )"
                 :key="data.name"
               >
+              <el-form-item :label="data.label">
                 <component
                   v-if="data.type != AttrEnum.OTHER"
                   :is="data.component"
@@ -44,6 +45,8 @@
                   :is="data.component"
                   :label="data.label"
                 ></component>
+              </el-form-item>
+               
               </template>
             </el-collapse-item>
           </el-collapse>

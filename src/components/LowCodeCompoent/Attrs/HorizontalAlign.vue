@@ -1,17 +1,14 @@
 <template>
   <div class="textAlign">
-    <el-form-item label="水平方向">
-      <div class="hz" grid>
-        <div v-for="item in defaultTextHorizontalAlign" :class="
-          item.value == currentComponent?.style?.justifyContent
-            ? 'border-black'
-            : 'border-gray-3'
+    <div class="hz" grid>
+      <div v-for="item in defaultTextHorizontalAlign" :class="item.value == currentComponent?.style?.justifyContent
+          ? 'border-black'
+          : 'border-gray-3'
         " p-1 border="1 solid" cursor-pointer hover=" bg-gray-3 " transition
-          @click="handleChange('justifyContent', item.value)">
-          {{ item.title }}
-        </div>
+        @click="handleChange('justifyContent', item.value)">
+        {{ item.title }}
       </div>
-    </el-form-item>
+    </div>
   </div>
 </template>
 

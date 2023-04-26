@@ -223,13 +223,13 @@ export const attrList: Attr[] = [
           {
             name: "borderRadius",
             type: AttrEnum.OTHER,
-            label: "borderRadius",
+            label: "边框圆角",
             component: markRaw(BorderRadius),
           },
           {
             name: "boxShadow",
             type: AttrEnum.OTHER,
-            label: "boxShadow",
+            label: "边框阴影",
             component: markRaw(Shadow),
           },
         ],

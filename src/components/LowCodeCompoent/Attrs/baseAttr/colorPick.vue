@@ -1,9 +1,6 @@
 <template>
-    <el-form-item :label="label">
-        <el-color-picker :predefine="predefineColors" :modelValue="modelValue" @update:modelValue="handlerUpdate"
-            show-alpha />
-        <el-input type="text" :modelValue="modelValue" @update:modelValue="handlerUpdate"></el-input>
-    </el-form-item>
+    <el-color-picker :predefine="predefineColors" :modelValue="modelValue" @update:modelValue="handlerUpdate" show-alpha />
+    <el-input type="text" :modelValue="modelValue" @update:modelValue="handlerUpdate"></el-input>
 </template>
 
 <script setup lang="ts">
@@ -12,7 +9,6 @@ import type { AttrEnum } from '@/types';
 const props = withDefaults(
     defineProps<{
         type: AttrEnum.COLORPick;
-        label: string;
         modelValue: any;
         predefineColors?: string[]
     }>(),
