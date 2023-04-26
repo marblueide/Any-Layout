@@ -94,8 +94,8 @@ export const componentList: [
       width: 90,
       height: 45,
       rotate: 0,
-      justifyContent: "center",
-      alignItems: "center",
+      justifyContent: "start",
+      alignItems: "start",
       color: "#000",
       fontSize: 16,
       textIndent:'0'

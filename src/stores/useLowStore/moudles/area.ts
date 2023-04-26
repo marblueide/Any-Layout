@@ -31,13 +31,17 @@ export const useArea = defineStore("area", () => {
     areaData.value = merge(areaData.value, obj);
   };
   const compose = () => {
+    const diffuse = {
+      width:30,
+      height:30
+    }
     const data = areaData.value.components.map((id) => getComponentById(id));
     const components: LowCanvasData[] = [];
     data.forEach((component) => {
       if (component && component.label != LabelEnum.group) {
         const { left, top } = component.style;
-        component.style.left -= areaData.value.left;
-        component.style.top -= areaData.value.top;
+        component.style.left -= areaData.value.left - diffuse.width / 2;
+        component.style.top -= areaData.value.top - diffuse.height / 2;
         component.isRoot = false;
         recordSnapshot({
           type: snapShotEnum.style,
@@ -62,10 +66,10 @@ export const useArea = defineStore("area", () => {
       isLock: false,
       isRoot: true,
       style: {
-        left: areaData.value.left,
-        top: areaData.value.top,
-        width: areaData.value.width,
-        height: areaData.value.height,
+        left: areaData.value.left - diffuse.width / 2,
+        top: areaData.value.top - diffuse.height / 2,
+        width: areaData.value.width + diffuse.width,
+        height: areaData.value.height + diffuse.height,
         rotate: 0,
       },
       propValue: components,
@@ -125,14 +129,14 @@ export const useArea = defineStore("area", () => {
   };
 
   const hideArea = () => {
-    if(!isShowArea.value) return
-    isShowArea.value = false
-  }
+    if (!isShowArea.value) return;
+    isShowArea.value = false;
+  };
 
   const showArea = () => {
-    if(isShowArea.value) return
-    isShowArea.value = true
-  }
+    if (isShowArea.value) return;
+    isShowArea.value = true;
+  };
 
   return {
     areaData,
@@ -142,6 +146,6 @@ export const useArea = defineStore("area", () => {
     compose,
     setIsShowArea,
     hideArea,
-    showArea
+    showArea,
   };
 });
