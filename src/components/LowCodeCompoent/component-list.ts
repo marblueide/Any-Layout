@@ -49,10 +49,6 @@ export const componentList: [
       styleBox: true,
       padding: "1px 2px 3px 4px",
       margin: "0 0 0 0",
-      borderTopWidth:2,
-      borderBottomWidth:2,
-      borderLeftWidth:2,
-      borderRightWidth:2
     },
     animations: [],
     icon: "icon-anniu",
