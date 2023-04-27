@@ -158,5 +158,9 @@ const activeTab = ref(0);
       padding-bottom: 0;
     }
   }
+
+  :deep(.el-form-item__content){
+    display: block;
+  }
 }
 </style>

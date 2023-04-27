@@ -1,6 +1,9 @@
 <template>
-    <el-color-picker :predefine="predefineColors" :modelValue="modelValue" @update:modelValue="handlerUpdate" show-alpha />
-    <el-input type="text" :modelValue="modelValue" @update:modelValue="handlerUpdate"></el-input>
+    <div class="color-pick" grid>
+        <el-color-picker :predefine="predefineColors" :modelValue="modelValue" @update:modelValue="handlerUpdate"
+            show-alpha />
+        <el-input type="text" :modelValue="modelValue" @update:modelValue="handlerUpdate"></el-input>
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -33,5 +36,10 @@ function handlerUpdate(value: string) {
     .el-input {
         margin-left: 5px
     }
+}
+
+.color-pick{
+    grid-template-columns: auto 1fr;
+    gap: 0 10px;
 }
 </style>

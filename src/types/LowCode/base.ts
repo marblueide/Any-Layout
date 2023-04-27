@@ -9,7 +9,8 @@ export enum LabelEnum {
   picture = "picture", //图片
   text = "text",  //文本
   group = "group",  //组合
-  container = "container"  //容器
+  container = "container",  //容器
+  input = 'input',
 }
 
 export type pointType = "lt" | "t" | "rt" | "r" | "rb" | "b" | "lb" | "l";

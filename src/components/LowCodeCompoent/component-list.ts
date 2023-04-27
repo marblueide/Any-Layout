@@ -5,6 +5,7 @@ import VPicture from "./VPicture/index.vue";
 import VText from "./VText/index.vue";
 import VGroup from "./VGroup/index.vue";
 import Echart from "./Echart/indedx.vue";
+import VInput from "./VInput/index.vue";
 import VContainer from "./VContainer/index.vue";
 import { LabelEnum } from "../../types/LowCode/index";
 import { getAllCollapse } from "./attr-list";
@@ -17,6 +18,7 @@ export const componentList: [
   LowCanvasData<LabelEnum.picture>,
   LowCanvasData<LabelEnum.text>,
   LowCanvasData<LabelEnum.container>,
+  LowCanvasData<LabelEnum.input>
 ] = [
   {
     type: LabelEnum.button,
@@ -44,6 +46,13 @@ export const componentList: [
       background: "#fff",
       color: "#000",
       fontSize: 16,
+      styleBox: true,
+      padding: "1px 2px 3px 4px",
+      margin: "0 0 0 0",
+      borderTopWidth:2,
+      borderBottomWidth:2,
+      borderLeftWidth:2,
+      borderRightWidth:2
     },
     animations: [],
     icon: "icon-anniu",
@@ -73,6 +82,8 @@ export const componentList: [
       borderWidth: 2,
       boxShadow: "none",
       borderRadius: 0,
+      padding:"0 0 0 0",
+      margin:"0 0 0 0"
     },
     icon: "icon-tupian",
     animations: [],
@@ -100,7 +111,9 @@ export const componentList: [
       alignItems: "start",
       color: "#000",
       fontSize: 16,
-      textIndent:'0'
+      textIndent: "0",
+      padding: "0 0 0 0",
+      margin: "0 0 0 0",
     },
     animations: [],
     icon: "icon-ziti",
@@ -112,11 +125,9 @@ export const componentList: [
   {
     type: LabelEnum.container,
     label: LabelEnum.container,
-    name: "button",
+    name: "container",
     collapse: [],
-    events: {
-      
-    },
+    events: {},
     isLock: false,
     isRoot: true,
     style: {
@@ -133,14 +144,48 @@ export const componentList: [
       background: "#fff",
       color: "#000",
       fontSize: 16,
+      padding: "0 0 0 0",
+      margin: "0 0 0 0",
     },
     animations: [],
     icon: "icon-checkbox",
     linkage: [],
-    propValue: {
-      
+    propValue: {},
+  },
+  {
+    type: LabelEnum.input,
+    label: LabelEnum.input,
+    name: "input",
+    collapse: [],
+    events: {
+      onInput: {
+        type: EventTypeEnum.None,
+      },
     },
-  }
+    isLock: false,
+    isRoot: true,
+    style: {
+      left: 0,
+      top: 0,
+      width: 200,
+      height: 50,
+      rotate: 0,
+      color: "#000",
+      fontSize: 16,
+      borderWidth: 0,
+      borderRadius: 0,
+      padding: "0 0 0 0",
+      margin: "0 0 0 0",
+    },
+    animations: [],
+    icon: "icon-danhangshurukuang",
+    linkage: [],
+    propValue: {
+      type: "text",
+      placeholder: "请输入值",
+      value: "",
+    },
+  },
 ];
 
 // const temporarily = [
@@ -180,7 +225,8 @@ export const labelEnumMapComponent: Record<LabelEnum, Component> = {
   [LabelEnum.picture]: markRaw(VPicture),
   [LabelEnum.text]: markRaw(VText),
   [LabelEnum.group]: markRaw(VGroup),
-  [LabelEnum.container]:markRaw(VContainer)
+  [LabelEnum.container]: markRaw(VContainer),
+  [LabelEnum.input]: markRaw(VInput),
 };
 
 export const labelEnumMapCGorup = omit(labelEnumMapComponent, [

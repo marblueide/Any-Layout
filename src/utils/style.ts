@@ -91,6 +91,5 @@ export const getOriginStyle = (data: Partial<ComponentStyle>) => {
       res[k] = data[k as keyof ComponentStyle] + "px";
     }
   });
-
   return res;
 };

@@ -15,10 +15,19 @@ export type ComponentStyle = {
   color?: string;
   fontSize?: number;
   textIndent?:string
+  styleBox?:boolean;
+  padding?:string;
+  margin?:string;
+  opacity?:number;
+  transform?:string;
+  borderTopWidth?:number
+  borderBottomWidth?:number
+  borderRightWidth?:number
+  borderLeftWidth?:number
 };
 
 export const degFix = ["rotate"];
-export const noneFix = [
+export const noneFix:(keyof ComponentStyle)[] = [
   "opacity",
   "boxShadow",
   "justifyContent",
@@ -26,9 +35,12 @@ export const noneFix = [
   "alignItems",
   "background",
   "color",
-  'textIndent'
+  'textIndent',
+  'padding',
+  'margin',
+  "styleBox"
 ];
-export const shapeStyle = [
+export const shapeStyle:(keyof ComponentStyle)[] = [
   "left",
   "top",
   "opacity",

@@ -5,7 +5,9 @@ export type PropValueType = {
   value: string;
   src: string;
   fit: string;
-  echartOption: echarts.EChartsCoreOption
+  echartOption: echarts.EChartsCoreOption;
+  placeholder:string
+  type:string
 };
 
 export type PropValue = {
@@ -13,5 +15,6 @@ export type PropValue = {
   [LabelEnum.picture]: Pick<PropValueType, "src" | "fit">;
   [LabelEnum.text]: Pick<PropValueType, "value">;
   [LabelEnum.group]: LowCanvasData<LabelEnum>[];
-  [LabelEnum.container]: {}
+  [LabelEnum.container]: {},
+  [LabelEnum.input]:Pick<PropValueType,'value' | 'placeholder' | 'type'>
 };

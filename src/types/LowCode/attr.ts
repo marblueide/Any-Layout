@@ -36,7 +36,8 @@ export type AttrComponent = {
   step?: number;
   selectOptions?:{value:any,label:any}[]
   echartOption?:echarts.EChartsCoreOption,
-  defaultOption?:any
+  defaultOption?:any,
+  postfix?:string
 };
 
 export type AttrData = {

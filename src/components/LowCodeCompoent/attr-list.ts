@@ -11,6 +11,7 @@ import BorderRadius from "./Attrs/BorderRadius.vue";
 import Shadow from "./Attrs/Shadow.vue";
 import Event from "./Attrs/event/index.vue";
 import { barPresets,LinePresets,piePresets } from "./Echart/Presets/line";
+import StyleBox from "./Attrs/StyleBox/index.vue";
 
 export const attrList: Attr[] = [
   {
@@ -124,25 +125,42 @@ export const attrList: Attr[] = [
             type: AttrEnum.INPUTNUMBER,
             label: "X坐标",
             component: markRaw(Input),
+            postfix:'px'
           },
           {
             name: "top",
             type: AttrEnum.INPUTNUMBER,
             label: "Y坐标",
             component: markRaw(Input),
+            postfix:'px'
           },
           {
             name: "width",
             type: AttrEnum.INPUTNUMBER,
             label: "宽度",
             component: markRaw(Input),
+            postfix:'px'
           },
           {
             name: "height",
             type: AttrEnum.INPUTNUMBER,
             label: "高度",
             component: markRaw(Input),
+            postfix:'px'
           },
+          {
+            name: "rotate",
+            type: AttrEnum.INPUTNUMBER,
+            label: "旋转",
+            component: markRaw(Input),
+            postfix:'deg'
+          },
+          {
+            name:"styleBox",
+            type:AttrEnum.OTHER,
+            label:"样式盒",
+            component:markRaw(StyleBox),
+          }
         ],
       },
       {
@@ -168,6 +186,7 @@ export const attrList: Attr[] = [
             label: "文字大小",
             component: markRaw(Input),
             step: 0.1,
+            postfix:'px'
           },
           {
             name:'textIndent',
@@ -219,6 +238,7 @@ export const attrList: Attr[] = [
             type: AttrEnum.INPUTNUMBER,
             label: "边框宽度",
             component: markRaw(Input),
+            postfix:'px'
           },
           {
             name: "borderRadius",
