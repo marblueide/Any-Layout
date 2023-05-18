@@ -1,97 +1,93 @@
 <template>
-  <main p-5 w="100%">
-    <div>
-      <div
-        class="search-wrapper"
-        inline-block
-        hover="bg-gray-1"
-        h="38px"
-        inline-flex
-        items-center
-        rounded-1
+  <div>
+    <div
+      class="search-wrapper"
+      inline-block
+      hover="bg-gray-1"
+      h="38px"
+      inline-flex
+      items-center
+      rounded-1
+      px-3
+    >
+      <i class="iconfont icon-sousuo"></i>
+      <input
+        type="text"
+        placeholder="搜索页面"
+        border-none
+        py-0
+        px="8px"
+        outline-none
+        bg-transparent
+      />
+    </div>
+  </div>
+  <div class="user-list" flex justify-between items-center my-1>
+    <div class="left">
+      <h2 font-500>1070129872's apps</h2>
+    </div>
+    <div class="right">
+      <button
+        cursor-pointer
+        border-none
         px-3
+        hover="bg-#1f9181"
+        py-2
+        font-600
+        outline-none
+        color-white
+        bg="#2CBBA6"
+        @click="handleAdd"
       >
-        <i class="iconfont icon-sousuo"></i>
-        <input
-          type="text"
-          placeholder="搜索页面"
-          border-none
-          py-0
-          px="8px"
-          outline-none
-          bg-transparent
-        />
-      </div>
+        <i class="iconfont icon-jiahao"></i> 创建页面
+      </button>
     </div>
-    <div class="user-list" flex justify-between items-center my-1>
-      <div class="left">
-        <h2 font-500>1070129872's apps</h2>
-      </div>
-      <div class="right">
-        <button
-          cursor-pointer
-          border-none
-          px-3
-          hover="bg-#1f9181"
-          py-2
-          font-600
-          outline-none
-          color-white
-          bg="#2CBBA6"
-          @click="handleAdd"
-        >
-          <i class="iconfont icon-jiahao"></i> 创建页面
-        </button>
-      </div>
-    </div>
-    <div class="cards" p-3>
-      <div class="card" w="213px">
-        <div class="item" flex items-center h="109px" box-border relative>
-          <h3 font-500>应用1</h3>
-          <div class="btns" absolute flex justify-around w="100%" left="0">
-            <button
-              cursor-pointer
-              px-3
-              hover="bg-#1f9181 border-#1f9181 border-2"
-              py-2
-              border="1 #2CBBA6"
-              font-600
-              outline-none
-              color-white
-              bg="#2CBBA6"
-              w="80px"
-              box-border
-            >
-              编辑
-            </button>
-            <button
-              cursor-pointer
-              px-3
-              hover="bg-transparent color-black border-#000 border-2"
-              border="1 #000"
-              py-2
-              font-600
-              outline-none
-              color-white
-              bg="#000"
-              w="80px"
-              box-border
-            >
-              访问
-            </button>
-          </div>
-        </div>
-        <div class="info" grid mt-1>
-          <div class="user" overflow-hidden text-ellipsis>
-            1070129872's apps
-          </div>
-          <div class="time">编辑于13分钟前</div>
+  </div>
+  <div class="cards" p-3>
+    <div class="card" w="213px">
+      <div class="item" flex items-center h="109px" box-border relative>
+        <h3 font-500>应用1</h3>
+        <div class="btns" absolute flex justify-around w="100%" left="0">
+          <button
+            cursor-pointer
+            px-3
+            hover="bg-#1f9181 border-#1f9181 border-2"
+            py-2
+            border="1 #2CBBA6"
+            font-600
+            outline-none
+            color-white
+            bg="#2CBBA6"
+            w="80px"
+            box-border
+          >
+            编辑
+          </button>
+          <button
+            cursor-pointer
+            px-3
+            hover="bg-transparent color-black border-#000 border-2"
+            border="1 #000"
+            py-2
+            font-600
+            outline-none
+            color-white
+            bg="#000"
+            w="80px"
+            box-border
+          >
+            访问
+          </button>
         </div>
       </div>
+      <div class="info" grid mt-1>
+        <div class="user" overflow-hidden text-ellipsis>1070129872's apps</div>
+        <div class="time">编辑于13分钟前</div>
+      </div>
     </div>
-  </main>
+  </div>
 
-  <el-dialog v-model="addDialog" :title="!isEditor ? '新增':'编辑' ">
+  <el-dialog v-model="addDialog" :title="!isEditor ? '新增' : '编辑'">
     <el-form :model="form" label-position="left">
       <el-form-item label="页面名称" required prop="page_name">
         <el-input v-model="form.page_name"></el-input>
@@ -109,32 +105,30 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref } from "vue";
 
 const addDialog = ref(false);
 const isEditor = ref(false);
 const form = ref({
   page_name: "",
-  describe:""
-})
+  describe: "",
+});
 
 const setDialog = (b: boolean) => {
-  addDialog.value = b
-}
+  addDialog.value = b;
+};
 
 const reset = () => {
   form.value = {
     page_name: "",
-  describe:""
-  }
-}
+    describe: "",
+  };
+};
 
 const handleAdd = () => {
-  isEditor.value = false
-  addDialog.value = true
-}
-
-
+  isEditor.value = false;
+  addDialog.value = true;
+};
 </script>
 
 <style scoped lang="scss">
@@ -213,8 +207,8 @@ const handleAdd = () => {
   }
 }
 
-.el-form-item-end{
-  :deep(.el-form-item__content){
+.el-form-item-end {
+  :deep(.el-form-item__content) {
     justify-content: end;
   }
 }

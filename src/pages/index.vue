@@ -23,45 +23,71 @@
       </div>
     </header>
     <section flex-1 flex>
-      <aside class="aside" w-256px h-full pt-4 pl-4 >
+      <aside class="aside" w-256px h-full pt-4 pl-4>
         <div text-13px font-bold py-9px px-15px>应用组</div>
-        <div class="aside-item color-#4b4848">
+        <!-- <div class="aside-item color-#4b4848">
           <SvgIcon name="add" mr-12px />
           <span>新建用户组</span>
-        </div>
-        <div v-for="it in asideList" class="aside-item color-#4b4848">
+        </div> -->
+        <div
+          v-for="it in asideList"
+          class="aside-item color-#4b4848"
+          @click="handleRouterTo(it)"
+        >
           <SvgIcon name="group" mr-12px />
           <span>{{ it.name }}</span>
         </div>
       </aside>
-      <Main flex-1 />
+      <main p-5 w="100%">
+        <RouterView/>
+      </main>
     </section>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from "vue";
-import Main from "@/components/index/main/index.vue"
+import { useRouter, type Router, type RouteLocationRaw } from "vue-router";
 
-const headerOptions = [
+type Options = {
+  name: string;
+  router?: RouteLocationRaw;
+};
+
+const router = useRouter();
+
+const headerOptions: Options[] = [
   {
     name: "应用",
   },
   {
-    name: "模板",
+    name: "组件库",
+    router: {
+      path: "/component_lib",
+    },
   },
 ];
 
 const currentHeader = ref(0);
 
-const asideList = [
+const asideList:Options[] = [
   {
     name: "'1070129872's apps",
+    router: {
+      path:"/"
+    }
   },
   {
-    name: "应用组1",
+    name: "组件库",
+    router: {
+      path: "/component_lib",
+    }
   },
 ];
+
+const handleRouterTo = (item: Options) => {
+  item.router && router.push(item.router);
+};
 </script>
 
 <style scoped lang="scss">
