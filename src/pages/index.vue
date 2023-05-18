@@ -38,7 +38,7 @@
           <span>{{ it.name }}</span>
         </div>
       </aside>
-      <main p-5 w="100%">
+      <main bg-gray-50 p-5 w="100%">
         <RouterView/>
       </main>
     </section>
