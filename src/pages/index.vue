@@ -34,13 +34,14 @@
           <span>{{ it.name }}</span>
         </div>
       </aside>
-      <div flex-1></div>
+      <Main flex-1 />
     </section>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from "vue";
+import Main from "@/components/index/main/index.vue"
 
 const headerOptions = [
   {
