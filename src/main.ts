@@ -8,6 +8,7 @@ import "uno.css";
 import "normalize.css";
 import "./styles/global.scss";
 import 'element-plus/dist/index.css'
+import 'virtual:svg-icons-register'
 
 const app = createApp(App);
 

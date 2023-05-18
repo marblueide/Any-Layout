@@ -1,0 +1,23 @@
+<svg
+  fill="none"
+  viewBox="0 0 16 16"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <mask
+    id="workspaceIcon_svg__a"
+    height="16"
+    maskUnits="userSpaceOnUse"
+    width="16"
+    x="0"
+    y="0"
+  >
+    <circle cx="8" cy="8" fill="#f0f0f0" r="8"></circle>
+  </mask>
+  <circle cx="8" cy="8" fill="#ebebeb" r="8"></circle>
+  <g mask="url(#workspaceIcon_svg__a)">
+    <path
+      d="M9.334 9.407V3.333l7.333 4v9.334h-12V7.333z"
+      fill="#a9a7a7"
+    ></path>
+  </g>
+</svg>

@@ -2,11 +2,12 @@ import { fileURLToPath, URL } from "node:url";
 import { defineConfig, loadEnv } from "vite";
 import vue from "@vitejs/plugin-vue";
 import Unocss from "unocss/vite";
-import { resolve } from "path";
+import { join, resolve } from "path";
 import AutoImport from "unplugin-auto-import/vite";
 import Components from "unplugin-vue-components/vite";
 import Pages from "vite-plugin-pages";
 import { ElementPlusResolver } from "unplugin-vue-components/resolvers";
+import { createSvgIconsPlugin } from "vite-plugin-svg-icons";
 
 const base = {
   build: {
@@ -16,7 +17,7 @@ const base = {
     vue(),
     Pages({
       exclude: ["**/components/*.vue"],
-      routeStyle:"nuxt"
+      routeStyle: "nuxt",
     }),
     AutoImport({
       imports: ["vue", "vue-router", "pinia"],
@@ -38,6 +39,9 @@ const base = {
     }),
     Unocss({
       configFile: resolve(__dirname, "uno.config.ts"),
+    }),
+    createSvgIconsPlugin({
+      iconDirs: [join(__dirname, "src/assets/svg")],
     }),
   ],
   resolve: {
