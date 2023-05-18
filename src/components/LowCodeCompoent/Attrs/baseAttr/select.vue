@@ -1,6 +1,6 @@
 <template>
     <el-select :model-value="modelValue" :placeholder="placeholder" @change="handlerUpdate">
-        <el-option v-for="item in selectOptions" :key="item.value" :label="item.label" :value="item.value" />
+        <el-option v-for="item in selectOptions" :key="item.label" :label="item.label" :value="item.value" />
     </el-select>
 </template>
 

@@ -16,5 +16,6 @@ export type PropValue = {
   [LabelEnum.text]: Pick<PropValueType, "value">;
   [LabelEnum.group]: LowCanvasData<LabelEnum>[];
   [LabelEnum.container]: {},
-  [LabelEnum.input]:Pick<PropValueType,'value' | 'placeholder' | 'type'>
+  [LabelEnum.input]:Pick<PropValueType,'value' | 'placeholder' | 'type'>,
+  [LabelEnum.echart]:Pick<PropValueType,'echartOption'>
 };

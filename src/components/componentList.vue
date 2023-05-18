@@ -1,5 +1,5 @@
 <template>
-  <div class="componentList" grid p-3 items-center items-baseline box-border>
+  <div class="componentList" w="100%" grid p-3 items-center items-baseline box-border>
     <div
       class="component-item"
       @dragstart="handleDragStart"

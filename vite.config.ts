@@ -5,6 +5,7 @@ import Unocss from "unocss/vite";
 import { resolve } from "path";
 import AutoImport from "unplugin-auto-import/vite";
 import Components from "unplugin-vue-components/vite";
+import IconsResolver from "unplugin-icons/resolver";
 import Pages from "vite-plugin-pages";
 import { ElementPlusResolver } from "unplugin-vue-components/resolvers";
 
@@ -16,7 +17,7 @@ const base = {
     vue(),
     Pages({
       exclude: ["**/components/*.vue"],
-      routeStyle:"nuxt"
+      routeStyle: "nuxt",
     }),
     AutoImport({
       imports: ["vue", "vue-router", "pinia"],
@@ -24,7 +25,12 @@ const base = {
         enabled: true,
       },
       dts: true,
-      resolvers: [ElementPlusResolver()],
+      resolvers: [
+        ElementPlusResolver(),
+        IconsResolver({
+          prefix: "Icon",
+        }),
+      ],
     }),
     Components({
       dts: true,

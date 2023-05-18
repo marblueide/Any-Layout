@@ -1,14 +1,21 @@
 <template>
   <div class="main" flex flex-1 overflow="hidden" @mousedown="handleMainDown">
-    <div class="left" bg-white border-r-1 border-gray-2 transition-all-500 overflow-hidden :class="{'w-65':!isPreView,'w-0':isPreView}">
-      <el-tabs type="border-card" class="el-tabs" v-model="activeName">
-        <el-tab-pane label="资源管理" name="Administration">
-          <componentLayer></componentLayer>
+    <div class="left" bg-white border-r-1 border-gray-2 transition-all-500 overflow-hidden grid :class="{'w-65':!isPreView,'w-0':isPreView}">
+      <el-tabs w="100%" overflow-hidden type="border-card" class="el-tabs" v-model="activeName">
+        <el-tab-pane label="基础组件" name="Administration">
+          <componentListVue />
         </el-tab-pane>
-        <el-tab-pane label="添加组件" name="add">
+        <el-tab-pane label="表单组件" name="input">
+          <componentListVue />
+        </el-tab-pane>
+        <el-tab-pane label="表单组件" name="input2">
+          <componentListVue />
+        </el-tab-pane>
+        <el-tab-pane label="表单组件" name="input3">
           <componentListVue />
         </el-tab-pane>
       </el-tabs>
+      <componentLayer></componentLayer>
     </div>
     <div class="center" flex-1 p-5 overflow="hidden">
       <el-scrollbar>
@@ -59,20 +66,21 @@ const handleMainDown = () => {
   }
 
   .left {
-    :deep(.el-tabs) {
-      height: 100%;
+    grid-template-rows: 1fr 1fr;
+    // :deep(.el-tabs) {
+    //   height: 100%;
 
-      .el-tabs__header {
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        border-bottom: none;
-      }
+    //   .el-tabs__header {
+    //     width: 100%;
+    //     display: flex;
+    //     justify-content: center;
+    //     border-bottom: none;
+    //   }
 
-      .el-tabs__content {
-        padding: 0;
-      }
-    }
+    //   .el-tabs__content {
+    //     padding: 0;
+    //   }
+    // }
   }
 }
 </style>

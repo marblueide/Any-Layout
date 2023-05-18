@@ -11,6 +11,7 @@ export enum LabelEnum {
   group = "group",  //组合
   container = "container",  //容器
   input = 'input',
+  echart = "echart", // Echart
 }
 
 export type pointType = "lt" | "t" | "rt" | "r" | "rb" | "b" | "lb" | "l";

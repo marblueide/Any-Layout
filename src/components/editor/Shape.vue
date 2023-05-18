@@ -78,7 +78,6 @@ const isGroupChidren = computed(() => {
 
 const handleMouseDown = (e: MouseEvent) => {
   if(isPreView.value) return ;
-  console.log(5555555555555)
   setCurrentComponent(props.id);
   console.log(currentComponent.value,props.id)
   const { left, top } = currentComponent.value!.style;
