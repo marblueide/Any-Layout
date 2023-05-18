@@ -10,7 +10,7 @@ import VerticalAlign from "./Attrs/VerticalAlign.vue";
 import BorderRadius from "./Attrs/BorderRadius.vue";
 import Shadow from "./Attrs/Shadow.vue";
 import Event from "./Attrs/event/index.vue";
-import { barPresets,LinePresets,piePresets } from "./Echart/Presets/line";
+import EchartOption from "./Attrs/EchartOption.vue"
 import StyleBox from "./Attrs/StyleBox/index.vue";
 
 export const attrList: Attr[] = [
@@ -63,26 +63,11 @@ export const attrList: Attr[] = [
             ],
           },
           {
-            name:"echartOption",
-            type: AttrEnum.SELECT,
-            label:"折线图预设",
-            component:markRaw(Select),
-            selectOptions:LinePresets
+            name: "echartOption",
+            type: AttrEnum.OTHER,
+            label: "echart预设",
+            component: markRaw(EchartOption),
           },
-          {
-            name:"echartOption",
-            type: AttrEnum.SELECT,
-            label:"柱状图预设",
-            component:markRaw(Select),
-            selectOptions:barPresets
-          },
-          {
-            name:"echartOption",
-            type: AttrEnum.SELECT,
-            label:"饼图预设",
-            component:markRaw(Select),
-            selectOptions:piePresets
-          }
         ],
       },
       {
@@ -125,42 +110,42 @@ export const attrList: Attr[] = [
             type: AttrEnum.INPUTNUMBER,
             label: "X坐标",
             component: markRaw(Input),
-            postfix:'px'
+            postfix: "px",
           },
           {
             name: "top",
             type: AttrEnum.INPUTNUMBER,
             label: "Y坐标",
             component: markRaw(Input),
-            postfix:'px'
+            postfix: "px",
           },
           {
             name: "width",
             type: AttrEnum.INPUTNUMBER,
             label: "宽度",
             component: markRaw(Input),
-            postfix:'px'
+            postfix: "px",
           },
           {
             name: "height",
             type: AttrEnum.INPUTNUMBER,
             label: "高度",
             component: markRaw(Input),
-            postfix:'px'
+            postfix: "px",
           },
           {
             name: "rotate",
             type: AttrEnum.INPUTNUMBER,
             label: "旋转",
             component: markRaw(Input),
-            postfix:'deg'
+            postfix: "deg",
           },
           {
-            name:"styleBox",
-            type:AttrEnum.OTHER,
-            label:"样式盒",
-            component:markRaw(StyleBox),
-          }
+            name: "styleBox",
+            type: AttrEnum.OTHER,
+            label: "样式盒",
+            component: markRaw(StyleBox),
+          },
         ],
       },
       {
@@ -186,29 +171,29 @@ export const attrList: Attr[] = [
             label: "文字大小",
             component: markRaw(Input),
             step: 0.1,
-            postfix:'px'
+            postfix: "px",
           },
           {
-            name:'textIndent',
-            type:AttrEnum.INPUTTYPE,
-            label:"文本缩进",
-            component:markRaw(InputType),
-            selectOptions:[
+            name: "textIndent",
+            type: AttrEnum.INPUTTYPE,
+            label: "文本缩进",
+            component: markRaw(InputType),
+            selectOptions: [
               {
-                value:'px',
-                label:'px'
+                value: "px",
+                label: "px",
               },
               {
-                value:'em',
-                label:'em'
+                value: "em",
+                label: "em",
               },
               {
-                value:'%',
-                label:'%'
+                value: "%",
+                label: "%",
               },
             ],
-            defaultOption:'px'
-          }
+            defaultOption: "px",
+          },
         ],
       },
       {
@@ -234,11 +219,17 @@ export const attrList: Attr[] = [
         title: "边框轮廓",
         components: [
           {
+            name: "borderColor",
+            type: AttrEnum.COLORPick,
+            label: "边框颜色",
+            component: markRaw(ColorPick),
+          },
+          {
             name: "borderWidth",
             type: AttrEnum.INPUTNUMBER,
             label: "边框宽度",
             component: markRaw(Input),
-            postfix:'px'
+            postfix: "px",
           },
           {
             name: "borderRadius",

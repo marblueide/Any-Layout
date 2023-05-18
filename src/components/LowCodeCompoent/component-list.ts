@@ -11,14 +11,15 @@ import { LabelEnum } from "../../types/LowCode/index";
 import { getAllCollapse } from "./attr-list";
 import { EventTypeEnum } from "@/types/LowCode/event";
 import { pick, omit } from "lodash-es";
-import { LinePresets } from "./Echart/Presets/line";
+import { presetsMap } from "./Echart/Presets";
 
 export const componentList: [
   LowCanvasData<LabelEnum.button>,
   LowCanvasData<LabelEnum.picture>,
   LowCanvasData<LabelEnum.text>,
   LowCanvasData<LabelEnum.container>,
-  LowCanvasData<LabelEnum.input>
+  LowCanvasData<LabelEnum.input>,
+  LowCanvasData<LabelEnum.echart>,
 ] = [
   {
     type: LabelEnum.button,
@@ -49,6 +50,7 @@ export const componentList: [
       styleBox: true,
       padding: "1px 2px 3px 4px",
       margin: "0 0 0 0",
+      borderColor:"#fff"
     },
     animations: [],
     icon: "icon-anniu",
@@ -182,6 +184,35 @@ export const componentList: [
       value: "",
     },
   },
+    {
+    type: LabelEnum.echart,
+    label: LabelEnum.echart,
+    name: "button",
+    collapse: [],
+    events: {
+      onClick: {
+        type: EventTypeEnum.None,
+      },
+    },
+    isLock: false,
+    isRoot: true,
+    style: {
+      left: 0,
+      top: 0,
+      width: 300,
+      height: 200,
+      rotate: 0,
+      borderWidth: 0,
+      borderRadius: 0,
+      boxShadow: "none",
+    },
+    animations: [],
+    icon: "icon-anniu",
+    linkage: [],
+    propValue: {
+      echartOption: presetsMap['基本柱状图'],
+    },
+  },
 ];
 
 // const temporarily = [
@@ -223,6 +254,7 @@ export const labelEnumMapComponent: Record<LabelEnum, Component> = {
   [LabelEnum.group]: markRaw(VGroup),
   [LabelEnum.container]: markRaw(VContainer),
   [LabelEnum.input]: markRaw(VInput),
+  [LabelEnum.echart]:markRaw(Echart)
 };
 
 export const labelEnumMapCGorup = omit(labelEnumMapComponent, [

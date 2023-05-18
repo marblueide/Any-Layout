@@ -20,10 +20,7 @@ export type ComponentStyle = {
   margin?:string;
   opacity?:number;
   transform?:string;
-  borderTopWidth?:number
-  borderBottomWidth?:number
-  borderRightWidth?:number
-  borderLeftWidth?:number
+  borderColor?:string
 };
 
 export const degFix = ["rotate"];
@@ -38,7 +35,8 @@ export const noneFix:(keyof ComponentStyle)[] = [
   'textIndent',
   'padding',
   'margin',
-  "styleBox"
+  "styleBox",
+  "borderColor"
 ];
 export const shapeStyle:(keyof ComponentStyle)[] = [
   "left",

@@ -5,7 +5,7 @@
 <script setup lang="ts">
 import { nextTick, onMounted, onUnmounted, reactive, ref, watch } from 'vue';
 import * as echarts from 'echarts';
-import { debounce } from "lodash-es"
+import { throttle } from "lodash-es"
 
 const echartRef = ref<HTMLElement>();
 let echart: echarts.ECharts;
@@ -21,7 +21,8 @@ const props = defineProps<{
     }
 }>()
 
-const unWatchEchartOption = watch(props.propValue.echartOption, (value) => {
+const unWatchEchartOption = watch(() =>  props.propValue.echartOption, (value) => {
+    echart.clear()
     echart && echart.setOption(value)
 })
 
@@ -41,7 +42,12 @@ const setStyle = () => {
 }
 
 const initEchart = async () => {
-    setStyle()
+    setStyle();
+    observer = new MutationObserver(setStyle)
+    observer.observe(echartRef.value!.parentElement!,{
+        attributes:true,
+        attributeFilter:['style']
+    })
     echart = echarts.init(echartRef.value!);
     echart.setOption(props.propValue.echartOption)
     await nextTick()

@@ -5,6 +5,7 @@ import Unocss from "unocss/vite";
 import { join, resolve } from "path";
 import AutoImport from "unplugin-auto-import/vite";
 import Components from "unplugin-vue-components/vite";
+import IconsResolver from "unplugin-icons/resolver";
 import Pages from "vite-plugin-pages";
 import { ElementPlusResolver } from "unplugin-vue-components/resolvers";
 import { createSvgIconsPlugin } from "vite-plugin-svg-icons";
@@ -25,7 +26,12 @@ const base = {
         enabled: true,
       },
       dts: true,
-      resolvers: [ElementPlusResolver()],
+      resolvers: [
+        ElementPlusResolver(),
+        IconsResolver({
+          prefix: "Icon",
+        }),
+      ],
     }),
     Components({
       dts: true,

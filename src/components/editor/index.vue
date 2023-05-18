@@ -1,39 +1,18 @@
 <template>
   <div class="center" flex-1 p-5 overflow="hidden" ref="centerRef">
-    <el-scrollbar>
+    <el-scrollbar ref="scrollRef">
       <div class="edit-container">
-        <div
-          id="editor"
-          class="editor"
-          ref="editorRef"
-          overflow="hidden"
-          :style="editorStyle"
-          @drop="handleDrop"
-          @dragover="handleDragOver"
-          @mousedown.prevent="handleMouseDown"
-          @contextmenu.stop.prevent="handleContextMenu"
-        >
+        <div id="editor" class="editor" ref="editorRef" overflow="hidden" :style="editorStyle"
+          @drop.stop.prevent="handleDrop" @dragover="handleDragOver" @mousedown.prevent="handleMouseDown"
+          @contextmenu.stop.prevent="handleContextMenu">
           <!-- <Grid :width="lowCanvasState.width" :height="lowCanvasState.height" /> -->
-          <Shape
-            v-for="item in lowCanvasData"
-            :id="item.id!"
-            :key="item.id!"
-            :style="getShapeStyle(item.style)"
-          >
-            <component
-              :is="labelEnumMapComponent[item.type]"
-              :propValue="item.propValue"
-              :style="getOriginStyle(item.style)"
-              :events="item.events"
-            >
+          <Shape v-for="item in lowCanvasData" :id="item.id!" :key="item.id!" :style="getShapeStyle(item.style)">
+            <component :is="labelEnumMapComponent[item.type]" :propValue="item.propValue"
+              :style="getOriginStyle(item.style)" :events="item.events">
             </component>
           </Shape>
-          <Area
-            v-bind="{ ...areaData }"
-            v-show="isShowArea"
-            @mousedown.stop.prevent="handleAreaDwon"
-            @contextMenu="handleAreaContextMenu"
-          />
+          <Area v-bind="{ ...areaData }" v-show="isShowArea" @mousedown.stop.prevent="handleAreaDwon"
+            @contextMenu="handleAreaContextMenu" />
           <MarkLine />
           <ContextMenu />
         </div>
@@ -67,9 +46,11 @@ const { setMenuState } = appStore.contextMenu;
 const { addLowCanvasDataAndSnapshot } = appStore.lowStore;
 
 const editorRef = ref();
-const centerRef = ref()
+const centerRef = ref();
+const scrollRef = ref()
 let editorRect: DOMRect;
-let centerRect: DOMRect
+let centerRect: DOMRect;
+const scroll = ref(0)
 
 const editorStyle = computed(() => {
   return {
@@ -81,13 +62,11 @@ const editorStyle = computed(() => {
 });
 
 const handleDrop = (e: DragEvent) => {
-  e.preventDefault();
-  e.stopPropagation();
   const data = cloneDeep(
     componentList[e.dataTransfer?.getData("index") as unknown as number]
   );
   if (!data) return;
-  if(!editorRect) editorRect = editorRef.value.getBoundingClientRect();
+  if (!editorRect) editorRect = editorRef.value.getBoundingClientRect();
   const { width, height } = data.style;
   let left = e.clientX - editorRect.x - width / 2;
   let top = e.clientY - editorRect.y - height! / 2;
@@ -95,14 +74,14 @@ const handleDrop = (e: DragEvent) => {
     left < 0
       ? 0
       : left >= editorRect.width - width!
-      ? editorRect.width - width!
-      : left;
+        ? editorRect.width - width!
+        : left;
   top =
     top < 0
       ? 0
       : top >= lowCanvasState.value.height - height!
-      ? lowCanvasState.value.height - height!
-      : top;
+        ? lowCanvasState.value.height - height!
+        : top;
   data.style.left = left;
   data.style.top = top;
   addLowCanvasDataAndSnapshot(data);
@@ -117,7 +96,7 @@ const selectComponentSet = reactive<Set<string>>(new Set());
 const handleMouseDown = async (e: MouseEvent) => {
   e.preventDefault();
   if (!editorRect) editorRect = editorRef.value.getBoundingClientRect();
-  if(!centerRect) centerRect = centerRef.value.getBoundingClientRect()
+  if (!centerRect) centerRect = centerRef.value.getBoundingClientRect()
   const startX = e.clientX;
   const startY = e.clientY;
 
@@ -279,11 +258,7 @@ const handleAreaContextMenu = (e: MouseEvent) => {
   });
 };
 
-const handleShapeDrag = () => {
-  //处理
-}
-
-window.addEventListener('resize',() => {
+window.addEventListener('resize', () => {
   editorRect = editorRef.value.getBoundingClientRect();
   centerRect = centerRef.value.getBoundingClientRect();
 })
@@ -296,6 +271,7 @@ window.addEventListener('resize',() => {
   .edit-container {
     width: 100%;
     height: 100%;
+
     .editor {
       position: relative;
       background: #f5f5f5;
