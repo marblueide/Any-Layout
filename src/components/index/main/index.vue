@@ -25,7 +25,7 @@
     </div>
     <div class="user-list" flex justify-between items-center my-1>
       <div class="left">
-        <h2 font-500>1070129872's apps</h2>
+        <h2 font-500 text-20px px-12px >1070129872's apps</h2>
       </div>
       <div class="right">
         <button
@@ -50,6 +50,7 @@
           <h3 font-500>应用1</h3>
           <div class="btns" absolute flex justify-around w="100%" left="0">
             <button
+              h-32px
               cursor-pointer
               px-3
               hover="bg-#1f9181 border-#1f9181 border-2"
@@ -65,6 +66,7 @@
               编辑
             </button>
             <button
+              h-32px
               cursor-pointer
               px-3
               hover="bg-transparent color-black border-#000 border-2"
@@ -91,7 +93,7 @@
     </div>
   </main>
 
-  <el-dialog v-model="addDialog" :title="!isEditor ? '新增':'编辑' ">
+  <el-dialog v-model="addDialog" :title="!isEditor ? '新增' : '编辑'">
     <el-form :model="form" label-position="left">
       <el-form-item label="页面名称" required prop="page_name">
         <el-input v-model="form.page_name"></el-input>
@@ -109,32 +111,30 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref } from "vue";
 
 const addDialog = ref(false);
 const isEditor = ref(false);
 const form = ref({
   page_name: "",
-  describe:""
-})
+  describe: "",
+});
 
 const setDialog = (b: boolean) => {
-  addDialog.value = b
-}
+  addDialog.value = b;
+};
 
 const reset = () => {
   form.value = {
     page_name: "",
-  describe:""
-  }
-}
+    describe: "",
+  };
+};
 
 const handleAdd = () => {
-  isEditor.value = false
-  addDialog.value = true
-}
-
-
+  isEditor.value = false;
+  addDialog.value = true;
+};
 </script>
 
 <style scoped lang="scss">
@@ -169,7 +169,9 @@ const handleAdd = () => {
       .btns {
         display: none;
         font-size: 0.8rem;
-        filter: blur(0px) !important;
+        height: 100%;
+        align-items: center;
+        transition: all 1s;
       }
       &::before {
         content: "";
@@ -198,6 +200,7 @@ const handleAdd = () => {
       &:hover {
         .btns {
           display: flex;
+          backdrop-filter: blur(2px);
         }
       }
     }
@@ -213,8 +216,8 @@ const handleAdd = () => {
   }
 }
 
-.el-form-item-end{
-  :deep(.el-form-item__content){
+.el-form-item-end {
+  :deep(.el-form-item__content) {
     justify-content: end;
   }
 }
