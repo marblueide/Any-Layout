@@ -14,32 +14,15 @@ const initState = {
   opacity: 1,
 }; //初始化State
 
-console.log(window.innerHeight);
-
 export const useLowCodeState = defineStore("lowCodeState", () => {
-  const localCanvasState: LowCanvasType = JSON.parse(
-    localStorage.getItem("CanvasState") ?? JSON.stringify(initState)
-  ); //获取localStorage中保存的State
-  const localCanvasData: LowCanvasData[] = JSON.parse(
-    localStorage.getItem("CanvasData") ?? JSON.stringify([])
-  );
-  const lowCanvasState = ref<LowCanvasType>(localCanvasState); //当前的State
-  const lowCanvasData = reactive<LowCanvasData[]>(localCanvasData);
+  const lowCanvasState = ref<LowCanvasType>(initState); //当前的State
+  const lowCanvasData = reactive<LowCanvasData[]>([]);
   const currentComponent = ref<LowCanvasData>();
   const currentComponentIndex = ref<number>();
   const idMapData = new Map<string, LowCanvasData>(); //id对应Data
   const idMapDataIndex = new Map<string, number>(); //id对应Data的Index
   const isMoving = ref(false); //是否移动
   const isPreView = ref(false); //预览
-
-  localInit();
-  function localInit() {
-    //初始化
-    lowCanvasData.forEach((item, index) => {
-      idMapData.set(item.id!, item);
-      idMapDataIndex.set(item.id!, index);
-    });
-  }
 
   const triggerPreView = () => {
     isPreView.value = !isPreView.value;
@@ -118,6 +101,10 @@ export const useLowCodeState = defineStore("lowCodeState", () => {
     lowCanvasState.value = merge(lowCanvasState.value, obj);
   };
 
+  const initLowCanvasState = () => {
+    lowCanvasState.value =initState
+  }
+
   const setLowCanvasData = (data: LowCanvasData[]) => {
     //设置组件数组
     lowCanvasData.splice(0, lowCanvasData.length, ...data);
@@ -177,11 +164,6 @@ export const useLowCodeState = defineStore("lowCodeState", () => {
     return idMapData.get(id);
   };
 
-  const save = () => {
-    localStorage.setItem("CanvasState", JSON.stringify(lowCanvasState.value));
-    localStorage.setItem("CanvasData", JSON.stringify(lowCanvasData));
-    console.log(JSON.stringify(lowCanvasData));
-  };
 
   return {
     lowCanvasState,
@@ -199,6 +181,7 @@ export const useLowCodeState = defineStore("lowCodeState", () => {
     setCurrentState,
     setComponentStyle,
     setLowCanvasState,
+    initLowCanvasState,
     setLowCanvasData,
     setCUrrentCompoentEvent,
     deleteComponentData,
@@ -209,7 +192,6 @@ export const useLowCodeState = defineStore("lowCodeState", () => {
     initLowCanvasData,
     setComponent,
     setCanvasState,
-    save,
     triggerPreView,
   };
 });

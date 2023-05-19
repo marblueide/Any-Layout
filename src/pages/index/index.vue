@@ -44,9 +44,9 @@
     </div>
   </div>
   <div class="cards" p-3>
-    <div class="card" w="213px">
+    <div class="card" w="213px" v-for="item in list">
       <div class="item" flex items-center h="109px" box-border relative>
-        <h3 font-500>应用1</h3>
+        <h3 font-500>{{ item.pageName }}</h3>
         <div class="btns" absolute flex justify-around w="100%" left="0">
           <button
             cursor-pointer
@@ -60,6 +60,7 @@
             bg="#2CBBA6"
             w="80px"
             box-border
+            @click="handleEditor(item)"
           >
             编辑
           </button>
@@ -81,8 +82,10 @@
         </div>
       </div>
       <div class="info" grid mt-1>
-        <div class="user" overflow-hidden text-ellipsis>1070129872's apps</div>
-        <div class="time">编辑于13分钟前</div>
+        <div class="user" overflow-hidden text-ellipsis>
+          {{ item.user.username }}'s apps
+        </div>
+        <div class="time">编辑于{{ handleTime(item.updateTime) }}前</div>
       </div>
     </div>
   </div>
@@ -98,24 +101,48 @@
       <el-form-item class="el-form-item-end">
         <el-button type="danger" @click="setDialog(false)">取消</el-button>
         <el-button @click="reset">重置</el-button>
-        <el-button type="primary">确定</el-button>
+        <el-button type="primary" @click="handleConfirm">确定</el-button>
       </el-form-item>
     </el-form>
   </el-dialog>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { getPageList, createPage, updatePage } from "@/api";
+import type { Page } from "@/types/model/Page";
+import { ElMessage } from "element-plus";
+import { update } from "lodash-es";
+import { reactive, ref } from "vue";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+import updateLocale from "dayjs/plugin/updateLocale";
+// 引入中文语言包
+import "dayjs/locale/zh-cn";
+import { useRouter } from "vue-router";
+// 设置语言为中文
+dayjs.locale("zh-cn");
+dayjs.extend(relativeTime);
+dayjs.extend(updateLocale);
 
+const router = useRouter()
 const addDialog = ref(false);
 const isEditor = ref(false);
 const form = ref({
+  id: "",
   page_name: "",
   describe: "",
 });
+const paginated = reactive({
+  page: 1,
+  limit: 10,
+});
+const list = ref<Page[]>([]);
 
 const setDialog = (b: boolean) => {
   addDialog.value = b;
+  if (b == false) {
+    reset();
+  }
 };
 
 const reset = () => {
@@ -129,6 +156,53 @@ const handleAdd = () => {
   isEditor.value = false;
   addDialog.value = true;
 };
+
+const handleConfirm = async () => {
+  try {
+    const { page_name, describe, id } = form.value;
+    let res;
+    if (isEditor.value) {
+      //更新
+      res = await updatePage({
+        pageName: page_name,
+        id,
+        describe,
+      });
+    } else {
+      //创建
+      res = await createPage(page_name, describe);
+      router.push("/workArea")
+    }
+    ElMessage({
+      type: "success",
+      message: res.message,
+    });
+    setDialog(false);
+  } catch (error: any) {
+    ElMessage({
+      type: "error",
+      message: error,
+    });
+  }
+};
+
+const init = async () => {
+  const res = await getPageList(paginated.page, paginated.limit);
+  list.value = res.data;
+};
+
+const handleTime = (time: string) => {
+  const start = dayjs(time);
+  return start.fromNow(true);
+};
+
+const handleEditor = (item:Page) => {
+  router.push({
+    path: `/workArea/${item.id}`,
+  })
+}
+
+init();
 </script>
 
 <style scoped lang="scss">
@@ -145,6 +219,9 @@ const handleAdd = () => {
 }
 
 .cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 213px);
+  gap: 30px;
   .card {
     .item {
       background-color: rgb(255, 255, 255);

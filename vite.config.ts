@@ -10,6 +10,8 @@ import Pages from "vite-plugin-pages";
 import { ElementPlusResolver } from "unplugin-vue-components/resolvers";
 import { createSvgIconsPlugin } from "vite-plugin-svg-icons";
 
+// vite.config.js
+
 const base = {
   build: {
     outDir: resolve(__dirname, "./docs"),
@@ -54,6 +56,15 @@ const base = {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),
       "@assets": fileURLToPath(new URL("./src/assets", import.meta.url)),
+    },
+  },
+  server: {
+    proxy: {
+      "/api": {
+        target: "http://localhost:3000",
+        changeOrigin: true,
+        rewrite: (path:string) => path.replace(/^\/api/, ""),
+      },
     },
   },
 };

@@ -27,6 +27,7 @@ export type LowCanvasData<T extends LabelEnum = LabelEnum> = {
   id?: string;
   label: T;
   type:T,
+  describe?: string;
   name: keyof typeof LabelEnum;
   collapse: string[];
   icon: string | Component;

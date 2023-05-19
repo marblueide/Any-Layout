@@ -1,7 +1,9 @@
 import axios from "axios"
 import pubSub from "./tools"
 
-const request = axios.create()
+const request = axios.create({
+    baseURL:"/api"
+})
 
 request.interceptors.request.use((config) => {
 
@@ -13,7 +15,7 @@ request.interceptors.response.use((response) => {
         return Promise.resolve(response.data)
     }
     pubSub.notify('Auth')
-    return response
+    return response.data
 },
 err => {
     

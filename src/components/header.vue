@@ -1,21 +1,49 @@
 <template>
-  <div class="editor-header" box-border h-20 border="b-1 gray-2" items-center p-4 flex justify-between @click="handleHeadDown">
+  <div
+    class="editor-header"
+    box-border
+    h-20
+    border="b-1 gray-2"
+    items-center
+    p-4
+    flex
+    justify-between
+    @click="handleHeadDown"
+  >
     <div>
-      <el-button m-x-1  type="primary" plain><el-icon><ArrowLeftBold /></el-icon></el-button>
+      <el-button m-x-1 type="primary" plain @click="back"
+        ><el-icon><ArrowLeftBold /></el-icon
+      ></el-button>
       <el-button m-x-1 @click.stop="triggerAce">JSON</el-button>
-      <el-button m-x-1 @click="handleBack" :disabled="stackIndex == -1">撤销</el-button>
-      <el-button m-x-1 @click="handleForward" :disabled="stackIndex == stack.length - 1">回退</el-button>
+      <el-button m-x-1 @click="handleBack" :disabled="stackIndex == -1"
+        >撤销</el-button
+      >
+      <el-button
+        m-x-1
+        @click="handleForward"
+        :disabled="stackIndex == stack.length - 1"
+        >回退</el-button
+      >
       <el-button m-x-1>预览</el-button>
-      <el-button m-x-1 @click="save">保存</el-button>
       <el-button m-x-1 @click="clearCanvas">清空画布</el-button>
       <el-button m-x-1 @click="init">初始化</el-button>
-      <el-button m-x-1 @click="compose" :disabled="areaData.components.length == 0">组合</el-button>
-      <el-button m-x-1 @click="splite" :disabled="!Array.isArray(currentComponent?.propValue)">拆分</el-button>
+      <el-button
+        m-x-1
+        @click="compose"
+        :disabled="areaData.components.length == 0"
+        >组合</el-button
+      >
+      <el-button
+        m-x-1
+        @click="splite"
+        :disabled="!Array.isArray(currentComponent?.propValue)"
+        >拆分</el-button
+      >
     </div>
     <div>
-      <el-button m-x-1 >.vue生成</el-button>
+      <el-button m-x-1>.vue生成</el-button>
       <el-button m-x-1 @click="triggerPreView">预览</el-button>
-      <el-button m-x-1 type="primary" plain>保存</el-button>
+      <el-button m-x-1 type="primary" plain @click="save">保存</el-button>
     </div>
 
     <!-- <div class="canvas-size" grid h-10 w-80 items-center mx-2>
@@ -33,17 +61,26 @@
 import { appStore } from "@/stores";
 import { storeToRefs } from "pinia";
 import AceEditor from "./AceEditor.vue";
-import { ArrowLeftBold } from '@element-plus/icons-vue'
+import { ArrowLeftBold } from "@element-plus/icons-vue";
+import { updatePage } from "@/api";
+import { ElMessage } from "element-plus";
+import { useRoute, useRouter } from "vue-router";
+import { ref, unref } from "vue";
 
 const { currentComponent } = storeToRefs(appStore.state);
-const { stackIndex, stack } = storeToRefs(appStore.stack)
-const { areaData } = storeToRefs(appStore.area)
-const { clearCanvas, splite, init } = appStore.lowStore
-const { setLowCanvasState, save, triggerPreView } = appStore.state
-const { compose, hideArea } = appStore.area
-const { triggerAce, hideAce } = appStore.ace
+const { stackIndex, stack } = storeToRefs(appStore.stack);
+const { areaData } = storeToRefs(appStore.area);
+const { clearCanvas, splite, init } = appStore.lowStore;
+const { setLowCanvasState, triggerPreView } = appStore.state;
+const { compose, hideArea } = appStore.area;
+const { triggerAce, hideAce } = appStore.ace;
 
-const { backSnapshot, forwardSnapshot } = appStore.stack
+const { backSnapshot, forwardSnapshot } = appStore.stack;
+const { lowCanvasData, lowCanvasState } = storeToRefs(appStore.state);
+
+const route = useRoute();
+const router = useRouter();
+const id = ref(route.params.id as string);
 
 const handleBack = () => {
   backSnapshot();
@@ -57,13 +94,39 @@ const handleInput = (key: string, val: number) => {
   setLowCanvasState({
     [key]: val,
   });
-}
+};
 
 const handleHeadDown = () => {
-  hideAce()
-  hideArea()
-}
+  hideAce();
+  hideArea();
+};
 
+const save = async () => {
+  try {
+    const pageData = JSON.stringify({
+      lowCanvasState:unref(lowCanvasData),
+      lowCanvasData:unref(lowCanvasData),
+    });
+    const res = await updatePage({
+      id: id.value,
+      pageData,
+    });
+    ElMessage({
+      type: "success",
+      message: res.message,
+    });
+    router.push("/")
+  } catch (error) {
+    ElMessage({
+      type: "error",
+      message: error as string,
+    });
+  }
+};
+
+const back = async () => {
+  router.push("/")
+}
 </script>
 
 <style lang="scss" scoped>
