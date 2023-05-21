@@ -104,7 +104,7 @@ const handleHeadDown = () => {
 const save = async () => {
   try {
     const pageData = JSON.stringify({
-      lowCanvasState:unref(lowCanvasData),
+      lowCanvasState:unref(lowCanvasState),
       lowCanvasData:unref(lowCanvasData),
     });
     const res = await updatePage({

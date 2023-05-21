@@ -5,6 +5,7 @@
     z-1
     :style="style"
     @mousedown.stop.prevent="handleMouseDown"
+    @click.stop
     :class="{
       'cursor-move outline-blue-3 outline-1  outline-solid':
         currentComponent?.id == id || isMoving,

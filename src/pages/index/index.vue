@@ -43,8 +43,8 @@
       </button>
     </div>
   </div>
-  <div class="cards" p-3>
-    <div class="card" w="213px" v-for="item in list">
+  <div class="cards" p-3 v-if="list.length > 0">
+    <div class="card" w="213px" v-for="item in list"> 
       <div class="item" flex items-center h="109px" box-border relative>
         <h3 font-500>{{ item.pageName }}</h3>
         <div class="btns" absolute flex justify-around w="100%" left="0">
@@ -128,7 +128,7 @@ const router = useRouter()
 const addDialog = ref(false);
 const isEditor = ref(false);
 const form = ref({
-  id: "",
+  id: "1",
   page_name: "",
   describe: "",
 });
@@ -147,6 +147,7 @@ const setDialog = (b: boolean) => {
 
 const reset = () => {
   form.value = {
+    id:"1",
     page_name: "",
     describe: "",
   };

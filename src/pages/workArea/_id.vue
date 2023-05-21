@@ -35,6 +35,7 @@ const init = async () => {
   }
   const res = await getPageById(id.value as string);
   const pageData = JSON.parse(res.data.pageData ?? "{}");
+  console.log(pageData)
   setLowCanvasData(pageData.lowCanvasData ?? []);
   if (pageData.lowCanvasState) {
     setLowCanvasState(pageData.lowCanvasState)
