@@ -2,6 +2,7 @@
   <div class="card-box">
     <div
       class="card"
+      h-115px
       bg-white
       cursor-pointer
       px-5
@@ -45,11 +46,25 @@
         </div>
       </div>
     </div>
+    <div h-115px lh-115px text-center p20px class="add-box">
+      <el-icon
+        inline-block
+        p-5
+        bg-red-5
+        rounded-full
+        font-bold
+        cursor-pointer
+        class="text-25px! add"
+      >
+        <Plus color-white />
+      </el-icon>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { componentList } from "@/components/LowCodeCompoent/component-list";
+import { Plus } from "@element-plus/icons-vue";
 import dayjs from "dayjs";
 </script>
 
@@ -61,9 +76,20 @@ import dayjs from "dayjs";
 }
 .card {
   box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.12);
-  transition: all 0.3s;
+  transition: transform 0.3s;
   &:hover {
     transform: scale(1.05);
+  }
+}
+.add-box {
+  .add {
+    box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.32);
+    transition: transform 0.3s;
+  }
+  &:hover {
+    .add {
+      transform: scale(1.05);
+    }
   }
 }
 </style>
