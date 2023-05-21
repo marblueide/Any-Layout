@@ -7,6 +7,8 @@ import VGroup from "./VGroup/index.vue";
 import Echart from "./Echart/indedx.vue";
 import VInput from "./VInput/index.vue";
 import VContainer from "./VContainer/index.vue";
+import VSelect from "./VSelect/index.vue";
+import VSwitch from "./VSwitch/index.vue";
 import { LabelEnum } from "../../types/LowCode/index";
 import { getAllCollapse } from "./attr-list";
 import { EventTypeEnum } from "@/types/LowCode/event";
@@ -20,6 +22,7 @@ export const componentList: [
   LowCanvasData<LabelEnum.container>,
   LowCanvasData<LabelEnum.input>,
   LowCanvasData<LabelEnum.echart>,
+  LowCanvasData<LabelEnum.select>
 ] = [
   {
     type: LabelEnum.button,
@@ -50,7 +53,7 @@ export const componentList: [
       styleBox: true,
       padding: "1px 2px 3px 4px",
       margin: "0 0 0 0",
-      borderColor:"#fff"
+      borderColor: "#fff",
     },
     animations: [],
     icon: "icon-anniu",
@@ -80,8 +83,8 @@ export const componentList: [
       borderWidth: 2,
       boxShadow: "none",
       borderRadius: 0,
-      padding:"0 0 0 0",
-      margin:"0 0 0 0"
+      padding: "0 0 0 0",
+      margin: "0 0 0 0",
     },
     icon: "icon-tupian",
     animations: [],
@@ -184,7 +187,7 @@ export const componentList: [
       value: "",
     },
   },
-    {
+  {
     type: LabelEnum.echart,
     label: LabelEnum.echart,
     name: "button",
@@ -210,7 +213,35 @@ export const componentList: [
     icon: "icon-anniu",
     linkage: [],
     propValue: {
-      echartOption: presetsMap['基本柱状图'],
+      echartOption: presetsMap["基本柱状图"],
+    },
+  },
+  {
+    type: LabelEnum.select,
+    label: LabelEnum.select,
+    name: "select",
+    collapse: [],
+    events: {
+      onClick: {
+        type: EventTypeEnum.None,
+      },
+    },
+    isLock: false,
+    isRoot: true,
+    style: {
+      left: 0,
+      top: 0,
+      width: 90,
+      height: 45,
+      rotate: 0,
+      borderWidth: 2,
+      borderRadius: 0,
+    },
+    animations: [],
+    icon: "icon-xuanzeqi",
+    linkage: [],
+    propValue: {
+      options: []
     },
   },
 ];
@@ -254,7 +285,9 @@ export const labelEnumMapComponent: Record<LabelEnum, Component> = {
   [LabelEnum.group]: markRaw(VGroup),
   [LabelEnum.container]: markRaw(VContainer),
   [LabelEnum.input]: markRaw(VInput),
-  [LabelEnum.echart]:markRaw(Echart)
+  [LabelEnum.echart]: markRaw(Echart),
+  [LabelEnum.select]: markRaw(VSelect),
+  [LabelEnum.switch]: markRaw(VSwitch)
 };
 
 export const labelEnumMapCGorup = omit(labelEnumMapComponent, [

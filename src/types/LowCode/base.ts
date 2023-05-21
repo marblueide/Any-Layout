@@ -12,6 +12,8 @@ export enum LabelEnum {
   container = "container",  //容器
   input = 'input',
   echart = "echart", // Echart
+  select = "select",
+  switch = "switch"
 }
 
 export type pointType = "lt" | "t" | "rt" | "r" | "rb" | "b" | "lb" | "l";
