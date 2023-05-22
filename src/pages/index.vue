@@ -1,5 +1,5 @@
 <template>
-  <div flex flex-col h-full>
+  <div flex flex-col h-full overflow-hidden>
     <header flex items-center justify-between px-7 h-50px lh-50px class="nav">
       <div flex gap-6 ml-42px>
         <div
@@ -22,7 +22,7 @@
         1
       </div>
     </header>
-    <section flex-1 flex>
+    <section flex-1 flex overflow-hidden>
       <aside class="aside" w-256px h-full pt-4 pl-4>
         <div text-13px font-bold py-9px px-15px>应用组</div>
         <!-- <div class="aside-item color-#4b4848">
@@ -38,9 +38,11 @@
           <span>{{ it.name }}</span>
         </div>
       </aside>
-      <main bg-gray-50 p-5 w="100%">
-        <RouterView/>
-      </main>
+      <el-scrollbar class="main-box">
+        <main bg-gray-50 p-5>
+          <RouterView />
+        </main>
+      </el-scrollbar>
     </section>
   </div>
 </template>
@@ -70,18 +72,18 @@ const headerOptions: Options[] = [
 
 const currentHeader = ref(0);
 
-const asideList:Options[] = [
+const asideList: Options[] = [
   {
     name: "'1070129872's apps",
     router: {
-      path:"/"
-    }
+      path: "/",
+    },
   },
   {
     name: "组件库",
     router: {
       path: "/component_lib",
-    }
+    },
   },
 ];
 
@@ -113,5 +115,10 @@ const handleRouterTo = (item: Options) => {
       color: #191919;
     }
   }
+}
+
+.main-box {
+  flex: 1 1 0;
+  overflow: hidden;
 }
 </style>
