@@ -1,3 +1,5 @@
+import type { UserGroup } from "./UserGroup";
+
 export type User = {
   id: string;
 
@@ -5,7 +7,7 @@ export type User = {
 
   password: string;
 
-  userGroupId: string;
+  userGroup: UserGroup;
 
   createTime: string;
 
