@@ -4,7 +4,6 @@
       class="card"
       h-115px
       bg-white
-      cursor-pointer
       px-5
       py-5
       rounded-2
@@ -13,7 +12,7 @@
       :class="{ active: activeComponentLibaray == index }"
       @click="handlerLibraryClick(it, index)"
     >
-      <div flex items-center h-16>
+      <div inline-flex items-center h-16 @click.stop>
         <span
           flex-shrink-0
           mr-6
@@ -37,13 +36,45 @@
           </div>
         </div>
       </div>
-      <div class="componentList" ref="componentListRef"></div>
-      <div mt-8 flex justify-between text-14px>
-        <div color-gray-5>
+      <div
+        v-if="activeComponentLibaray == index"
+        class="componentList"
+        ref="componentListRef"
+        @click.stop
+      >
+        <div v-if="componentList?.length" flex items-center flex-row gap-2>
+          <ComponentItem
+            v-for="it in componentList"
+            :component="it"
+            @click="handlerComponentClick(it)"
+          />
+          <el-icon
+            inline-block
+            p-2
+            bg-blue-gray-4
+            rounded-full
+            font-bold
+            cursor-pointer
+            class="text-25px! add"
+            @click="handlerComponentDialogState(true, 'add')"
+          >
+            <Plus color-white />
+          </el-icon>
+        </div>
+        <el-empty v-else description="空">
+          <el-button
+            type="primary"
+            @click="handlerComponentDialogState(true, 'add')"
+            >添加组件</el-button
+          >
+        </el-empty>
+      </div>
+      <div mt-8 inline-flex items-center justify-between text-14px self-stretch>
+        <div color-gray-5 @click.stop>
           <span>开发者: </span>
           <span>admin</span>
         </div>
-        <div color-gray-5 text-12px>
+        <div color-gray-5 text-12px @click.stop>
           <span>{{ dayjs(Date.now()).format("YYYY-MM-DD HH:mm:ss") }}</span>
         </div>
       </div>
@@ -82,6 +113,7 @@
       <Plus color-white />
     </el-icon>
   </div>
+
   <el-dialog
     v-model="dialogVisible"
     :title="dialogType == 'update' ? '修改' : '新增'"
@@ -106,14 +138,55 @@
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="dialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="handlerSubmit"> 确定 </el-button>
+        <el-button type="primary" @click="handlerSubmit">
+          {{ dialogType == "update" ? "修改" : "新增" }}}
+        </el-button>
       </span>
     </template>
   </el-dialog>
+
+  <el-drawer
+    v-model="componentDialog"
+    :title="componentDialogType == 'update' ? '修改' : '新增'"
+    width="700px"
+  >
+    <el-form :model="componentForm" label-width="80px">
+      <el-form-item label="id" v-if="componentDialogType == 'update'">
+        <el-input v-model="componentForm.id" disabled></el-input>
+      </el-form-item>
+      <el-form-item label="名称">
+        <el-input
+          v-model="componentForm.componentName"
+          placeholder="请输入名称"
+        ></el-input>
+      </el-form-item>
+      <el-form-item label="组件JSON">
+        <el-input
+          type="textarea"
+          :rows="4"
+          v-model="componentForm.ComponentData"
+          placeholder="请输入名称"
+        ></el-input>
+      </el-form-item>
+    </el-form>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="componentDialog = false">取消</el-button>
+        <el-button type="primary" @click="handlerComponentSubmit">
+          {{ componentDialogType == "update" ? "修改" : "新增" }}
+        </el-button>
+      </span>
+    </template>
+  </el-drawer>
 </template>
 
 <script setup lang="ts">
-import { getComponentList, getComponentListByLibId } from "@/api/component";
+import {
+  createComponent,
+  getComponentById,
+  getComponentListByLibId,
+  updateComponent,
+} from "@/api/component";
 import {
   createComponentLibrary,
   deleteComponentLibrary,
@@ -132,8 +205,10 @@ import {
 } from "@element-plus/icons-vue";
 import dayjs from "dayjs";
 import { ElMessageBox, ElNotification } from "element-plus";
-import { nextTick, reactive, ref } from "vue";
+import { tr } from "element-plus/es/locale";
+import { nextTick, reactive, ref, watch } from "vue";
 import { useRouter } from "vue-router";
+import ComponentItem from "./component/ComponentItem.vue";
 
 const libraryList = ref<ComponentLibrary[]>([]);
 const router = useRouter();
@@ -162,60 +237,92 @@ const form = ref<ComponentLibrary>({
   deleteTime: "",
 });
 
-function handlerLibraryClick(item: ComponentLibrary, i: number) {
-  if (!libRefs.value) return;
-  activeComponentLibaray.value = i;
-  const dom = libRefs.value[i];
-  startLibraryAnimation(dom);
-  setTimeout(() => {
-    recoverLibraryAnmiation(dom)
-  }, 3000);
-  // getComponentList(item.id);
+const componentForm = ref<Component>({
+  id: "",
+  componentName: "",
+  ComponentData: "",
+  libId: "",
+});
+const componentDialog = ref(false);
+const componentDialogType = ref<"update" | "add">("add");
+
+watch(dialogVisible, (newVal) => {
+  if (!newVal)
+    form.value = {
+      id: "",
+      libName: "",
+      description: "",
+      components: [],
+      createTime: "",
+      updateTime: "",
+      deleteTime: "",
+    };
+});
+
+watch(componentDialog, (newVal) => {
+  if (!newVal)
+    componentForm.value = {
+      id: "",
+      componentName: "",
+      ComponentData: "",
+      libId: "",
+    };
+});
+
+async function handlerComponentSubmit() {
+  if (componentDialogType.value == "add") {
+    await addComponent();
+  } else {
+    await updateComponentContent();
+  }
+  const { id } = libraryList.value[activeComponentLibaray.value];
+  getComponentList(id);
+  componentDialog.value = false;
 }
 
-async function startLibraryAnimation(dom: HTMLElement) {
-  const parentWidth = libParent.value!.offsetWidth;
-  const prevWidth = dom.offsetWidth;
-  const prevHeight = dom.offsetHeight;
-  const span = Math.floor(parentWidth / 330) + 1;
-  dom.style.gridColumn = `1 / ${span}`;
-  dom.style.transitionDuration = "1s";
-  dom.style.height = "auto";
-  await asyncRequestAnimationFrame();
-
-  const currentWidth = dom.offsetWidth;
-  const currentHeight = dom.offsetHeight;
-  dom.style.width = prevWidth + "px";
-  dom.style.height = prevHeight + "px";
-
-  await asyncRequestAnimationFrame();
-  dom.style.width = currentWidth - 40 + "px";
-  dom.style.height = currentHeight + "px";
-
-  dom.addEventListener("transitionend", () => {
-    dom.style.transitionDuration = "0.3s";
-    dom.style.width = "auto";
-    dom.style.height = "auto";
+async function addComponent() {
+  const { componentName, ComponentData, libId } = componentForm.value;
+  const res = await createComponent({
+    componentName,
+    ComponentData,
+    libId,
+  });
+  ElNotification({
+    title: "Success",
+    message: "添加成功",
+    type: "success",
   });
 }
 
-async function recoverLibraryAnmiation(dom: HTMLElement) {
-  const prevWidth = dom.offsetWidth;
-  dom.style.gridColumn = "auto";
-  dom.style.transitionDuration = "1s";
-  dom.style.height = 115 + 'px'
-
-  await asyncRequestAnimationFrame();
-  const currentWidth = dom.offsetWidth;
-  dom.style.width = prevWidth + "px";
-
-  await asyncRequestAnimationFrame();
-  dom.style.width = currentWidth + "px";
-
-  dom.addEventListener("transitionend", () => {
-    dom.style.transitionDuration = "0.3s";
-    dom.style.width = "auto";
+async function updateComponentContent() {
+  const { componentName, ComponentData, libId, id } = componentForm.value;
+  const res = await updateComponent({
+    componentName,
+    ComponentData,
+    libId,
+    id,
   });
+  ElNotification({
+    title: "Success",
+    message: "更新成功",
+    type: "success",
+  });
+}
+
+async function handlerComponentClick(item: Component) {
+  const res = await getComponentById(item.id);
+  componentForm.value = res.data;
+  handlerComponentDialogState(true, "update");
+}
+
+function handlerComponentDialogState(isOpen: boolean, type: "update" | "add") {
+  componentDialog.value = isOpen;
+  componentDialogType.value = type;
+}
+
+async function getComponentList(id: string) {
+  const res = await getComponentListByLibId(id);
+  componentList.value = res.data;
 }
 
 function asyncRequestAnimationFrame() {
@@ -226,12 +333,18 @@ function asyncRequestAnimationFrame() {
   });
 }
 
-async function getComponentList(id: string) {
-  const res = await getComponentListByLibId(id);
-  componentList.value = res.data;
-}
+/** start ComponentLib相关 */
 
-/** start ComponentLib接口请求 */
+function handlerLibraryClick(item: ComponentLibrary, i: number) {
+  if (!libRefs.value) return;
+  if (i == activeComponentLibaray.value) {
+    activeComponentLibaray.value = -1;
+  } else {
+    activeComponentLibaray.value = i;
+  }
+  getComponentList(item.id);
+  componentForm.value.libId = item.id;
+}
 
 async function getLibrary() {
   const { page, limit } = paginated;
@@ -316,22 +429,31 @@ async function handlerSubmit() {
   getLibrary();
   dialogVisible.value = false;
 }
-/** end ComponentLib接口请求 */
+/** end ComponentLib相关 */
 </script>
 
 <style scoped lang="scss">
 .card-box {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+  display: flex;
+  // grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+  flex-wrap: wrap;
   gap: 20px;
 }
 .card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 330px;
   box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.12);
-  transition: all 0.3s;
+  transition: all 1s;
+  overflow: hidden;
   &.active {
     transform: scale(1);
+    width: 100%;
+    height: auto;
+    transition-duration: 1s;
     .componentList {
-      height: 200px;
+      flex: 1;
     }
   }
   .operation {
@@ -344,13 +466,20 @@ async function handlerSubmit() {
   }
   &:not(.active):hover {
     transform: scale(1.05);
+    transition-duration: 1s;
+    .operation {
+      opacity: 1;
+    }
+  }
+  &:hover {
     .operation {
       opacity: 1;
     }
   }
   .componentList {
-    height: 0;
+    height: 0px;
     transition: all 1s;
+    overflow: hidden;
   }
 }
 .add-box {

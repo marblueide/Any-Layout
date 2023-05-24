@@ -5,6 +5,5 @@ export type Component = {
   componentName: string;
   ComponentData: string;
   libId: string;
-  createTime: string;
-  deleteTime: string;
+  createTime?: string;
 }

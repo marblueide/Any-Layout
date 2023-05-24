@@ -246,6 +246,7 @@ export const componentList: [
   },
 ];
 
+console.log(componentList[0])
 
 // const temporarily = [
 //   {

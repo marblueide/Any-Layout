@@ -1,9 +1,9 @@
 <template>
-  <div class="card" bg-white cursor-pointer rounded-2>
+  <div class="component" bg-white cursor-pointer rounded-2>
     <div text-center h-16>
       <i
         class="iconfont"
-        :class="parseComponetData(component.ComponentData).icon"
+        :class="parseComponetData(component.ComponentData)?.icon"
         inline-block
         text-3xl
         text-center
@@ -25,13 +25,15 @@ const props = defineProps<{
   component: Component;
 }>();
 
-function parseComponetData(json: string): LowCanvasData {
-  return JSON.parse(json);
+function parseComponetData(json: string): LowCanvasData | undefined {
+  try {
+    return JSON.parse(json);
+  } catch (error) {}
 }
 </script>
 
 <style scoped lang="scss">
-.card {
+.component {
   display: inline-flex;
   justify-content: center;
   align-items: center;

@@ -50,7 +50,7 @@ export function getComponentListByLibId(id: string) {
   });
 }
 
-export function createComponentLibrary(data: {
+export function createComponent(data: {
   componentName: string;
   ComponentData: string;
   libId: string;
@@ -62,7 +62,7 @@ export function createComponentLibrary(data: {
   });
 }
 
-export function updateComponentLibrary(data: {
+export function updateComponent(data: {
   id: string;
   componentName?: string;
   ComponentData?: string;

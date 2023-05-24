@@ -16,6 +16,13 @@ const base = {
   build: {
     outDir: resolve(__dirname, "./docs"),
   },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        additionalData: `@use "src/styles/element/index.scss" as *;`,
+      },
+    },
+  },
   plugins: [
     vue(),
     Pages({
