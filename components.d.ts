@@ -8,6 +8,7 @@ export {}
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     AceContainer: typeof import('./src/components/common/AceContainer.vue')['default']
+    AceCotainer: typeof import('./src/components/AceCotainer.vue')['default']
     AceEditor: typeof import('./src/components/AceEditor.vue')['default']
     Area: typeof import('./src/components/editor/Area.vue')['default']
     Attr: typeof import('./src/components/editor/Attr.vue')['default']
@@ -28,9 +29,6 @@ declare module '@vue/runtime-core' {
     ElCollapseItem: typeof import('element-plus/es')['ElCollapseItem']
     ElColorPicker: typeof import('element-plus/es')['ElColorPicker']
     ElDialog: typeof import('element-plus/es')['ElDialog']
-    ElDropdown: typeof import('element-plus/es')['ElDropdown']
-    ElDropdownItem: typeof import('element-plus/es')['ElDropdownItem']
-    ElDropdownMenu: typeof import('element-plus/es')['ElDropdownMenu']
     ElForm: typeof import('element-plus/es')['ElForm']
     ElFormItem: typeof import('element-plus/es')['ElFormItem']
     ElIcon: typeof import('element-plus/es')['ElIcon']
@@ -39,13 +37,15 @@ declare module '@vue/runtime-core' {
     ElMenu: typeof import('element-plus/es')['ElMenu']
     ElMenuItem: typeof import('element-plus/es')['ElMenuItem']
     ElOption: typeof import('element-plus/es')['ElOption']
-    ElPopover: typeof import('element-plus/es')['ElPopover']
     ElScrollbar: typeof import('element-plus/es')['ElScrollbar']
     ElSelect: typeof import('element-plus/es')['ElSelect']
     ElSlider: typeof import('element-plus/es')['ElSlider']
     ElSubMenu: typeof import('element-plus/es')['ElSubMenu']
+    ElTable: typeof import('element-plus/es')['ElTable']
+    ElTableColumn: typeof import('element-plus/es')['ElTableColumn']
     ElTabPane: typeof import('element-plus/es')['ElTabPane']
     ElTabs: typeof import('element-plus/es')['ElTabs']
+    ElTag: typeof import('element-plus/es')['ElTag']
     ElTooltip: typeof import('element-plus/es')['ElTooltip']
     Event: typeof import('./src/components/LowCodeCompoent/Attrs/event/index.vue')['default']
     Grid: typeof import('./src/components/editor/Grid.vue')['default']
@@ -57,6 +57,7 @@ declare module '@vue/runtime-core' {
     Main: typeof import('./src/components/main.vue')['default']
     MarkLine: typeof import('./src/components/editor/MarkLine.vue')['default']
     NavigateTo: typeof import('./src/components/LowCodeCompoent/Attrs/event/component/NavigateTo.vue')['default']
+    Padding: typeof import('./src/components/LowCodeCompoent/Attrs/Padding.vue')['default']
     PageItem: typeof import('./src/components/PageItem.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
@@ -66,6 +67,7 @@ declare module '@vue/runtime-core' {
     ShowAlert: typeof import('./src/components/LowCodeCompoent/Attrs/event/component/ShowAlert.vue')['default']
     StyleBox: typeof import('./src/components/LowCodeCompoent/Attrs/StyleBox/index.vue')['default']
     SvgIcon: typeof import('./src/components/SvgIcon.vue')['default']
+    Switch: typeof import('./src/components/LowCodeCompoent/Attrs/baseAttr/switch.vue')['default']
     VButton: typeof import('./src/components/LowCodeCompoent/VButton/index.vue')['default']
     VContainer: typeof import('./src/components/LowCodeCompoent/VContainer/index.vue')['default']
     VerticalAlign: typeof import('./src/components/LowCodeCompoent/Attrs/VerticalAlign.vue')['default']
@@ -75,5 +77,8 @@ declare module '@vue/runtime-core' {
     VSelect: typeof import('./src/components/LowCodeCompoent/VSelect/index.vue')['default']
     VSwitch: typeof import('./src/components/LowCodeCompoent/VSwitch/index.vue')['default']
     VText: typeof import('./src/components/LowCodeCompoent/VText/index.vue')['default']
+  }
+  export interface ComponentCustomProperties {
+    vInfiniteScroll: typeof import('element-plus/es')['ElInfiniteScroll']
   }
 }

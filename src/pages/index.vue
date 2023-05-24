@@ -98,7 +98,7 @@ const asideList: Options[] = [
   {
     name: "组件库",
     router: {
-      path: "/component_lib",
+      path: "/componentLib",
     },
   },
   {

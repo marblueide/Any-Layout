@@ -6,8 +6,8 @@ import LowComponent from "./components/LowCodeCompoent/index";
 import {registerStore} from "@/stores/index"
 import "uno.css";
 import "normalize.css";
-import "./styles/global.scss";
 import 'element-plus/dist/index.css'
+import "./styles/global.scss";
 import 'virtual:svg-icons-register'
 import "./stores"
 
