@@ -34,7 +34,7 @@ export function getComponentLibraryList(page: number = 1, limit: number = 10) {
   });
 }
 
-export function createComponentLibrary(libName: string, description: string) {
+export function createComponentLibrary(libName: string, description?: string) {
   return request({
     url: "/componentLibrary/create",
     method: "post",

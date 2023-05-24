@@ -38,8 +38,8 @@
           <span>{{ it.name }}</span>
         </div>
       </aside>
-      <el-scrollbar class="main-box">
-        <main bg-gray-50 p-5>
+      <el-scrollbar class="main-box" bg-gray-50>
+        <main p-5 min-h-full block>
           <RouterView />
         </main>
       </el-scrollbar>
@@ -82,14 +82,14 @@ const asideList: Options[] = [
   {
     name: "组件库",
     router: {
-      path: "/component_lib",
+      path: "/componentLib",
     },
   },
 ];
 
 const handleRouterTo = (item: Options) => {
   item.router && router.push(item.router);
-};
+};  
 </script>
 
 <style scoped lang="scss">
@@ -120,5 +120,8 @@ const handleRouterTo = (item: Options) => {
 .main-box {
   flex: 1 1 0;
   overflow: hidden;
+  :deep(.el-scrollbar__view){
+    min-height: 100%;
+  }
 }
 </style>

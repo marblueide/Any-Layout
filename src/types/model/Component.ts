@@ -1,10 +1,10 @@
 import type { ComponentLibrary } from "./ComponentLibrary";
 
-export type Component{
+export type Component = {
   id: string;
   componentName: string;
   ComponentData: string;
-  libId: ComponentLibrary;
+  libId: string;
   createTime: string;
   deleteTime: string;
 }

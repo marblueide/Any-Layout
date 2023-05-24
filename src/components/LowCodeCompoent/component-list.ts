@@ -241,10 +241,11 @@ export const componentList: [
     icon: "icon-xuanzeqi",
     linkage: [],
     propValue: {
-      options: []
+      options: [],
     },
   },
 ];
+
 
 // const temporarily = [
 //   {
@@ -287,7 +288,7 @@ export const labelEnumMapComponent: Record<LabelEnum, Component> = {
   [LabelEnum.input]: markRaw(VInput),
   [LabelEnum.echart]: markRaw(Echart),
   [LabelEnum.select]: markRaw(VSelect),
-  [LabelEnum.switch]: markRaw(VSwitch)
+  [LabelEnum.switch]: markRaw(VSwitch),
 };
 
 export const labelEnumMapCGorup = omit(labelEnumMapComponent, [
