@@ -44,8 +44,8 @@
           <span>{{ it.name }}</span>
         </div>
       </aside>
-      <el-scrollbar class="main-box">
-        <main bg-gray-50 p-5>
+      <el-scrollbar bg-gray-50 class="main-box">
+        <main  p-5>
           <RouterView />
         </main>
       </el-scrollbar>
@@ -68,6 +68,11 @@ const router = useRouter();
 
 const { out } = appStore.user
 const { user } = storeToRefs(appStore.user);
+const pagination = ref({
+  total: 0,
+  limit: 10,
+  page: 1,
+});
 
 const headerOptions: Options[] = [
   {
@@ -96,6 +101,12 @@ const asideList: Options[] = [
       path: "/component_lib",
     },
   },
+  {
+    name: "用户管理",
+    router: {
+      path:"/user"
+    }
+  }
 ];
 
 const handleRouterTo = (item: Options) => {
@@ -137,10 +148,10 @@ const handleOut = () => {
   flex: 1 1 0;
   overflow: hidden;
   :deep(.el-scrollbar__view) {
-    height: 100%;
+    // height: 100%;
   }
   main {
-    height: 100%;
+    box-sizing: border-box;
   }
 }
 </style>

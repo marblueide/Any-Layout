@@ -1,4 +1,5 @@
 import { validate, Length, IsNotEmpty } from "class-validator";
+import md5 from "md5"
 
 export class LoginValidator {
   //@ts-ignore
@@ -17,7 +18,7 @@ export class LoginValidator {
 
   constructor(username: string, password: string) {
     this.username = username;
-    this.password = password;
+    this.password = md5(password);
   }
 
   validate() {

@@ -54,7 +54,7 @@ const isLogin = ref(true);
 const passwordError = ref(false);
 const existed = ref(false);
 const form = reactive({
-  username: "admin",
+  username: localStorage.getItem("username") ?? 'admin',
   password: "123456",
 });
 
@@ -72,6 +72,8 @@ const hadnleLogin = async () => {
   } else {
     try {
       await login(loginValidator);
+      localStorage.setItem("username",loginValidator.username)
+      changeType();
       router.push("/");
     } catch (error) {
       passwordError.value = true;

@@ -10,7 +10,10 @@ export type PropValueType = {
   type: string;
   options: any;
   size: string;
-  disabled: boolean
+  disabled: boolean;
+  filterable: boolean;
+  multiple: boolean
+  switchValue:boolean
 };
 
 export type PropValue = {
@@ -21,6 +24,9 @@ export type PropValue = {
   [LabelEnum.container]: {};
   [LabelEnum.input]: Pick<PropValueType, "value" | "placeholder" | "type">;
   [LabelEnum.echart]: Pick<PropValueType, "echartOption">;
-  [LabelEnum.select]: Pick<PropValueType, "options">;
-  [LabelEnum.switch]: Pick<PropValueType, "size" | "disabled">;
+  [LabelEnum.select]: Pick<
+    PropValueType,
+    "options" | "placeholder" | "filterable" | "multiple"
+  >;
+  [LabelEnum.switch]: Pick<PropValueType, "size" | "disabled" | 'switchValue'>;
 };

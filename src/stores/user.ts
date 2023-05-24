@@ -6,10 +6,11 @@ import { defineStore } from "pinia";
 import { computed, ref, watch } from "vue";
 
 export const useUser = defineStore("user", () => {
-  const token = ref(localStorage.getItem("access_token"));
+  const token = ref(JSON.parse(localStorage.getItem("access_token") ?? ""));
   const user = ref<User>(
     JSON.parse(localStorage.getItem("user") ?? "{}") as User
   );
+  console.log(token.value)
   const isLogin = computed(() => {
     return (
       Object.keys(user.value).length > 0 &&

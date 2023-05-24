@@ -14,11 +14,13 @@
       <input
         type="text"
         placeholder="搜索页面"
+        v-model="searchInput"
         border-none
         py-0
         px="8px"
         outline-none
         bg-transparent
+        @input="handleInput"
       />
     </div>
   </div>
@@ -67,7 +69,7 @@
           <button
             cursor-pointer
             px-3
-            hover="bg-transparent color-black border-#000 border-2"
+            hover="bg-blue color-white border-blue border-2"
             border="1 #000"
             py-2
             font-600
@@ -80,11 +82,27 @@
           >
             访问
           </button>
+          <button
+            cursor-pointer
+            px-3
+            hover="bg-red color-white border-red border-2"
+            border="1 blue"
+            py-2
+            font-600
+            outline-none
+            color-white
+            bg-blue
+            w="80px"
+            box-border
+            @click="handleDelete(item)"
+          >
+            删除
+          </button>
         </div>
       </div>
       <div class="info" grid mt-1>
         <div class="user" overflow-hidden text-ellipsis>
-          {{ item.user.username }}'s apps
+          {{ item.user?.username }}'s apps
         </div>
         <div class="time">编辑于{{ handleTime(item.updateTime) }}前</div>
       </div>
@@ -92,7 +110,12 @@
   </div>
 
   <el-dialog v-model="addDialog" :title="!isEditor ? '新增' : '编辑'">
-    <el-form :model="form" label-position="left" ref="ruleFormRef" :validate-on-rule-change="false">
+    <el-form
+      :model="form"
+      label-position="left"
+      ref="ruleFormRef"
+      :validate-on-rule-change="false"
+    >
       <el-form-item
         label="页面名称"
         required
@@ -116,10 +139,10 @@
 </template>
 
 <script setup lang="ts">
-import { getPageList, createPage, updatePage } from "@/api";
+import { getPageList, createPage, updatePage, deletePage } from "@/api";
 import type { Page } from "@/types/model/Page";
 import { ElMessage, type FormInstance } from "element-plus";
-import { update } from "lodash-es";
+import { debounce } from "lodash-es";
 import { nextTick, reactive, ref, watch, watchEffect } from "vue";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -154,7 +177,7 @@ const setDialog = async (b: boolean) => {
   addDialog.value = b;
   if (b == false) {
     reset(ruleFormRef.value);
-  } 
+  }
 };
 
 const reset = (formEl: FormInstance | undefined) => {
@@ -173,12 +196,12 @@ const handleAdd = () => {
 };
 
 const init = async () => {
-  const res = await getPageList(paginated.page, paginated.limit);
+  const res = await getPageList(searchInput.value);
   list.value = res.data;
 };
 
 const handleConfirm = async (formEl: FormInstance | undefined) => {
-  console.log(1111111)
+  console.log(1111111);
   if (!formEl) return;
   const { page_name, describe, id } = form.value;
   let res;
@@ -219,9 +242,23 @@ const handleEditor = (item: Page) => {
 
 const handlePreview = (item: Page) => {
   router.push({
-    path:`/preview/${item.id}`
+    path: `/preview/${item.id}`,
+  });
+};
+
+const handleDelete = async(item:Page) => {
+  let res = await deletePage(item.id);
+  init();
+  ElMessage({
+    type: "success",
+    message: res.message
   })
 }
+
+const searchInput = ref("")
+const handleInput = debounce(() => {
+  init()
+},500)
 
 init();
 </script>

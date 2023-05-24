@@ -2,24 +2,27 @@ import type { User } from "@/types/model/User";
 import request from "../config/axios";
 import type { Page } from "@/types/model/page";
 
-export const getPageList = (page: number = 1, limit: number = 10) => {
-  const offset = (page - 1) * limit;
+export const getPageList = (input?: string) => {
   return request({
     method: "get",
     url: "/page/list",
     params: {
-      offset,
-      limit,
+      input,
     },
   });
 };
 
-export const createPage = (user:string,pageName: string, describe: string) => {
+export const createPage = (
+  user: string,
+  pageName: string,
+  describe: string
+) => {
   return request<
     any,
     {
-      data: Page[];
+      data: User[];
       message: string;
+      count: number;
     }
   >({
     method: "post",
@@ -27,7 +30,7 @@ export const createPage = (user:string,pageName: string, describe: string) => {
     data: {
       pageName,
       describe,
-      user
+      user,
     },
   });
 };
@@ -53,12 +56,30 @@ export const updatePage = (data: {
 };
 
 export const getPageById = (id: string) => {
-  return request<any, {
-    data: Page,
-    message:string
-  }>({
+  return request<
+    any,
+    {
+      data: Page;
+      message: string;
+    }
+  >({
     url: "/page/one",
     method: "get",
+    params: {
+      id,
+    },
+  });
+};
+
+export const deletePage = (id: string) => {
+  return request<
+    any,
+    {
+      message: string;
+    }
+  >({
+    method: "delete",
+    url: "/page/delete",
     params: {
       id,
     },

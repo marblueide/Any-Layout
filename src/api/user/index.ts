@@ -24,3 +24,31 @@ export const register = (data: LoginValidator) => {
         data
     })
 }
+
+export const getUserList = (page: number = 1, limit: number = 10) => {
+    const offset = (page - 1) * limit;
+    return request<any, {
+        data: User[],
+        count: number,
+        message:string
+    }>({
+      method: "get",
+      url: "/user/list",
+      params: {
+        offset,
+        limit,
+      },
+    });
+};
+  
+export const deleteUser = (id:string) => {
+    return request<any, {
+        message:string
+    }>({
+      method: "delete",
+      url: "/user/delete",
+      params: {
+       id
+      },
+    });
+}

@@ -9,6 +9,7 @@ import "normalize.css";
 import "./styles/global.scss";
 import 'element-plus/dist/index.css'
 import 'virtual:svg-icons-register'
+import "./stores"
 
 const app = createApp(App);
 

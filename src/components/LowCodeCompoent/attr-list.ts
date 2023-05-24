@@ -2,7 +2,9 @@ import { markRaw } from "vue";
 import type { Attr } from "../../types/LowCode/index";
 import { AttrEnum } from "../../types/LowCode/attr";
 import Input from "./Attrs/baseAttr/input.vue";
+import Switch from "./Attrs/baseAttr/switch.vue";
 import Select from "./Attrs/baseAttr/select.vue";
+import Option from "./Attrs/baseAttr/option.vue";
 import ColorPick from "./Attrs/baseAttr/colorPick.vue";
 import InputType from "./Attrs/baseAttr/inputType.vue";
 import HorizontalAlign from "./Attrs/HorizontalAlign.vue";
@@ -68,6 +70,30 @@ export const attrList: Attr[] = [
             label: "echart预设",
             component: markRaw(EchartOption),
           },
+          {
+            name: "placeholder",
+            type: AttrEnum.INPUT,
+            label: "提示语",
+            component: markRaw(Input)
+          },
+          {
+            name: "multiple",
+            type: AttrEnum.SWITCH,
+            label: "是否多选",
+            component:markRaw(Switch)
+          },
+          {
+            name: "filterable",
+            type: AttrEnum.SWITCH,
+            label: "是否可搜索",
+            component:markRaw(Switch)
+          },
+          {
+            name: "options",
+            type: AttrEnum.OPTION,
+            label: "选项配置",
+            component: markRaw(Option)
+          }
         ],
       },
       {

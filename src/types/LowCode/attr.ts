@@ -24,6 +24,8 @@ export enum AttrEnum {
   SELECT = "select",
   OTHER = "other",
   COLORPick = "colorPick",
+  SWITCH = 'switch',
+  OPTION = "option",
   ALL = "all",
 }
 

@@ -22,7 +22,9 @@ export const componentList: [
   LowCanvasData<LabelEnum.container>,
   LowCanvasData<LabelEnum.input>,
   LowCanvasData<LabelEnum.echart>,
-  LowCanvasData<LabelEnum.select>
+  LowCanvasData<LabelEnum.select>,
+  LowCanvasData<LabelEnum.switch>,
+
 ] = [
   {
     type: LabelEnum.button,
@@ -231,8 +233,8 @@ export const componentList: [
     style: {
       left: 0,
       top: 0,
-      width: 90,
-      height: 45,
+      width: 150,
+      height: 40,
       rotate: 0,
       borderWidth: 2,
       borderRadius: 0,
@@ -241,9 +243,42 @@ export const componentList: [
     icon: "icon-xuanzeqi",
     linkage: [],
     propValue: {
-      options: []
+      options: [],
+      placeholder: "请选择",
+      filterable: false,
+      multiple: false
     },
-  },
+    },
+    {
+      type: LabelEnum.switch,
+      label: LabelEnum.switch,
+      name: "select",
+      collapse: [],
+      events: {
+        onClick: {
+          type: EventTypeEnum.None,
+        },
+      },
+      isLock: false,
+      isRoot: true,
+      style: {
+        left: 0,
+        top: 0,
+        width: 40,
+        height: 20,
+        rotate: 0,
+        borderWidth: 2,
+        borderRadius: 0,
+      },
+      animations: [],
+      icon: "icon-xuanzeqi",
+      linkage: [],
+      propValue: {
+        size: 'default',
+        disabled: false,
+        switchValue: true
+      },
+    },
 ];
 
 // const temporarily = [
@@ -287,7 +322,7 @@ export const labelEnumMapComponent: Record<LabelEnum, Component> = {
   [LabelEnum.input]: markRaw(VInput),
   [LabelEnum.echart]: markRaw(Echart),
   [LabelEnum.select]: markRaw(VSelect),
-  [LabelEnum.switch]: markRaw(VSwitch)
+  [LabelEnum.switch]: markRaw(VSwitch),
 };
 
 export const labelEnumMapCGorup = omit(labelEnumMapComponent, [
