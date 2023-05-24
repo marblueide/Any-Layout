@@ -19,19 +19,19 @@
             <span class="errTips" v-if="existed">* 用户名已经存在！ *</span>
             <input type="password" placeholder="密码" v-model="form.password" />
           </div>
-          <button class="bbutton" @click="register">注册</button>
+          <button class="bbutton" @click="handleRegister">注册</button>
         </div>
       </div>
       <div class="small-box" :class="{ active: isLogin }">
         <div class="small-contain" key="smallContainRegister" v-if="isLogin">
           <div class="stitle">你好，朋友!</div>
           <p class="scontent">开始注册，和我们一起旅行</p>
-          <button class="sbutton" @click="changeType">注册</button>
+          <button class="sbutton" @click="changeType(false)">注册</button>
         </div>
         <div class="small-contain" key="smallContainLogin" v-else>
           <div class="stitle">欢迎回来!</div>
           <p class="scontent">与我们保持联系，请登录你的账户</p>
-          <button class="sbutton" @click="changeType">登录</button>
+          <button class="sbutton" @click="changeType(false)">登录</button>
         </div>
       </div>
     </div>
@@ -42,8 +42,13 @@
 import { appStore } from "@/stores";
 import { LoginValidator } from "@/utils/validator/login";
 import { reactive, ref } from "vue";
+import { useRouter } from "vue-router";
+import { register } from "@/api";
+import { ElMessage } from "element-plus";
 
-const { login } = appStore.user
+const { login } = appStore.user;
+
+const router = useRouter();
 
 const isLogin = ref(true);
 const passwordError = ref(false);
@@ -53,26 +58,59 @@ const form = reactive({
   password: "123456",
 });
 
-const changeType = () => {
+const changeType = (flag: boolean = false) => {
   isLogin.value = !isLogin.value;
-  form.username = "";
+  !flag && (form.username = "");
   form.password = "";
 };
 
 const hadnleLogin = async () => {
-    const loginValidator = new LoginValidator(form.username, form.password);
-    const errors = await loginValidator.validate();
-    if (errors.length) {
-        passwordError.value = true
-    } else {
-        try {
-            await login(loginValidator);
-        } catch (error) {
-            passwordError.value = true
-        }
+  const loginValidator = new LoginValidator(form.username, form.password);
+  const errors = await loginValidator.validate();
+  if (errors.length) {
+    passwordError.value = true;
+  } else {
+    try {
+      await login(loginValidator);
+      router.push("/");
+    } catch (error) {
+      passwordError.value = true;
     }
+  }
 };
-const register = () => {};
+const handleRegister = async () => {
+  const loginValidator = new LoginValidator(form.username, form.password);
+  const errors = await loginValidator.validate();
+  if (errors.length) {
+    errors.forEach((item) => {
+      for (let prop in item.constraints) {
+        ElMessage({
+          type: "error",
+          message: item.constraints[prop],
+        });
+      }
+    });
+    return;
+  }
+  try {
+    const res = await register(loginValidator);
+    if (res.code == 500) {
+      existed.value = true;
+      ElMessage({
+        type: "error",
+        message: res.message,
+      });
+      return;
+    }
+    changeType(true);
+    ElMessage({
+      type: "success",
+      message: res.message,
+    });
+  } catch (error) {
+    existed.value = true;
+  }
+};
 </script>
 
 <style scoped="scoped" lang="scss">

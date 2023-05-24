@@ -1,3 +1,4 @@
+import { appStore } from "@/stores";
 import { createRouter, createWebHistory } from "vue-router";
 import routes from "~pages";
 
@@ -9,5 +10,16 @@ const router = createRouter({
   ),
   routes,
 });
+
+router.beforeEach((to,from) => {
+  const { isLogin } = appStore.user;
+  if (to.path != '/login' && !isLogin) {
+    return {
+      path:"/login"
+    }
+  } else if (to.path == "/login" && isLogin) {
+    // router.back()
+  }
+})
 
 export default router;

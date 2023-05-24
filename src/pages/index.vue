@@ -10,17 +10,23 @@
           {{ it.name }}
         </div>
       </div>
-      <div
-        h-34px
-        lh-34px
-        w-34px
-        text-center
-        rounded-full
-        text-10px
-        class="bg-#e4d8cc"
-      >
-        1
-      </div>
+      <el-popover placement="bottom" trigger="click" popper-class="popover">
+        <template #reference>
+          <div
+            h-34px
+            lh-34px
+            w-34px
+            text-center
+            rounded-full
+            text-10px
+            mr-5
+            class="bg-#e4d8cc"
+          >
+            1
+          </div>
+        </template>
+        <el-button type="danger" @click="handleOut">登出</el-button>
+      </el-popover>
     </header>
     <section flex-1 flex overflow-hidden>
       <aside class="aside" w-256px h-full pt-4 pl-4>
@@ -48,6 +54,8 @@
 </template>
 
 <script setup lang="ts">
+import { appStore } from "@/stores";
+import { storeToRefs } from "pinia";
 import { ref } from "vue";
 import { useRouter, type Router, type RouteLocationRaw } from "vue-router";
 
@@ -57,6 +65,9 @@ type Options = {
 };
 
 const router = useRouter();
+
+const { out } = appStore.user
+const { user } = storeToRefs(appStore.user);
 
 const headerOptions: Options[] = [
   {
@@ -74,7 +85,7 @@ const currentHeader = ref(0);
 
 const asideList: Options[] = [
   {
-    name: "'1070129872's apps",
+    name: `${user.value?.username}'s apps`,
     router: {
       path: "/",
     },
@@ -90,6 +101,11 @@ const asideList: Options[] = [
 const handleRouterTo = (item: Options) => {
   item.router && router.push(item.router);
 };
+
+const handleOut = () => {
+  out();
+  router.push("/login")
+}
 </script>
 
 <style scoped lang="scss">
@@ -120,5 +136,17 @@ const handleRouterTo = (item: Options) => {
 .main-box {
   flex: 1 1 0;
   overflow: hidden;
+  :deep(.el-scrollbar__view) {
+    height: 100%;
+  }
+  main {
+    height: 100%;
+  }
+}
+</style>
+<style lang="scss">
+.popover {
+  width: auto !important;
+  min-width: auto !important;
 }
 </style>

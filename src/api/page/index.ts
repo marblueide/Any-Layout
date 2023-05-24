@@ -14,7 +14,7 @@ export const getPageList = (page: number = 1, limit: number = 10) => {
   });
 };
 
-export const createPage = (pageName: string, describe: string) => {
+export const createPage = (user:string,pageName: string, describe: string) => {
   return request<
     any,
     {
@@ -27,6 +27,7 @@ export const createPage = (pageName: string, describe: string) => {
     data: {
       pageName,
       describe,
+      user
     },
   });
 };

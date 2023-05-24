@@ -24,7 +24,7 @@
   </div>
   <div class="user-list" flex justify-between items-center my-1>
     <div class="left">
-      <h2 font-500>1070129872's apps</h2>
+      <h2 font-500>{{ user.username }}'s apps</h2>
     </div>
     <div class="right">
       <button
@@ -44,7 +44,7 @@
     </div>
   </div>
   <div class="cards" p-3 v-if="list.length > 0">
-    <div class="card" w="213px" v-for="item in list"> 
+    <div class="card" w="213px" v-for="item in list">
       <div class="item" flex items-center h="109px" box-border relative>
         <h3 font-500>{{ item.pageName }}</h3>
         <div class="btns" absolute flex justify-around w="100%" left="0">
@@ -76,6 +76,7 @@
             bg="#000"
             w="80px"
             box-border
+            @click="handlePreview(item)"
           >
             访问
           </button>
@@ -91,8 +92,13 @@
   </div>
 
   <el-dialog v-model="addDialog" :title="!isEditor ? '新增' : '编辑'">
-    <el-form :model="form" label-position="left">
-      <el-form-item label="页面名称" required prop="page_name">
+    <el-form :model="form" label-position="left" ref="ruleFormRef" :validate-on-rule-change="false">
+      <el-form-item
+        label="页面名称"
+        required
+        prop="page_name"
+        error="请填写页面名称"
+      >
         <el-input v-model="form.page_name"></el-input>
       </el-form-item>
       <el-form-item label="描述信息" prop="describe">
@@ -100,8 +106,10 @@
       </el-form-item>
       <el-form-item class="el-form-item-end">
         <el-button type="danger" @click="setDialog(false)">取消</el-button>
-        <el-button @click="reset">重置</el-button>
-        <el-button type="primary" @click="handleConfirm">确定</el-button>
+        <el-button @click="reset(ruleFormRef)">重置</el-button>
+        <el-button type="primary" @click="handleConfirm(ruleFormRef)"
+          >确定</el-button
+        >
       </el-form-item>
     </el-form>
   </el-dialog>
@@ -110,25 +118,28 @@
 <script setup lang="ts">
 import { getPageList, createPage, updatePage } from "@/api";
 import type { Page } from "@/types/model/Page";
-import { ElMessage } from "element-plus";
+import { ElMessage, type FormInstance } from "element-plus";
 import { update } from "lodash-es";
-import { reactive, ref } from "vue";
+import { nextTick, reactive, ref, watch, watchEffect } from "vue";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import updateLocale from "dayjs/plugin/updateLocale";
 // 引入中文语言包
 import "dayjs/locale/zh-cn";
 import { useRouter } from "vue-router";
+import { storeToRefs } from "pinia";
+import { appStore } from "@/stores";
 // 设置语言为中文
 dayjs.locale("zh-cn");
 dayjs.extend(relativeTime);
 dayjs.extend(updateLocale);
 
-const router = useRouter()
+const router = useRouter();
 const addDialog = ref(false);
 const isEditor = ref(false);
+const { user } = storeToRefs(appStore.user);
 const form = ref({
-  id: "1",
+  id: user.value.id,
   page_name: "",
   describe: "",
 });
@@ -137,17 +148,20 @@ const paginated = reactive({
   limit: 10,
 });
 const list = ref<Page[]>([]);
+const ruleFormRef = ref<FormInstance>();
 
-const setDialog = (b: boolean) => {
+const setDialog = async (b: boolean) => {
   addDialog.value = b;
   if (b == false) {
-    reset();
-  }
+    reset(ruleFormRef.value);
+  } 
 };
 
-const reset = () => {
+const reset = (formEl: FormInstance | undefined) => {
+  if (!formEl) return;
+  formEl.resetFields();
   form.value = {
-    id:"1",
+    id: "1",
     page_name: "",
     describe: "",
   };
@@ -158,38 +172,38 @@ const handleAdd = () => {
   addDialog.value = true;
 };
 
-const handleConfirm = async () => {
-  try {
-    const { page_name, describe, id } = form.value;
-    let res;
-    if (isEditor.value) {
-      //更新
-      res = await updatePage({
-        pageName: page_name,
-        id,
-        describe,
-      });
-    } else {
-      //创建
-      res = await createPage(page_name, describe);
-      router.push("/workArea")
-    }
-    ElMessage({
-      type: "success",
-      message: res.message,
-    });
-    setDialog(false);
-  } catch (error: any) {
-    ElMessage({
-      type: "error",
-      message: error,
-    });
-  }
-};
-
 const init = async () => {
   const res = await getPageList(paginated.page, paginated.limit);
   list.value = res.data;
+};
+
+const handleConfirm = async (formEl: FormInstance | undefined) => {
+  console.log(1111111)
+  if (!formEl) return;
+  const { page_name, describe, id } = form.value;
+  let res;
+  if (isEditor.value) {
+    //更新
+    res = await updatePage({
+      pageName: page_name,
+      id,
+      describe,
+    });
+    setDialog(false);
+  } else {
+    //创建
+    await formEl.validate(async (valid, fields) => {
+      if (valid) {
+        res = await createPage(id, page_name, describe);
+        await init();
+        ElMessage({
+          type: "success",
+          message: res?.message ?? "创建成功",
+        });
+        setDialog(false);
+      }
+    });
+  }
 };
 
 const handleTime = (time: string) => {
@@ -197,9 +211,15 @@ const handleTime = (time: string) => {
   return start.fromNow(true);
 };
 
-const handleEditor = (item:Page) => {
+const handleEditor = (item: Page) => {
   router.push({
     path: `/workArea/${item.id}`,
+  });
+};
+
+const handlePreview = (item: Page) => {
+  router.push({
+    path:`/preview/${item.id}`
   })
 }
 

@@ -15,7 +15,10 @@ export const login = (data: LoginValidator) => {
 }
 
 export const register = (data: LoginValidator) => {
-    return request({
+    return request<any, {
+        code: number,
+        message:string
+    }>({
         method: "post",
         url:"/user/register",
         data
