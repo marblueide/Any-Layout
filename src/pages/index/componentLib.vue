@@ -36,12 +36,7 @@
           </div>
         </div>
       </div>
-      <div
-        v-if="activeComponentLibaray == index"
-        class="componentList"
-        ref="componentListRef"
-        @click.stop
-      >
+      <div class="componentList" ref="componentListRef" @click.stop>
         <div v-if="componentList?.length" flex items-center flex-row gap-2>
           <ComponentItem
             v-for="it in componentList"
@@ -145,7 +140,7 @@
     </template>
   </el-dialog>
 
-  <el-drawer
+  <el-dialog
     v-model="componentDialog"
     :title="componentDialogType == 'update' ? '修改' : '新增'"
     width="700px"
@@ -177,7 +172,7 @@
         </el-button>
       </span>
     </template>
-  </el-drawer>
+  </el-dialog>
 </template>
 
 <script setup lang="ts">
@@ -333,10 +328,30 @@ function asyncRequestAnimationFrame() {
   });
 }
 
+async function backAnmiation(dom: HTMLElement) {
+  const son = dom.getElementsByClassName("componentList")[0] as HTMLElement;
+  const prevSonHeight = son.offsetHeight;
+  const prevHeight = dom.offsetHeight;
+  dom.style.height = prevHeight + "px";
+  son.style.height = prevSonHeight + "px";
+
+  await asyncRequestAnimationFrame();
+  const currentHeight = 115;
+
+  dom.style.height = currentHeight + "px";
+  son.style.height = "0px";
+
+  dom.addEventListener("transitionend", () => {
+    dom.style.height = "";
+    son.style.height = "";
+  });
+}
+
 /** start ComponentLib相关 */
 
 function handlerLibraryClick(item: ComponentLibrary, i: number) {
   if (!libRefs.value) return;
+  backAnmiation(libRefs.value[activeComponentLibaray.value]);
   if (i == activeComponentLibaray.value) {
     activeComponentLibaray.value = -1;
   } else {
