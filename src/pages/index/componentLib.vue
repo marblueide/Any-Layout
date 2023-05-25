@@ -36,7 +36,15 @@
           </div>
         </div>
       </div>
-      <div class="componentList" mt-2 mb-3 p-1 :class="{'w-full': componentList?.length == 0}" ref="componentListRef" @click.stop>
+      <div
+        class="componentList"
+        mt-3
+        mb-4
+        mx-1
+        :class="{ 'w-full': componentList?.length == 0 }"
+        ref="componentListRef"
+        @click.stop
+      >
         <div v-if="componentList?.length" flex items-center flex-wrap gap-2>
           <ComponentItem
             v-for="it in componentList"
@@ -145,6 +153,7 @@
     v-model="componentDialog"
     :title="componentDialogType == 'update' ? '修改' : '新增'"
     width="700px"
+    top="5vh"
   >
     <el-form :model="componentForm" label-width="80px">
       <el-form-item label="id" v-if="componentDialogType == 'update'">
@@ -157,12 +166,11 @@
         ></el-input>
       </el-form-item>
       <el-form-item label="组件JSON">
-        <el-input
-          type="textarea"
-          :rows="4"
-          v-model="componentForm.ComponentData"
-          placeholder="请输入名称"
-        ></el-input>
+        <AceContainer
+          ref="aceContainer"
+          class="h-600px!"
+          :model-value="componentForm.ComponentData"
+        />
       </el-form-item>
     </el-form>
     <template #footer>
@@ -216,6 +224,7 @@ import { tr } from "element-plus/es/locale";
 import { nextTick, reactive, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import ComponentItem from "./component/ComponentItem.vue";
+import AceContainer from "@/components/AceContainer.vue";
 
 const libraryList = ref<ComponentLibrary[]>([]);
 const router = useRouter();
@@ -252,6 +261,7 @@ const componentForm = ref<Component>({
 });
 const componentDialog = ref(false);
 const componentDialogType = ref<"update" | "add">("add");
+const aceContainer = ref<InstanceType<typeof AceContainer>>();
 
 watch(dialogVisible, (newVal) => {
   if (!newVal)
@@ -288,11 +298,11 @@ async function handlerComponentSubmit() {
 }
 
 async function addComponent() {
-  const { componentName, ComponentData } = componentForm.value;
+  const { componentName } = componentForm.value;
   const libId = libraryList.value[activeComponentLibaray.value].id;
   const res = await createComponent({
     componentName,
-    ComponentData,
+    ComponentData: aceContainer.value?.getValue() || "",
     libId,
   });
   ElNotification({
@@ -303,11 +313,11 @@ async function addComponent() {
 }
 
 async function updateComponentContent() {
-  const { componentName, ComponentData, id } = componentForm.value;
+  const { componentName, id } = componentForm.value;
   const libId = libraryList.value[activeComponentLibaray.value].id;
   const res = await updateComponent({
     componentName,
-    ComponentData,
+    ComponentData: aceContainer.value?.getValue() || "",
     libId,
     id,
   });

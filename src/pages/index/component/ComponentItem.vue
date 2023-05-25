@@ -38,12 +38,12 @@ function parseComponetData(json: string): LowCanvasData | undefined {
   justify-content: center;
   align-items: center;
   width: 70px;
-  border: 1px solid transparent;
+  border: 1px solid #e6e6e6;
   aspect-ratio: 1/ 1;
   transition: all 0.3s;
-  box-shadow: var(--el-box-shadow-lighter);
   &:hover{
-    border: 1px solid #dcdcdc;
+    border: 1px solid #bcbcbc;
+    box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.07);
   }
 }
 </style>
