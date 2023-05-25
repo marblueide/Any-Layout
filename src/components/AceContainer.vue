@@ -47,11 +47,20 @@ onMounted(() => {
     enableLiveAutocompletion: true,
     tabSize: 4,
   });
+  editor.addEventListener('input', () => {
+    const value = editor.getValue();
+    try {
+      JSON.parse(value)
+    } catch (error) {
+      ElMessage.warning('JSON错误');
+    }
+  })
   setEditorValue(props.modelValue);
 });
 
 function getValue() {
-  return editor.getValue();
+  const value = editor.getValue();
+  return value;
 }
 
 function setEditorValue(value: string) {
@@ -59,9 +68,8 @@ function setEditorValue(value: string) {
   try {
     json = value?.length ? JSON.stringify(JSON.parse(value), null, 4) : "";
   } catch (error) {
-    debugger
     json = "";
-    ElMessage.error(error?.message)
+    ElMessage.error(error?.message);
   }
   editor && editor.setValue(json);
 }
