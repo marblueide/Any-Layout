@@ -1,6 +1,6 @@
 <template>
   <div class="component" bg-white cursor-pointer rounded-2>
-    <div text-center h-16>
+    <div text-center h-16 w="100%">
       <i
         class="iconfont"
         :class="parseComponetData(component.ComponentData)?.icon"
@@ -10,7 +10,7 @@
         rounded-full
       >
       </i>
-      <div mt-2 overflow-hidden text-ellipsis  >
+      <div mt-2 overflow-hidden text-ellipsis w="100%" >
         {{ component.componentName }}
       </div>
     </div>
@@ -41,6 +41,7 @@ function parseComponetData(json: string): LowCanvasData | undefined {
   border: 1px solid transparent;
   aspect-ratio: 1/ 1;
   transition: all 0.3s;
+  box-shadow: var(--el-box-shadow-lighter);
   &:hover{
     border: 1px solid #dcdcdc;
   }
