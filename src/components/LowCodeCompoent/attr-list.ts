@@ -12,7 +12,7 @@ import VerticalAlign from "./Attrs/VerticalAlign.vue";
 import BorderRadius from "./Attrs/BorderRadius.vue";
 import Shadow from "./Attrs/Shadow.vue";
 import Event from "./Attrs/event/index.vue";
-import EchartOption from "./Attrs/EchartOption.vue"
+import EchartOption from "./Attrs/EchartOption.vue";
 import StyleBox from "./Attrs/StyleBox/index.vue";
 
 export const attrList: Attr[] = [
@@ -74,26 +74,178 @@ export const attrList: Attr[] = [
             name: "placeholder",
             type: AttrEnum.INPUT,
             label: "提示语",
-            component: markRaw(Input)
+            component: markRaw(Input),
           },
           {
             name: "multiple",
             type: AttrEnum.SWITCH,
             label: "是否多选",
-            component:markRaw(Switch)
+            component: markRaw(Switch),
           },
           {
             name: "filterable",
             type: AttrEnum.SWITCH,
             label: "是否可搜索",
-            component:markRaw(Switch)
+            component: markRaw(Switch),
           },
           {
             name: "options",
             type: AttrEnum.OPTION,
             label: "选项配置",
-            component: markRaw(Option)
-          }
+            component: markRaw(Option),
+          },
+          {
+            name: "switchValue",
+            type: AttrEnum.SWITCH,
+            label: "默认值",
+            component: markRaw(Switch),
+          },
+          {
+            name: "disabled",
+            type: AttrEnum.SWITCH,
+            label: "是否禁用",
+            component: markRaw(Switch),
+          },
+          {
+            name: "small",
+            type: AttrEnum.SWITCH,
+            label: "是否使用小型分页样式",
+            component: markRaw(Switch),
+          },
+          {
+            name: "total",
+            type: AttrEnum.INPUTNUMBER,
+            label: "总条目数",
+            component: markRaw(Input),
+          },
+          {
+            name: "pagerCount",
+            type: AttrEnum.INPUTNUMBER,
+            label: "设置最大页码按钮数",
+            component: markRaw(Input),
+          },
+          {
+            name: "pageSize",
+            type: AttrEnum.INPUTNUMBER,
+            label: "每页显示条目个数",
+            component: markRaw(Input),
+          },
+          {
+            name: "percentage",
+            type: AttrEnum.INPUTNUMBER,
+            label: "当前进度",
+            component: markRaw(Input),
+          },
+          {
+            name: "striped",
+            type: AttrEnum.SWITCH,
+            label: "在进度条上增加条纹",
+            component: markRaw(Switch),
+          },
+          {
+            name: "stripedFlow",
+            type: AttrEnum.SWITCH,
+            label: "让进度条上的条纹流动起来",
+            component: markRaw(Switch),
+          },
+          {
+            name: "status",
+            type: AttrEnum.SELECT,
+            label: "进度条当前状态",
+            component: markRaw(Select),
+            selectOptions: [
+              {
+                value: "success",
+                label: "success",
+              },
+              {
+                value: "exception",
+                label: "exception",
+              },
+              {
+                value: "warning",
+                label: "warning",
+              },
+            ],
+          },
+          {
+            name: "min",
+            type: AttrEnum.INPUTNUMBER,
+            label: "可被勾选的 checkbox 的最小数量",
+            component: markRaw(Input),
+          },
+          {
+            name: "max",
+            type: AttrEnum.INPUTNUMBER,
+            label: "可被勾选的 checkbox 的最大数量",
+            component: markRaw(Input),
+          },
+          {
+            name: "button",
+            type: AttrEnum.SWITCH,
+            label: "按钮型",
+            component: markRaw(Switch),
+          },
+          {
+            name: "border",
+            type: AttrEnum.SWITCH,
+            label: "是否有边框",
+            component: markRaw(Switch),
+          },
+          {
+            name: "size",
+            type: AttrEnum.SELECT,
+            label: "尺寸",
+            component: markRaw(Select),
+            selectOptions: [
+              {
+                value: "large",
+                label: "large",
+              },
+              {
+                value: "default",
+                label: "default",
+              },
+              {
+                value: "small",
+                label: "small",
+              },
+            ],
+          },
+          {
+            name: "fill",
+            type: AttrEnum.COLORPick,
+            label: "当按钮为活跃状态时的边框和背景颜色",
+            component: markRaw(ColorPick),
+            predefineColors: [],
+          },
+          {
+            name: "textColor",
+            type: AttrEnum.COLORPick,
+            label: "当按钮为活跃状态时的字体颜色",
+            component: markRaw(ColorPick),
+            predefineColors: [],
+          },
+          {
+            name: "shadow",
+            type: AttrEnum.SELECT,
+            label: "设置阴影显示时机",
+            component: markRaw(Select),
+            selectOptions: [
+              {
+                value: "always",
+                label: "always",
+              },
+              {
+                value: "never",
+                label: "never",
+              },
+              {
+                value: "hover",
+                label: "hover",
+              },
+            ],
+          },
         ],
       },
       {

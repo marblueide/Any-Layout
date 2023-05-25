@@ -9,6 +9,10 @@ import VInput from "./VInput/index.vue";
 import VContainer from "./VContainer/index.vue";
 import VSelect from "./VSelect/index.vue";
 import VSwitch from "./VSwitch/index.vue";
+import VPagination from "./VPagination/index.vue";
+import VProcess from "./VProcess/index.vue";
+import VCheckGroup from "./VCheckGroup/index.vue";
+import VRadio from "./VRadio/index.vue";
 import { LabelEnum } from "../../types/LowCode/index";
 import { getAllCollapse } from "./attr-list";
 import { EventTypeEnum } from "@/types/LowCode/event";
@@ -24,7 +28,10 @@ export const componentList: [
   LowCanvasData<LabelEnum.echart>,
   LowCanvasData<LabelEnum.select>,
   LowCanvasData<LabelEnum.switch>,
-
+  LowCanvasData<LabelEnum.pagination>,
+  LowCanvasData<LabelEnum.progress>,
+  LowCanvasData<LabelEnum.checkbox>,
+  LowCanvasData<LabelEnum.radio>
 ] = [
   {
     type: LabelEnum.button,
@@ -153,7 +160,9 @@ export const componentList: [
     animations: [],
     icon: "icon-checkbox",
     linkage: [],
-    propValue: {},
+    propValue: {
+      shadow: "always ",
+    },
   },
   {
     type: LabelEnum.input,
@@ -246,42 +255,173 @@ export const componentList: [
       options: [],
       placeholder: "请选择",
       filterable: false,
-      multiple: false
+      multiple: false,
     },
+  },
+  {
+    type: LabelEnum.switch,
+    label: "下拉选择框",
+    name: "select",
+    collapse: [],
+    events: {
+      onClick: {
+        type: EventTypeEnum.None,
+      },
     },
-    {
-      type: LabelEnum.switch,
-      label: LabelEnum.switch,
-      name: "select",
-      collapse: [],
-      events: {
-        onClick: {
-          type: EventTypeEnum.None,
+    isLock: false,
+    isRoot: true,
+    style: {
+      left: 0,
+      top: 0,
+      width: 40,
+      height: 20,
+      rotate: 0,
+    },
+    animations: [],
+    icon: "icon-kaiguan",
+    linkage: [],
+    propValue: {
+      size: "default",
+      disabled: false,
+      switchValue: true,
+    },
+  },
+  {
+    type: LabelEnum.pagination,
+    label: "分页",
+    name: "select",
+    collapse: [],
+    events: {
+      onClick: {
+        type: EventTypeEnum.None,
+      },
+      onChange: {
+        type: EventTypeEnum.None,
+      },
+    },
+    isLock: false,
+    isRoot: true,
+    style: {
+      left: 0,
+      top: 0,
+      width: 220,
+      height: 35,
+      rotate: 0,
+    },
+    animations: [],
+    icon: "icon-fenye",
+    linkage: [],
+    propValue: {
+      total: 50,
+      pagerCount: 7,
+      pageSize: 10,
+      small: false,
+    },
+  },
+  {
+    type: LabelEnum.progress,
+    label: "分页",
+    name: "select",
+    collapse: [],
+    events: {
+      onChange: {
+        type: EventTypeEnum.None,
+      },
+    },
+    isLock: false,
+    isRoot: true,
+    style: {
+      left: 0,
+      top: 0,
+      width: 220,
+      height: 35,
+      rotate: 0,
+    },
+    animations: [],
+    icon: "icon-jindutiao",
+    linkage: [],
+    propValue: {
+      percentage: 50,
+      status: "success",
+      striped: true,
+      stripedFlow: true,
+    },
+  },
+  {
+    type: LabelEnum.checkbox,
+    label: "复选框组",
+    name: "select",
+    collapse: [],
+    events: {
+      onChange: {
+        type: EventTypeEnum.None,
+      },
+    },
+    isLock: false,
+    isRoot: true,
+    style: {
+      left: 0,
+      top: 0,
+      width: 220,
+      height: 35,
+      rotate: 0,
+    },
+    animations: [],
+    icon: "icon-duoxuankuang1",
+    linkage: [],
+    propValue: {
+      options: [
+        {
+          label: "label",
+          value: "label",
         },
-      },
-      isLock: false,
-      isRoot: true,
-      style: {
-        left: 0,
-        top: 0,
-        width: 40,
-        height: 20,
-        rotate: 0,
-        borderWidth: 2,
-        borderRadius: 0,
-      },
-      animations: [],
-      icon: "icon-xuanzeqi",
-      linkage: [],
-      propValue: {
-        size: 'default',
-        disabled: false,
-        switchValue: true
+      ],
+      min: 0,
+      max: 2,
+      button: false,
+      border: false,
+      size: "default",
+      fill: "#409EFF",
+      textColor: "#ffffff",
+    },
+  },
+  {
+    type: LabelEnum.radio,
+    label: "单选框组",
+    name: "select",
+    collapse: [],
+    events: {
+      onChange: {
+        type: EventTypeEnum.None,
       },
     },
+    isLock: false,
+    isRoot: true,
+    style: {
+      left: 0,
+      top: 0,
+      width: 220,
+      height: 35,
+      rotate: 0,
+    },
+    animations: [],
+    icon: "icon-BAI-danxuankuangs",
+    linkage: [],
+    propValue: {
+      options: [
+        {
+          label: "label",
+          value: "label",
+        },
+      ],
+      button: false,
+      border: false,
+      size: "default",
+      fill: "#409EFF",
+      textColor: "#ffffff",
+    },
+  },
 ];
-
-console.log(componentList[0])
 
 // const temporarily = [
 //   {
@@ -325,6 +465,10 @@ export const labelEnumMapComponent: Record<LabelEnum, Component> = {
   [LabelEnum.echart]: markRaw(Echart),
   [LabelEnum.select]: markRaw(VSelect),
   [LabelEnum.switch]: markRaw(VSwitch),
+  [LabelEnum.pagination]: markRaw(VPagination),
+  [LabelEnum.progress]: markRaw(VProcess),
+  [LabelEnum.checkbox]: markRaw(VCheckGroup),
+  [LabelEnum.radio]: markRaw(VRadio),
 };
 
 export const labelEnumMapCGorup = omit(labelEnumMapComponent, [

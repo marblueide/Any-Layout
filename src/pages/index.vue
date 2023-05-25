@@ -2,13 +2,16 @@
   <div flex flex-col h-full overflow-hidden>
     <header flex items-center justify-between px-7 h-50px lh-50px class="nav">
       <div flex gap-6 ml-42px>
-        <div
-          v-for="(it, index) in headerOptions"
-          class="color-#858282"
-          :class="{ active: currentHeader == index }"
-        >
-          {{ it.name }}
-        </div>
+        <template v-for="(it, index) in headerOptions">
+          <Role :roles="it.roles">
+            <div
+              class="color-#858282"
+              :class="{ active: currentHeader == index }"
+            >
+              {{ it.name }}
+            </div>
+          </Role>
+        </template>
       </div>
       <el-popover placement="bottom" trigger="click" popper-class="popover">
         <template #reference>
@@ -35,17 +38,17 @@
           <SvgIcon name="add" mr-12px />
           <span>新建用户组</span>
         </div> -->
-        <div
-          v-for="it in asideList"
-          class="aside-item color-#4b4848"
-          @click="handleRouterTo(it)"
-        >
-          <SvgIcon name="group" mr-12px />
-          <span>{{ it.name }}</span>
-        </div>
+        <template v-for="it in asideList">
+          <Role :roles="it.roles">
+            <div class="aside-item color-#4b4848" @click="handleRouterTo(it)">
+              <SvgIcon name="group" mr-12px />
+              <span>{{ it.name }}</span>
+            </div>
+          </Role>
+        </template>
       </aside>
       <el-scrollbar bg-gray-50 class="main-box">
-        <main  p-5>
+        <main p-5>
           <RouterView />
         </main>
       </el-scrollbar>
@@ -54,19 +57,21 @@
 </template>
 
 <script setup lang="ts">
+import Role from "@/components/Role.vue";
 import { appStore } from "@/stores";
+import { UserGroupEnum } from "@/types/user.enum";
 import { storeToRefs } from "pinia";
 import { ref } from "vue";
 import { useRouter, type Router, type RouteLocationRaw } from "vue-router";
-
 type Options = {
   name: string;
   router?: RouteLocationRaw;
+  roles: UserGroupEnum[];
 };
 
 const router = useRouter();
 
-const { out } = appStore.user
+const { out } = appStore.user;
 const { user } = storeToRefs(appStore.user);
 const pagination = ref({
   total: 0,
@@ -77,12 +82,17 @@ const pagination = ref({
 const headerOptions: Options[] = [
   {
     name: "应用",
+    router: {
+      path: "/",
+    },
+    roles: [UserGroupEnum.admin, UserGroupEnum.user],
   },
   {
     name: "组件库",
     router: {
       path: "/component_lib",
     },
+    roles: [UserGroupEnum.admin],
   },
 ];
 
@@ -94,19 +104,22 @@ const asideList: Options[] = [
     router: {
       path: "/",
     },
+    roles: [UserGroupEnum.admin, UserGroupEnum.user],
   },
   {
     name: "组件库",
     router: {
       path: "/componentLib",
     },
+    roles: [UserGroupEnum.admin],
   },
   {
     name: "用户管理",
     router: {
-      path:"/user"
-    }
-  }
+      path: "/user",
+    },
+    roles: [UserGroupEnum.admin],
+  },
 ];
 
 const handleRouterTo = (item: Options) => {
@@ -115,8 +128,8 @@ const handleRouterTo = (item: Options) => {
 
 const handleOut = () => {
   out();
-  router.push("/login")
-}
+  router.push("/login");
+};
 </script>
 
 <style scoped lang="scss">

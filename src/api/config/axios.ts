@@ -11,7 +11,7 @@ const request = axios.create({
 request.interceptors.request.use((config) => {
   const { token, user } = storeToRefs(appStore.user);
   config.headers.Authorization = `Bearer ${token.value}`;
-  console.log(`Bearer ${token.value}`)
+  console.log(token.value)
   return config;
 });
 

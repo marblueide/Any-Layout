@@ -7,13 +7,17 @@ import type { ComponentStyle } from "./style";
 export enum LabelEnum {
   button = "button", //按钮
   picture = "picture", //图片
-  text = "text",  //文本
-  group = "group",  //组合
-  container = "container",  //容器
-  input = 'input',
+  text = "text", //文本
+  group = "group", //组合
+  container = "container", //容器
+  input = "input",
   echart = "echart", // Echart
   select = "select",
-  switch = "switch"
+  switch = "switch",
+  pagination = "pagination ",
+  progress = "progress",
+  checkbox = "checkbox",
+  radio = 'radio'
 }
 
 export type pointType = "lt" | "t" | "rt" | "r" | "rb" | "b" | "lb" | "l";
@@ -27,15 +31,15 @@ export type LowCanvasType = {
 
 export type LowCanvasData<T extends LabelEnum = LabelEnum> = {
   id?: string;
-  label: T;
-  type:T,
+  label: string;
+  type: T;
   describe?: string;
   name: keyof typeof LabelEnum;
   collapse: string[];
   icon: string | Component;
   events: EventType;
   isLock: boolean;
-  isRoot:boolean;
+  isRoot: boolean;
   style: ComponentStyle;
   propValue: PropValue[T];
   animations: DataAnimation[];

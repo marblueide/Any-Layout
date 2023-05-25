@@ -1,11 +1,12 @@
 <template>
-  <el-switch
-    v-model="value"
-    :disabled="propValue.disabled"
-    :size="propValue.size"
-    class="switch"
-  >
-  </el-switch>
+  <div class="switch-wrapper" w="100%" h="100%">
+    <el-switch
+      v-model="value"
+      :disabled="propValue.disabled"
+      class="switch"
+    >
+    </el-switch>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -14,7 +15,6 @@ import { ref, watchEffect, type StyleValue } from "vue";
 
 const props = defineProps<{
   propValue: {
-    size: string;
     disabled: boolean;
     switchValue: boolean;
   };
@@ -30,17 +30,24 @@ watchEffect(() => {
 </script>
 
 <style scoped lang="scss">
-  .switch{
+.switch-wrapper {
+  &:deep(.el-switch.is-checked .el-switch__core .el-switch__action) {
+    transform: translateX(-100%);
+    left: 100%;
+  }
+}
+.switch {
+  width: 100%;
+  height: 100%;
+
+  :deep(.el-switch__core) {
     width: 100%;
     height: 100%;
-    :deep(.el-switch__core){
-      width: 100%;
-      height: 100%;
-      .el-switch__action{
-        height: 60%;
-        aspect-ratio:1/1;
-        width: auto !important;
-      }
+    .el-switch__action {
+      height: 60%;
+      aspect-ratio: 1/1;
+      width: auto !important;
     }
   }
+}
 </style>
