@@ -120,6 +120,13 @@ const asideList: Options[] = [
     },
     roles: [UserGroupEnum.admin],
   },
+  {
+    name: "路由管理",
+    router: {
+      path: "/router",
+    },
+    roles: [UserGroupEnum.admin],
+  },
 ];
 
 const handleRouterTo = (item: Options) => {
