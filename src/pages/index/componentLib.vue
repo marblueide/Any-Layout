@@ -36,8 +36,8 @@
           </div>
         </div>
       </div>
-      <div class="componentList" ref="componentListRef" @click.stop>
-        <div v-if="componentList?.length" flex items-center flex-row gap-2>
+      <div class="componentList" mt-2 mb-3 p-1 :class="{'w-full': componentList?.length == 0}" ref="componentListRef" @click.stop>
+        <div v-if="componentList?.length" flex items-center flex-wrap gap-2>
           <ComponentItem
             v-for="it in componentList"
             :component="it"
@@ -46,11 +46,12 @@
           <el-icon
             inline-block
             p-2
+            mx-2
             bg-blue-gray-4
             rounded-full
             font-bold
             cursor-pointer
-            class="text-25px! add"
+            class="text-25px!"
             @click="handlerComponentDialogState(true, 'add')"
           >
             <Plus color-white />
@@ -64,7 +65,7 @@
           >
         </el-empty>
       </div>
-      <div mt-8 inline-flex items-center justify-between text-14px self-stretch>
+      <div mt-2 inline-flex items-center justify-between text-14px self-stretch>
         <div color-gray-5 @click.stop>
           <span>开发者: </span>
           <span>admin</span>
@@ -167,6 +168,16 @@
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="componentDialog = false">取消</el-button>
+        <el-button
+          v-if="componentDialogType == 'update'"
+          type="danger"
+          @click="
+            () => (
+              deleteComponentById(componentForm.id), (componentDialog = false)
+            )
+          "
+          >删除</el-button
+        >
         <el-button type="primary" @click="handlerComponentSubmit">
           {{ componentDialogType == "update" ? "修改" : "新增" }}
         </el-button>
@@ -178,6 +189,7 @@
 <script setup lang="ts">
 import {
   createComponent,
+  deleteComponent,
   getComponentById,
   getComponentListByLibId,
   updateComponent,
@@ -276,7 +288,8 @@ async function handlerComponentSubmit() {
 }
 
 async function addComponent() {
-  const { componentName, ComponentData, libId } = componentForm.value;
+  const { componentName, ComponentData } = componentForm.value;
+  const libId = libraryList.value[activeComponentLibaray.value].id;
   const res = await createComponent({
     componentName,
     ComponentData,
@@ -290,7 +303,8 @@ async function addComponent() {
 }
 
 async function updateComponentContent() {
-  const { componentName, ComponentData, libId, id } = componentForm.value;
+  const { componentName, ComponentData, id } = componentForm.value;
+  const libId = libraryList.value[activeComponentLibaray.value].id;
   const res = await updateComponent({
     componentName,
     ComponentData,
@@ -302,6 +316,17 @@ async function updateComponentContent() {
     message: "更新成功",
     type: "success",
   });
+}
+
+async function deleteComponentById(id: string) {
+  await deleteComponent(id);
+  ElNotification({
+    title: "Success",
+    message: "删除成功",
+    type: "success",
+  });
+  const { id: libId } = libraryList.value[activeComponentLibaray.value];
+  getComponentList(libId);
 }
 
 async function handlerComponentClick(item: Component) {
@@ -351,7 +376,8 @@ async function backAnmiation(dom: HTMLElement) {
 
 function handlerLibraryClick(item: ComponentLibrary, i: number) {
   if (!libRefs.value) return;
-  backAnmiation(libRefs.value[activeComponentLibaray.value]);
+  if (activeComponentLibaray.value !== -1)
+    backAnmiation(libRefs.value[activeComponentLibaray.value]);
   if (i == activeComponentLibaray.value) {
     activeComponentLibaray.value = -1;
   } else {
