@@ -10,7 +10,7 @@
         rounded-full
       >
       </i>
-      <div mt-2>
+      <div mt-2 overflow-hidden text-ellipsis  >
         {{ component.componentName }}
       </div>
     </div>
@@ -37,7 +37,12 @@ function parseComponetData(json: string): LowCanvasData | undefined {
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  width: 100px;
+  width: 70px;
+  border: 1px solid transparent;
   aspect-ratio: 1/ 1;
+  transition: all 0.3s;
+  &:hover{
+    border: 1px solid #dcdcdc;
+  }
 }
 </style>
